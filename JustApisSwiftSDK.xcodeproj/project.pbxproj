@@ -9,6 +9,13 @@
 /* Begin PBXBuildFile section */
 		5386B1AA1C18B503001D8D31 /* JustApisSwiftSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 5386B1A91C18B503001D8D31 /* JustApisSwiftSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5386B1B11C18B503001D8D31 /* JustApisSwiftSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5386B1A61C18B503001D8D31 /* JustApisSwiftSDK.framework */; };
+		5386B1C11C18B903001D8D31 /* CoreTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5386B1C01C18B903001D8D31 /* CoreTypes.swift */; };
+		5386B1C31C18CCE9001D8D31 /* CompositedGateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5386B1C21C18CCE9001D8D31 /* CompositedGateway.swift */; };
+		5386B1C51C18D4A4001D8D31 /* BasicRequests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5386B1C41C18D4A4001D8D31 /* BasicRequests.swift */; };
+		5386B1C71C18D6DA001D8D31 /* BasicResponses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5386B1C61C18D6DA001D8D31 /* BasicResponses.swift */; };
+		5386B1CA1C18D728001D8D31 /* FoundationNetworkAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5386B1C91C18D728001D8D31 /* FoundationNetworkAdapter.swift */; };
+		5386B1CC1C18D750001D8D31 /* ResponseProcessors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5386B1CB1C18D750001D8D31 /* ResponseProcessors.swift */; };
+		5386B1CE1C18D761001D8D31 /* RequestPreparers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5386B1CD1C18D761001D8D31 /* RequestPreparers.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -27,6 +34,13 @@
 		5386B1AB1C18B503001D8D31 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5386B1B01C18B503001D8D31 /* JustApisSwiftSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JustApisSwiftSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5386B1B71C18B503001D8D31 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5386B1C01C18B903001D8D31 /* CoreTypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreTypes.swift; sourceTree = "<group>"; };
+		5386B1C21C18CCE9001D8D31 /* CompositedGateway.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CompositedGateway.swift; sourceTree = "<group>"; };
+		5386B1C41C18D4A4001D8D31 /* BasicRequests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BasicRequests.swift; sourceTree = "<group>"; };
+		5386B1C61C18D6DA001D8D31 /* BasicResponses.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BasicResponses.swift; sourceTree = "<group>"; };
+		5386B1C91C18D728001D8D31 /* FoundationNetworkAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoundationNetworkAdapter.swift; sourceTree = "<group>"; };
+		5386B1CB1C18D750001D8D31 /* ResponseProcessors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResponseProcessors.swift; sourceTree = "<group>"; };
+		5386B1CD1C18D761001D8D31 /* RequestPreparers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestPreparers.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,8 +83,12 @@
 		5386B1A81C18B503001D8D31 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				5386B1C81C18D6ED001D8D31 /* CompositedGateway */,
 				5386B1A91C18B503001D8D31 /* JustApisSwiftSDK.h */,
 				5386B1AB1C18B503001D8D31 /* Info.plist */,
+				5386B1C01C18B903001D8D31 /* CoreTypes.swift */,
+				5386B1C41C18D4A4001D8D31 /* BasicRequests.swift */,
+				5386B1C61C18D6DA001D8D31 /* BasicResponses.swift */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -81,6 +99,17 @@
 				5386B1B71C18B503001D8D31 /* Info.plist */,
 			);
 			path = Tests;
+			sourceTree = "<group>";
+		};
+		5386B1C81C18D6ED001D8D31 /* CompositedGateway */ = {
+			isa = PBXGroup;
+			children = (
+				5386B1C21C18CCE9001D8D31 /* CompositedGateway.swift */,
+				5386B1C91C18D728001D8D31 /* FoundationNetworkAdapter.swift */,
+				5386B1CB1C18D750001D8D31 /* ResponseProcessors.swift */,
+				5386B1CD1C18D761001D8D31 /* RequestPreparers.swift */,
+			);
+			name = CompositedGateway;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -191,6 +220,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5386B1CE1C18D761001D8D31 /* RequestPreparers.swift in Sources */,
+				5386B1C51C18D4A4001D8D31 /* BasicRequests.swift in Sources */,
+				5386B1C11C18B903001D8D31 /* CoreTypes.swift in Sources */,
+				5386B1C31C18CCE9001D8D31 /* CompositedGateway.swift in Sources */,
+				5386B1CA1C18D728001D8D31 /* FoundationNetworkAdapter.swift in Sources */,
+				5386B1C71C18D6DA001D8D31 /* BasicResponses.swift in Sources */,
+				5386B1CC1C18D750001D8D31 /* ResponseProcessors.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -304,6 +340,7 @@
 		5386B1BB1C18B503001D8D31 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -314,12 +351,14 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.anypresence.JustApisSwiftSDK;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
 		5386B1BC1C18B503001D8D31 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;

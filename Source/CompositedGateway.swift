@@ -81,9 +81,12 @@ public class CompositedGateway : Gateway
         self.networkAdapter = networkAdapter!
     }
     
-    public func performRequest(request:Request, callback:RequestCallback)
+    public func performRequest(request:Request, callback:RequestCallback?)
     {
         var request = request
+        
+        // Apply an empty callback if none was provided. It makes the logic cleaner below
+        let callback:RequestCallback = nil != callback ? callback! : {(_:RequestResult) in }
 
         // Prepare the request if a preparer is available
         if let requestPreparer = self.requestPreparer
@@ -115,6 +118,7 @@ public class CompositedGateway : Gateway
             // Post-process the response if a processor is available
             if let responseProcessor = self.responseProcessor
             {
+                // TODO: invoke this on a background thread. Parsing could take a while
                 result = responseProcessor.processResponse(result.response!)
             }
             

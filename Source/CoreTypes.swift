@@ -99,7 +99,7 @@ public protocol Gateway
     var baseUrl:NSURL { get }
     
     /// Sends a request to the gateway
-    func performRequest(request:Request, callback:RequestCallback)
+    func performRequest(request:Request, callback:RequestCallback?)
     
 
     /// A convenience method for sending a POST request
@@ -118,9 +118,9 @@ public protocol Gateway
 public extension Gateway
 {
     /// A convenience method for sending a GET request
-    func get(path:String, params:QueryParameters?, callback:RequestCallback)
+    func get(path:String, params:QueryParameters?, headers:Headers?, body:NSData?, callback:RequestCallback?)
     {
-        let request = BasicImmutableRequest(method:"GET", path:path, params:params, headers:nil, body:nil, followRedirects:false)
+        let request = ImmutableRequest(method:"GET", path:path, params:params, headers:headers, body:body, followRedirects:false)
         
         self.performRequest(request, callback: callback)
     }

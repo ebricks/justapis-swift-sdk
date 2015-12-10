@@ -12,7 +12,7 @@ import Foundation
 ///
 /// Minimal implementation of Request protocol
 ///
-public struct BasicImmutableRequest : Request
+public struct ImmutableRequest : Request
 {
     public let method:String
     public let path:String
@@ -43,16 +43,16 @@ public struct BasicImmutableRequest : Request
     }
     
     /// Returns a mutable copy of this request
-    public func mutableCopy() -> BasicMutableRequest
+    public func mutableCopy() -> MutableRequest
     {
-        return BasicMutableRequest(self)
+        return MutableRequest(self)
     }
 }
 
 ///
 /// Minimal mutable implementation of Request protocol
 ///
-public class BasicMutableRequest : Request
+public class MutableRequest : Request
 {
     public var method:String
     public var path:String
@@ -83,8 +83,8 @@ public class BasicMutableRequest : Request
     }
     
     /// Returns an immutable copy of this request
-    public func immutableCopy() -> BasicImmutableRequest
+    public func immutableCopy() -> ImmutableRequest
     {
-        return BasicImmutableRequest(self)
+        return ImmutableRequest(self)
     }
 }

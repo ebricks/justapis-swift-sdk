@@ -19,9 +19,9 @@ public struct ImmutableResponse : Response
     public let resolvedURL:NSURL?
     public let statusCode:Int
     public let headers:Headers
-    public let body:NSData?
+    public let body:AnyObject?
     
-    public init(gateway:Gateway, request:Request, requestedURL:NSURL, resolvedURL:NSURL?, statusCode:Int, headers:Headers, body:NSData?)
+    public init(gateway:Gateway, request:Request, requestedURL:NSURL, resolvedURL:NSURL?, statusCode:Int, headers:Headers, body:AnyObject?)
     {
         self.gateway = gateway
         self.request = request
@@ -32,7 +32,7 @@ public struct ImmutableResponse : Response
         self.body = body
     }
     
-    public init(_ response:MutableResponse)
+    public init(_ response:Response)
     {
         self.gateway = response.gateway
         self.request = response.request
@@ -60,9 +60,9 @@ public class MutableResponse : Response
     public var resolvedURL:NSURL?
     public var statusCode:Int
     public var headers:Headers
-    public var body:NSData?
+    public var body:AnyObject?
 
-    public init(gateway:Gateway, request:Request, requestedURL:NSURL, resolvedURL:NSURL?, statusCode:Int, headers:Headers, body:NSData?)
+    public init(gateway:Gateway, request:Request, requestedURL:NSURL, resolvedURL:NSURL?, statusCode:Int, headers:Headers, body:AnyObject?)
     {
         self.gateway = gateway
         self.request = request
@@ -73,7 +73,7 @@ public class MutableResponse : Response
         self.body = body
     }
     
-    public init(_ response:ImmutableResponse)
+    public init(_ response:Response)
     {
         self.gateway = response.gateway
         self.request = response.request

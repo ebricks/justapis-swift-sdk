@@ -49,7 +49,8 @@ public protocol NetworkAdapter
 }
 
 ///
-/// Implementation of Gateway protocol that dispatches most details
+/// Implementation of Gateway protocol that dispatches most details to
+/// helper classes.
 ///
 public class CompositedGateway : Gateway
 {
@@ -61,9 +62,9 @@ public class CompositedGateway : Gateway
     
     public init(
         baseUrl:NSURL,
-        networkAdapter:NetworkAdapter? = nil,
         requestPreparer:RequestPreparer? = nil,
-        responseProcessor:ResponseProcessor? = nil
+        responseProcessor:ResponseProcessor? = nil,
+        networkAdapter:NetworkAdapter? = nil
         )
     {
         self.baseUrl = baseUrl
@@ -120,5 +121,16 @@ public class CompositedGateway : Gateway
             // Pass result back to caller
             callback(result)
         })
+    }
+}
+
+///
+/// Convenience subclass of CompositedGateway that uses the JsonResponseProcessor.
+///
+public class JsonGateway : CompositedGateway
+{
+    public init(baseUrl: NSURL, requestPreparer: RequestPreparer? = nil, networkAdapter: NetworkAdapter? = nil)
+    {
+        super.init(baseUrl: baseUrl, requestPreparer:requestPreparer, responseProcessor:JsonResponseProcessor(), networkAdapter:networkAdapter)
     }
 }

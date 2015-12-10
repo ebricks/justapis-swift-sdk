@@ -15,7 +15,7 @@ import Foundation
 //
 
 /// The module-specific type used for Errors
-public typealias Error = NSError
+public typealias Error = ErrorType
 
 /// The tuple that represents a response or error associated with a completed request
 public typealias RequestResult = (request:Request, response:Response?, error:Error?)
@@ -86,7 +86,7 @@ public protocol Response
     var headers:Headers { get }
     
     /// Any body data returned by the server
-    var body:NSData? { get }
+    var body:AnyObject? { get }
 }
 
 

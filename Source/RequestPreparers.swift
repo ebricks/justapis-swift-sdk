@@ -14,8 +14,8 @@ import Foundation
 ///
 public class DefaultFieldsRequestPreparer : RequestPreparer
 {
-    public let defaultHeaders:Headers = Headers()
-    public let defaultQueryParameters:QueryParameters = QueryParameters()
+    public var defaultHeaders:Headers = Headers()
+    public var defaultQueryParameters:QueryParameters = QueryParameters()
     
     public func prepareRequest(request: Request) -> Request
     {

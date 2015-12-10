@@ -43,7 +43,7 @@ public typealias Headers = Dictionary<String, String>
 public protocol Request
 {
     /// The HTTP Verb to use
-    var verb:String { get }
+    var method:String { get }
     
     // The path to request, relative to the Gateway's baseURL
     var path:String { get }
@@ -67,8 +67,6 @@ public protocol Request
 ///
 public protocol Response
 {
-    typealias BodyDataType
-
     /// The Gateway from which this response was generated
     var gateway:Gateway { get }
     
@@ -79,7 +77,7 @@ public protocol Response
     var requestedURL:NSURL { get }
     
     /// The final URL of the request (after any redirection)
-    var resolvedURL:NSURL { get }
+    var resolvedURL:NSURL? { get }
     
     /// The HTTP status code returned by the server
     var statusCode:Int { get }
@@ -88,7 +86,7 @@ public protocol Response
     var headers:Headers { get }
     
     /// Any body data returned by the server
-    var body:BodyDataType? { get }
+    var body:NSData? { get }
 }
 
 
@@ -122,7 +120,7 @@ public extension Gateway
     /// A convenience method for sending a GET request
     func get(path:String, params:QueryParameters?, callback:RequestCallback)
     {
-        let request = BasicImmutableRequest(verb:"GET", path:path, params:params, headers:nil, body:nil, followRedirects:false)
+        let request = BasicImmutableRequest(method:"GET", path:path, params:params, headers:nil, body:nil, followRedirects:false)
         
         self.performRequest(request, callback: callback)
     }

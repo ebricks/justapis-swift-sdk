@@ -8,29 +8,20 @@
 
 import Foundation
 
-/// ImmutableResponse where body data is left an unprocessed NSData blob
-typealias FoundationImmutableResponse = ImmutableResponse<NSData>
-
-/// MutableResponse where body data is left as an unprocessed NSData blob
-typealias FoundationMutableResponse = MutableResponse<NSData>
-
 ///
 /// Minimal implementation of Response Protocol
 ///
-public struct ImmutableResponse<BDT> : Response
+public struct ImmutableResponse : Response
 {
-    public typealias BodyDataType = BDT
-    public typealias MutableType = MutableResponse<BDT>
-    
     public let gateway:Gateway
     public let request:Request
     public let requestedURL:NSURL
-    public let resolvedURL:NSURL
+    public let resolvedURL:NSURL?
     public let statusCode:Int
     public let headers:Headers
-    public let body:BodyDataType?
+    public let body:NSData?
     
-    public init(gateway:Gateway, request:Request, requestedURL:NSURL, resolvedURL:NSURL, statusCode:Int, headers:Headers, body:BodyDataType?)
+    public init(gateway:Gateway, request:Request, requestedURL:NSURL, resolvedURL:NSURL?, statusCode:Int, headers:Headers, body:NSData?)
     {
         self.gateway = gateway
         self.request = request
@@ -41,7 +32,7 @@ public struct ImmutableResponse<BDT> : Response
         self.body = body
     }
     
-    public init(_ response:MutableType)
+    public init(_ response:MutableResponse)
     {
         self.gateway = response.gateway
         self.request = response.request
@@ -52,7 +43,7 @@ public struct ImmutableResponse<BDT> : Response
         self.body = response.body
     }
     
-    public func mutableCopy() -> MutableType
+    public func mutableCopy() -> MutableResponse
     {
         return MutableResponse(self)
     }
@@ -61,20 +52,17 @@ public struct ImmutableResponse<BDT> : Response
 ///
 /// Minimal mutable implementation of Response Protocol
 ///
-public class MutableResponse<BDT> : Response
+public class MutableResponse : Response
 {
-    public typealias BodyDataType = BDT
-    public typealias ImmutableType = ImmutableResponse<BDT>
-
     public var gateway:Gateway
     public var request:Request
     public var requestedURL:NSURL
-    public var resolvedURL:NSURL
+    public var resolvedURL:NSURL?
     public var statusCode:Int
     public var headers:Headers
-    public var body:BodyDataType?
+    public var body:NSData?
 
-    public init(gateway:Gateway, request:Request, requestedURL:NSURL, resolvedURL:NSURL, statusCode:Int, headers:Headers, body:BodyDataType?)
+    public init(gateway:Gateway, request:Request, requestedURL:NSURL, resolvedURL:NSURL?, statusCode:Int, headers:Headers, body:NSData?)
     {
         self.gateway = gateway
         self.request = request
@@ -85,7 +73,7 @@ public class MutableResponse<BDT> : Response
         self.body = body
     }
     
-    public init(_ response:ImmutableType)
+    public init(_ response:ImmutableResponse)
     {
         self.gateway = response.gateway
         self.request = response.request
@@ -96,7 +84,7 @@ public class MutableResponse<BDT> : Response
         self.body = response.body
     }
     
-    public func immutableCopy() -> ImmutableType
+    public func immutableCopy() -> ImmutableResponse
     {
         return ImmutableResponse(self)
     }

@@ -14,16 +14,16 @@ import Foundation
 ///
 public struct BasicImmutableRequest : Request
 {
-    public let verb:String
+    public let method:String
     public let path:String
     public let params:QueryParameters?
     public let headers:Headers?
     public let body:NSData?
     public let followRedirects:Bool
     
-    public init(verb:String, path:String, params:QueryParameters? = nil, headers:Headers? = nil, body:NSData? = nil, followRedirects:Bool = false)
+    public init(method:String, path:String, params:QueryParameters? = nil, headers:Headers? = nil, body:NSData? = nil, followRedirects:Bool = false)
     {
-        self.verb = verb
+        self.method = method
         self.path = path
         self.params = params
         self.headers = headers
@@ -34,7 +34,7 @@ public struct BasicImmutableRequest : Request
     /// Initializes with values provided in the given request
     public init(_ request:Request)
     {
-        self.verb = request.verb
+        self.method = request.method
         self.path = request.path
         self.params = request.params
         self.headers = request.headers
@@ -54,16 +54,16 @@ public struct BasicImmutableRequest : Request
 ///
 public class BasicMutableRequest : Request
 {
-    public var verb:String
+    public var method:String
     public var path:String
     public var params:QueryParameters?
     public var headers:Headers?
     public var body:NSData?
     public var followRedirects:Bool
     
-    public init(verb:String, path:String, params:QueryParameters? = nil, headers:Headers? = nil, body:NSData? = nil, followRedirects:Bool = false)
+    public init(method:String, path:String, params:QueryParameters? = nil, headers:Headers? = nil, body:NSData? = nil, followRedirects:Bool = false)
     {
-        self.verb = verb
+        self.method = method
         self.path = path
         self.params = params
         self.headers = headers
@@ -74,7 +74,7 @@ public class BasicMutableRequest : Request
     /// Initializes with values provided in the given request
     public init(_ request:Request)
     {
-        self.verb = request.verb
+        self.method = request.method
         self.path = request.path
         self.params = request.params
         self.headers = request.headers

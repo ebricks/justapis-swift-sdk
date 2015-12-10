@@ -45,7 +45,7 @@ public protocol ResponseProcessor
 ///
 public protocol NetworkAdapter
 {
-    func performRequest(request:Request, callback:RequestCallback)
+    func performRequest(request:Request, gateway:Gateway, callback:RequestCallback)
 }
 
 ///
@@ -91,7 +91,7 @@ public class CompositedGateway : Gateway
         }
 
         // Send the request to the network adapter
-        self.networkAdapter.performRequest(request, callback: {
+        self.networkAdapter.performRequest(request, gateway:self, callback: {
             (result:RequestResult) -> (Void) in
             
             var result = result

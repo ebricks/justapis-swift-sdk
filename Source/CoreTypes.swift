@@ -29,8 +29,6 @@ public typealias QueryParameters = Dictionary<String, AnyObject?>
 /// A semantic alias for Key-Value hashes used as HTTP Headers
 public typealias Headers = Dictionary<String, String>
 
-
-
 //
 //
 // The core protocols of this SDK. Gateway, Request, and Response
@@ -101,7 +99,6 @@ public protocol Gateway
     /// Sends a request to the gateway
     func performRequest(request:Request, callback:RequestCallback?)
     
-
     /// A convenience method for sending a POST request
     //func post(endpoint:NSURL, params:QueryParameters?, headers:Headers?, body:NSData?, callback:RequestCallback?)
 
@@ -138,5 +135,101 @@ public extension Gateway
     func get(path:String, callback:RequestCallback?)
     {
         return self.get(path, params: nil, headers: nil, body: nil, callback: callback)
+    }
+}
+
+///
+/// A protocol extension to Gateway that adds convenience methods for preparing POST requests
+///
+public extension Gateway
+{
+    /// A convenience method for sending a POST request
+    func post(path:String, params:QueryParameters?, headers:Headers?, body:NSData?, callback:RequestCallback?)
+    {
+        let request = ImmutableRequest(method:"POST", path:path, params:params, headers:headers, body:body, followRedirects:false)
+        
+        self.performRequest(request, callback: callback)
+    }
+    
+    /// A convenience method for sending a POST request
+    func post(path:String, params:QueryParameters?, headers:Headers?, callback:RequestCallback?)
+    {
+        return self.post(path, params: params, headers: headers, body: nil, callback: callback)
+    }
+    
+    /// A convenience method for sending a POST request
+    func post(path:String, params:QueryParameters?, callback:RequestCallback?)
+    {
+        return self.post(path, params: params, headers: nil, body: nil, callback: callback)
+    }
+    
+    /// A convenience method for sending a POST request
+    func post(path:String, callback:RequestCallback?)
+    {
+        return self.post(path, params: nil, headers: nil, body: nil, callback: callback)
+    }
+}
+
+///
+/// A protocol extension to Gateway that adds convenience methods for preparing PUT requests
+///
+public extension Gateway
+{
+    /// A convenience method for sending a PUT request
+    func put(path:String, params:QueryParameters?, headers:Headers?, body:NSData?, callback:RequestCallback?)
+    {
+        let request = ImmutableRequest(method:"PUT", path:path, params:params, headers:headers, body:body, followRedirects:false)
+        
+        self.performRequest(request, callback: callback)
+    }
+    
+    /// A convenience method for sending a PUT request
+    func put(path:String, params:QueryParameters?, headers:Headers?, callback:RequestCallback?)
+    {
+        return self.put(path, params: params, headers: headers, body: nil, callback: callback)
+    }
+    
+    /// A convenience method for sending a PUT request
+    func put(path:String, params:QueryParameters?, callback:RequestCallback?)
+    {
+        return self.put(path, params: params, headers: nil, body: nil, callback: callback)
+    }
+    
+    /// A convenience method for sending a PUT request
+    func put(path:String, callback:RequestCallback?)
+    {
+        return self.put(path, params: nil, headers: nil, body: nil, callback: callback)
+    }
+}
+
+///
+/// A protocol extension to Gateway that adds convenience methods for preparing DELETE requests
+///
+public extension Gateway
+{
+    /// A convenience method for sending a DELETE request
+    func delete(path:String, params:QueryParameters?, headers:Headers?, body:NSData?, callback:RequestCallback?)
+    {
+        let request = ImmutableRequest(method:"PUT", path:path, params:params, headers:headers, body:body, followRedirects:false)
+        
+        self.performRequest(request, callback: callback)
+    }
+    
+    /// A convenience method for sending a DELETE request
+    func delete(path:String, params:QueryParameters?, headers:Headers?, callback:RequestCallback?)
+    {
+        return self.delete(path, params: params, headers: headers, body: nil, callback: callback)
+    }
+    
+    /// A convenience method for sending a DELETE request
+    func delete(path:String, params:QueryParameters?, callback:RequestCallback?)
+    {
+        return self.delete(path, params: params, headers: nil, body: nil, callback: callback)
+    }
+    
+    /// A convenience method for sending a DELETE request
+    func delete(path:String, callback:RequestCallback?)
+    {
+        return self.delete(path, params: nil, headers: nil, body: nil, callback: callback)
     }
 }

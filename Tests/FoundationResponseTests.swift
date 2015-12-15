@@ -246,7 +246,28 @@ class FoundationResponseTests: XCTestCase {
     ///
     func testJsonObjectResponse()
     {
-        XCTFail("Test not implemented!");
+        let baseUrl = "http://localhost"
+        let requestPath = "test/request/path"
+        let expectation = self.expectationWithDescription(self.name)
+        
+        stub(isHost("localhost"), response: {
+            (request:NSURLRequest) in
+            
+            return OHHTTPStubsResponse(JSONObject: ["a":123], statusCode: 200, headers: nil)
+        })
+        
+        let gateway:Gateway = JsonGateway(baseUrl: NSURL(string: baseUrl)!)
+        gateway.get(requestPath, callback: { (result) in
+            XCTAssertNil(result.error)
+            XCTAssert(result.response != nil)
+            XCTAssertEqual(result.response!.statusCode, 200)
+            XCTAssertNotNil(result.response!.body as? [String: AnyObject])
+            let content = (result.response!.body as! [String: AnyObject])
+            XCTAssertEqual(content["a"] as? Int, 123)
+            expectation.fulfill()
+        })
+        
+        self.waitForExpectationsWithTimeout(5, handler: nil)
     }
     
     ///
@@ -254,7 +275,29 @@ class FoundationResponseTests: XCTestCase {
     ///
     func testJsonArrayResponse()
     {
-        XCTFail("Test not implemented!");
+        let baseUrl = "http://localhost"
+        let requestPath = "test/request/path"
+        let expectation = self.expectationWithDescription(self.name)
+        
+        stub(isHost("localhost"), response: {
+            (request:NSURLRequest) in
+            
+            return OHHTTPStubsResponse(JSONObject: [123, 456], statusCode: 200, headers: nil)
+        })
+        
+        let gateway:Gateway = JsonGateway(baseUrl: NSURL(string: baseUrl)!)
+        gateway.get(requestPath, callback: { (result) in
+            XCTAssertNil(result.error)
+            XCTAssert(result.response != nil)
+            XCTAssertEqual(result.response!.statusCode, 200)
+            XCTAssertNotNil(result.response!.body as? [AnyObject])
+            let content = (result.response!.body as! [AnyObject])
+            XCTAssertEqual(content[0] as? Int, 123)
+            XCTAssertEqual(content[1] as? Int, 456)
+            expectation.fulfill()
+        })
+        
+        self.waitForExpectationsWithTimeout(5, handler: nil)
     }
     
     ///
@@ -262,7 +305,23 @@ class FoundationResponseTests: XCTestCase {
     ///
     func testJsonError()
     {
-        XCTFail("Test not implemented!");
+        let baseUrl = "http://localhost"
+        let requestPath = "test/request/path"
+        let expectation = self.expectationWithDescription(self.name)
+        
+        stub(isHost("localhost"), response: {
+            (request:NSURLRequest) in
+            
+            return OHHTTPStubsResponse(data: "2".dataUsingEncoding(NSUTF8StringEncoding)! , statusCode: 200, headers: nil)
+        })
+        
+        let gateway:Gateway = JsonGateway(baseUrl: NSURL(string: baseUrl)!)
+        gateway.get(requestPath, callback: { (result) in
+            XCTAssertNotNil(result.error)
+            expectation.fulfill()
+        })
+        
+        self.waitForExpectationsWithTimeout(5, handler: nil)
     }
     
 }

@@ -19,9 +19,38 @@ public class DefaultFieldsRequestPreparer : RequestPreparer
     
     public func prepareRequest(request: Request) -> Request
     {
-        // TODO: Infill defaultHeaders into request.headers
-        // TODO: Infill defaultQueryParameters into request.queryParameters
+        if (self.defaultHeaders.count == 0 && self.defaultQueryParameters.count == 0)
+        {
+            // Nothing to do. Don't even make our working copy
+            return request;
+        }
+        let request:MutableRequest = MutableRequest(request)
+
+        // Infill defaultHeaders into request.headers if they're missing
+        for (key, value) in self.defaultHeaders
+        {
+            request.headers = request.headers ?? Headers()
+            if (nil == request.headers![key])
+            {
+                request.headers![key] = value
+            }
+        }
+        
+        // Infill defaultQueryParameters into request.queryParameters
+        for (key, value) in self.defaultQueryParameters
+        {
+            request.params = request.params ?? QueryParameters()
+            if (nil == request.params![key])
+            {
+                request.params![key] = value
+            }
+        }
         return request
+    }
+    
+    public init()
+    {
+        
     }
 }
 

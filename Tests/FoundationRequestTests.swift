@@ -7,11 +7,14 @@
 //
 
 import XCTest
+import JustApisSwiftSDK
 
 ///
 /// Tests request building when using the FoundationNetworkAdapter
 ///
 class FoundationRequestTests: XCTestCase {
+
+    let anyRequest:OHHTTPStubsTestBlock = { _ in return true }
 
     override func setUp() {
         super.setUp()
@@ -29,7 +32,25 @@ class FoundationRequestTests: XCTestCase {
     ///
     func testSimplePathAppend()
     {
-        XCTFail("Test not implemented!");
+        let baseUrl = "http://localhost"
+        let requestPath = "test/request/path"
+        let expectedURL = NSURL(string:"http://localhost/test/request/path")!
+        let expectation = self.expectationWithDescription(self.name)
+        
+        stub(isHost("localhost"), response: {
+            (request:NSURLRequest) in
+            
+            XCTAssertEqual(request.URL, expectedURL)
+            expectation.fulfill()
+            return OHHTTPStubsResponse()
+        })
+        
+        let gateway:Gateway = CompositedGateway(baseUrl: NSURL(string: baseUrl)!)
+        gateway.get(requestPath, callback: { _ in
+            // No action. The test was performed in the stub.
+        })
+        
+        self.waitForExpectationsWithTimeout(5, handler: nil)
     }
 
     ///
@@ -37,23 +58,25 @@ class FoundationRequestTests: XCTestCase {
     ///
     func testRelativePathAppend()
     {
-        XCTFail("Test not implemented!");
-    }
-    
-    ///
-    /// Tests invalid baseURL during request prep
-    ///
-    func testInvalidBaseUrl()
-    {
-        XCTFail("Test not implemented!");
-    }
-    
-    ///
-    /// Tests invalid request path during request prep
-    ///
-    func testInvalidRequestPath()
-    {
-        XCTFail("Test not implemented!");
+        let baseUrl = "http://localhost/api/v1/"
+        let requestPath = "test/request/path"
+        let expectedURL = NSURL(string:"http://localhost/api/v1/test/request/path")!
+        let expectation = self.expectationWithDescription(self.name)
+        
+        stub(isHost("localhost"), response: {
+            (request:NSURLRequest) in
+            
+            XCTAssertEqual(request.URL, expectedURL)
+            expectation.fulfill()
+            return OHHTTPStubsResponse()
+        })
+        
+        let gateway:Gateway = CompositedGateway(baseUrl: NSURL(string: baseUrl)!)
+        gateway.get(requestPath, callback: { _ in
+            // No action. The test was performed in the stub.
+        })
+        
+        self.waitForExpectationsWithTimeout(5, handler: nil)
     }
     
     ///
@@ -61,15 +84,142 @@ class FoundationRequestTests: XCTestCase {
     ///
     func testQueryParameterEncoding()
     {
-        XCTFail("Test not implemented!");
+        let baseUrl = "http://localhost/"
+        let requestPath = "test/request/path"
+        let queryParams:QueryParameters = ["a":"test", "b":2]
+        let expectedURL = NSURL(string:"http://localhost/test/request/path?a=test&b=2")!
+        let alternateExpectedURL = NSURL(string:"http://localhost/test/request/path?b=2&a=test")!
+        let expectation = self.expectationWithDescription(self.name)
+        
+        
+        stub(isHost("localhost"), response: {
+            (request:NSURLRequest) in
+            
+            // QueryParamters is a Dictionary and the order of members is not guaranteed.
+            // We'll allow that the URL is valid if either order is given here.
+            XCTAssert((request.URL == expectedURL) || (request.URL == alternateExpectedURL))
+            expectation.fulfill()
+            return OHHTTPStubsResponse()
+        })
+        
+        let gateway:Gateway = CompositedGateway(baseUrl: NSURL(string: baseUrl)!)
+        gateway.get(requestPath, params: queryParams, callback: { _ in
+            // No action. The test was performed in the stub.
+        })
+        
+        self.waitForExpectationsWithTimeout(5, handler: nil)
     }
     
     ///
-    /// Tests that unusual query parameters are appended to URL properly
+    /// Tests that array query parameters are appended to URL in traditional style
     ///
-    func testComplexQueryParameterEncoding()
+    func testArrayQueryParameterEncoding()
     {
-        XCTFail("Test not implemented!");
+        let baseUrl = "http://localhost/"
+        let requestPath = "test/request/path"
+        let queryParams:QueryParameters = ["a":[1,2]]
+        let expectedURL = NSURL(string:"http://localhost/test/request/path?a%5B%5D=1&a%5B%5D=2")!
+        let expectation = self.expectationWithDescription(self.name)
+        
+        
+        stub(isHost("localhost"), response: {
+            (request:NSURLRequest) in
+            
+            XCTAssertEqual(request.URL, expectedURL)
+            expectation.fulfill()
+            return OHHTTPStubsResponse()
+        })
+        
+        let gateway:Gateway = CompositedGateway(baseUrl: NSURL(string: baseUrl)!)
+        gateway.get(requestPath, params: queryParams, callback: { _ in
+            // No action. The test was performed in the stub.
+        })
+        
+        self.waitForExpectationsWithTimeout(5, handler: nil)
+    }
+    
+    ///
+    /// Tests that array query parameters are appended to URL in traditional style
+    ///
+    func testEmptyKeyQueryParameterEncoding()
+    {
+        let baseUrl = "http://localhost/"
+        let requestPath = "test/request/path"
+        let queryParams:QueryParameters = ["":"test"]
+        let expectedURL = NSURL(string:"http://localhost/test/request/path?=test")!
+        let expectation = self.expectationWithDescription(self.name)
+        
+        
+        stub(isHost("localhost"), response: {
+            (request:NSURLRequest) in
+            
+            XCTAssertEqual(request.URL, expectedURL)
+            expectation.fulfill()
+            return OHHTTPStubsResponse()
+        })
+        
+        let gateway:Gateway = CompositedGateway(baseUrl: NSURL(string: baseUrl)!)
+        gateway.get(requestPath, params: queryParams, callback: { _ in
+            // No action. The test was performed in the stub.
+        })
+        
+        self.waitForExpectationsWithTimeout(5, handler: nil)
+    }
+
+    ///
+    /// Tests that array query parameters are appended to URL in traditional style
+    ///
+    func testEmptyValueQueryParameterEncoding()
+    {
+        let baseUrl = "http://localhost/"
+        let requestPath = "test/request/path"
+        let queryParams:QueryParameters = ["a":""]
+        let expectedURL = NSURL(string:"http://localhost/test/request/path?a=")!
+        let expectation = self.expectationWithDescription(self.name)
+        
+        
+        stub(isHost("localhost"), response: {
+            (request:NSURLRequest) in
+            
+            XCTAssertEqual(request.URL, expectedURL)
+            expectation.fulfill()
+            return OHHTTPStubsResponse()
+        })
+        
+        let gateway:Gateway = CompositedGateway(baseUrl: NSURL(string: baseUrl)!)
+        gateway.get(requestPath, params: queryParams, callback: { _ in
+            // No action. The test was performed in the stub.
+        })
+        
+        self.waitForExpectationsWithTimeout(5, handler: nil)
+    }
+
+    ///
+    /// Tests that array query parameters are appended to URL in traditional style
+    ///
+    func testNilValueQueryParameterEncoding()
+    {
+        let baseUrl = "http://localhost/"
+        let requestPath = "test/request/path"
+        let queryParams:QueryParameters = ["a":nil]
+        let expectedURL = NSURL(string:"http://localhost/test/request/path?a")!
+        let expectation = self.expectationWithDescription(self.name)
+        
+        
+        stub(isHost("localhost"), response: {
+            (request:NSURLRequest) in
+            
+            XCTAssertEqual(request.URL, expectedURL)
+            expectation.fulfill()
+            return OHHTTPStubsResponse()
+        })
+        
+        let gateway:Gateway = CompositedGateway(baseUrl: NSURL(string: baseUrl)!)
+        gateway.get(requestPath, params: queryParams, callback: { _ in
+            // No action. The test was performed in the stub.
+        })
+        
+        self.waitForExpectationsWithTimeout(5, handler: nil)
     }
     
     ///
@@ -77,7 +227,28 @@ class FoundationRequestTests: XCTestCase {
     ///
     func testHeaderEncoding()
     {
-        XCTFail("Test not implemented!");
+        let baseUrl = "http://localhost/"
+        let requestPath = "test/request/path"
+        let expectedURL = NSURL(string:"http://localhost/test/request/path")!
+        let headers:Headers = ["X-Test-Header":"TestValue", "X-Another-Test-Header":"AnotherTestValue"]
+        let expectation = self.expectationWithDescription(self.name)
+        
+        stub(isHost("localhost"), response: {
+            (request:NSURLRequest) in
+            
+            XCTAssertEqual(request.URL, expectedURL)
+            XCTAssertEqual(request.valueForHTTPHeaderField("X-Test-Header"), "TestValue")
+            XCTAssertEqual(request.valueForHTTPHeaderField("X-Another-Test-Header"), "AnotherTestValue")
+            expectation.fulfill()
+            return OHHTTPStubsResponse()
+        })
+        
+        let gateway:Gateway = CompositedGateway(baseUrl: NSURL(string: baseUrl)!)
+        gateway.get(requestPath, params: nil, headers: headers, callback: { _ in
+            // No action. The test was performed in the stub.
+        })
+        
+        self.waitForExpectationsWithTimeout(5, handler: nil)
     }
     
     ///
@@ -85,7 +256,30 @@ class FoundationRequestTests: XCTestCase {
     ///
     func testDefaultHeaders()
     {
-        XCTFail("Test not implemented!");
+        let baseUrl = "http://localhost"
+        let requestPath = "test/request/path"
+        let expectedURL = NSURL(string:"http://localhost/test/request/path")!
+        let expectation = self.expectationWithDescription(self.name)
+        
+        stub(isHost("localhost"), response: {
+            (request:NSURLRequest) in
+            
+            XCTAssertEqual(request.URL, expectedURL)
+            XCTAssertEqual(request.valueForHTTPHeaderField("X-Test-Header"), "TestValue")
+            XCTAssertEqual(request.valueForHTTPHeaderField("X-Another-Test-Header"), "AnotherTestValue")
+            expectation.fulfill()
+            return OHHTTPStubsResponse()
+        })
+        
+        let requestPreparer = DefaultFieldsRequestPreparer()
+        requestPreparer.defaultHeaders["X-Test-Header"] = "TestValue"
+        requestPreparer.defaultHeaders["X-Another-Test-Header"] = "AnotherTestValue"
+        let gateway:Gateway = CompositedGateway(baseUrl: NSURL(string: baseUrl)!, requestPreparer: requestPreparer)
+        gateway.get(requestPath, callback: { _ in
+            // No action. The test was performed in the stub.
+        })
+        
+        self.waitForExpectationsWithTimeout(5, handler: nil)
     }
     
     ///
@@ -93,7 +287,32 @@ class FoundationRequestTests: XCTestCase {
     ///
     func testDefaultQueryParameters()
     {
-        XCTFail("Test not implemented!");
+        let baseUrl = "http://localhost"
+        let requestPath = "test/request/path"
+        let expectedURL = NSURL(string:"http://localhost/test/request/path?a=test&b=2")!
+        let alternateExpectedURL = NSURL(string:"http://localhost/test/request/path?b=2&a=test")!
+        let expectation = self.expectationWithDescription(self.name)
+        
+        stub(isHost("localhost"), response: {
+            (request:NSURLRequest) in
+            
+            // QueryParamters is a Dictionary and the order of members is not guaranteed.
+            // We'll allow that the URL is valid if either order is given here.
+            XCTAssert((request.URL == expectedURL) || (request.URL == alternateExpectedURL))
+            expectation.fulfill()
+            return OHHTTPStubsResponse()
+        })
+        
+        let requestPreparer = DefaultFieldsRequestPreparer()
+        requestPreparer.defaultQueryParameters["a"] = "test"
+        requestPreparer.defaultQueryParameters["b"] = 2
+        
+        let gateway:Gateway = CompositedGateway(baseUrl: NSURL(string: baseUrl)!, requestPreparer: requestPreparer)
+        gateway.get(requestPath, callback: { _ in
+            // No action. The test was performed in the stub.
+        })
+        
+        self.waitForExpectationsWithTimeout(5, handler: nil)
     }
     
     ///
@@ -101,14 +320,30 @@ class FoundationRequestTests: XCTestCase {
     ///
     func testRequestClosureAdapterModification()
     {
-        XCTFail("Test not implemented!");
-    }
-    
-    ///
-    /// Tests that the RequestPreparereClosureAdapter can validate and reject requests
-    ///
-    func testRequestClosureAdapterError()
-    {
-        XCTFail("Test not implemented!");        
+        let baseUrl = "http://localhost"
+        let requestPath = "test/request/path"
+        let expectedURL = NSURL(string:"http://localhost/alternate/request/path")!
+        let expectation = self.expectationWithDescription(self.name)
+        
+        stub(isHost("localhost"), response: {
+            (request:NSURLRequest) in
+            
+            XCTAssertEqual(request.URL, expectedURL)
+            expectation.fulfill()
+            return OHHTTPStubsResponse()
+        })
+        
+        let requestPreparer = RequestPreparerClosureAdapter(closure: {
+            (request) in
+            let mutableRequest = MutableRequest(request)
+            mutableRequest.path = "alternate/request/path"
+            return mutableRequest
+        })
+        let gateway:Gateway = CompositedGateway(baseUrl: NSURL(string: baseUrl)!, requestPreparer: requestPreparer)
+        gateway.get(requestPath, callback: { _ in
+            // No action. The test was performed in the stub.
+        })
+        
+        self.waitForExpectationsWithTimeout(5, handler: nil)
     }
 }

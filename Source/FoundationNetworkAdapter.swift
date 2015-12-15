@@ -23,7 +23,7 @@ public class FoundationNetworkAdapter : NetworkAdapter
         let session:NSURLSession = NSURLSession.sharedSession()
         
         // Submit the request on that session
-        session.dataTaskWithRequest(urlRequest, completionHandler: {
+        let task = session.dataTaskWithRequest(urlRequest, completionHandler: {
             (data:NSData?, response:NSURLResponse?, error:NSError?) -> Void in
             
             var gatewayResponse:ImmutableResponse? = nil
@@ -36,6 +36,7 @@ public class FoundationNetworkAdapter : NetworkAdapter
             
             callback((request:request, response:gatewayResponse, error:error))
         })
+        task.resume()
     }
 }
 
@@ -89,8 +90,19 @@ internal extension Request
             var queryItems = Array<NSURLQueryItem>()
             for (key,value) in params
             {
-                let queryItem:NSURLQueryItem = NSURLQueryItem(name: key, value: value);
-                queryItems.append(queryItem)
+                if let arrayValue = value as? Array<AnyObject>
+                {
+                    for (innerValue) in arrayValue
+                    {
+                        let queryItem:NSURLQueryItem = NSURLQueryItem(name: key + "[]", value:String(innerValue))
+                        queryItems.append(queryItem)
+                    }
+                }
+                else
+                {
+                    let queryItem:NSURLQueryItem = NSURLQueryItem(name: key, value: nil != value ? String(value!) : nil);
+                    queryItems.append(queryItem)
+                }
             }
             urlComponents.queryItems = queryItems
             

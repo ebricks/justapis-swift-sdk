@@ -24,7 +24,7 @@ public typealias RequestResult = (request:Request, response:Response?, error:Err
 public typealias RequestCallback = ((RequestResult) -> Void)
 
 /// A semantic alias for Key-Value hashes used as Query Parameters
-public typealias QueryParameters = Dictionary<String, String>
+public typealias QueryParameters = Dictionary<String, AnyObject?>
 
 /// A semantic alias for Key-Value hashes used as HTTP Headers
 public typealias Headers = Dictionary<String, String>
@@ -123,5 +123,20 @@ public extension Gateway
         let request = ImmutableRequest(method:"GET", path:path, params:params, headers:headers, body:body, followRedirects:false)
         
         self.performRequest(request, callback: callback)
+    }
+    
+    func get(path:String, params:QueryParameters?, headers:Headers?, callback:RequestCallback?)
+    {
+        return self.get(path, params: params, headers: headers, body: nil, callback: callback)
+    }
+
+    func get(path:String, params:QueryParameters?, callback:RequestCallback?)
+    {
+        return self.get(path, params: params, headers: nil, body: nil, callback: callback)
+    }
+
+    func get(path:String, callback:RequestCallback?)
+    {
+        return self.get(path, params: nil, headers: nil, body: nil, callback: callback)
     }
 }

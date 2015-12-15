@@ -36,7 +36,6 @@ public class FoundationNetworkAdapter : NetworkAdapter
             
             callback((request:request, response:gatewayResponse, error:error))
         })
-        
     }
 }
 

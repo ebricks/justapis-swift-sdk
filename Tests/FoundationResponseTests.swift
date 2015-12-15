@@ -27,7 +27,25 @@ class FoundationResponseTests: XCTestCase {
     ///
     func testResponseSuccess()
     {
-        XCTFail("Test not implemented!");
+        let baseUrl = "http://localhost"
+        let requestPath = "test/request/path"
+        let expectation = self.expectationWithDescription(self.name)
+        
+        stub(isHost("localhost"), response: {
+            (request:NSURLRequest) in
+            
+            return OHHTTPStubsResponse(data: NSData(), statusCode: 200, headers: nil)
+        })
+        
+        let gateway:Gateway = CompositedGateway(baseUrl: NSURL(string: baseUrl)!)
+        gateway.get(requestPath, callback: { (result) in
+            XCTAssertNil(result.error)
+            XCTAssert(result.response != nil)
+            XCTAssertEqual(result.response!.statusCode, 200)
+            expectation.fulfill()
+        })
+        
+        self.waitForExpectationsWithTimeout(5, handler: nil)
     }
     
     ///
@@ -35,7 +53,25 @@ class FoundationResponseTests: XCTestCase {
     ///
     func testResponse4xxFailure()
     {
-        XCTFail("Test not implemented!");
+        let baseUrl = "http://localhost"
+        let requestPath = "test/request/path"
+        let expectation = self.expectationWithDescription(self.name)
+        
+        stub(isHost("localhost"), response: {
+            (request:NSURLRequest) in
+            
+            return OHHTTPStubsResponse(data: NSData(), statusCode: 404, headers: nil)
+        })
+        
+        let gateway:Gateway = CompositedGateway(baseUrl: NSURL(string: baseUrl)!)
+        gateway.get(requestPath, callback: { (result) in
+            XCTAssertNotNil(result.error)
+            XCTAssertNotNil(result.response)
+            XCTAssertEqual(result.response!.statusCode, 404)
+            expectation.fulfill()
+        })
+        
+        self.waitForExpectationsWithTimeout(5, handler: nil)
     }
     
     ///
@@ -43,7 +79,26 @@ class FoundationResponseTests: XCTestCase {
     ///
     func testBodyDataInResponse()
     {
-        XCTFail("Test not implemented!");
+        let baseUrl = "http://localhost"
+        let requestPath = "test/request/path"
+        let expectation = self.expectationWithDescription(self.name)
+        let body = "test".dataUsingEncoding(NSUTF8StringEncoding)
+        
+        stub(isHost("localhost"), response: {
+            (request:NSURLRequest) in
+            
+            return OHHTTPStubsResponse(data: body!, statusCode: 200, headers: nil)
+        })
+        
+        let gateway:Gateway = CompositedGateway(baseUrl: NSURL(string: baseUrl)!)
+        gateway.get(requestPath, callback: { (result) in
+            XCTAssertNil(result.error)
+            XCTAssertNotNil(result.response)
+            XCTAssertEqual(result.response!.body as? NSData, body!)
+            expectation.fulfill()
+        })
+        
+        self.waitForExpectationsWithTimeout(5, handler: nil)
     }
     
     ///
@@ -51,7 +106,26 @@ class FoundationResponseTests: XCTestCase {
     ///
     func testHeadersInResponse()
     {
-        XCTFail("Test not implemented!");
+        let baseUrl = "http://localhost"
+        let requestPath = "test/request/path"
+        let expectation = self.expectationWithDescription(self.name)
+        let body = "test".dataUsingEncoding(NSUTF8StringEncoding)
+        
+        stub(isHost("localhost"), response: {
+            (request:NSURLRequest) in
+            
+            return OHHTTPStubsResponse(data: body!, statusCode: 200, headers: nil)
+        })
+        
+        let gateway:Gateway = CompositedGateway(baseUrl: NSURL(string: baseUrl)!)
+        gateway.get(requestPath, callback: { (result) in
+            XCTAssertNil(result.error)
+            XCTAssertNotNil(result.response)
+            XCTAssertEqual(result.response!.headers["Content-Length"], "4")
+            expectation.fulfill()
+        })
+        
+        self.waitForExpectationsWithTimeout(5, handler: nil)
     }
     
     ///
@@ -75,7 +149,34 @@ class FoundationResponseTests: XCTestCase {
     ///
     func testResponseClosureAdapterModification()
     {
-        XCTFail("Test not implemented!");
+        let baseUrl = "http://localhost"
+        let requestPath = "test/request/path"
+        let expectation = self.expectationWithDescription(self.name)
+        let body = "test".dataUsingEncoding(NSUTF8StringEncoding)
+        let alternateBody = "rest".dataUsingEncoding(NSUTF8StringEncoding)
+
+        stub(isHost("localhost"), response: {
+            (request:NSURLRequest) in
+            
+            return OHHTTPStubsResponse(data: body!, statusCode: 200, headers: nil)
+        })
+        
+        let responseProcessor = ResponseProcessorClosureAdapter(closure: {
+            (response) in
+            let response = MutableResponse(response)
+            response.body = alternateBody
+            return (request:response.request, response: response, error:nil)
+        })
+        
+        let gateway:Gateway = CompositedGateway(baseUrl: NSURL(string: baseUrl)!, requestPreparer: nil, responseProcessor: responseProcessor)
+        gateway.get(requestPath, callback: { (result) in
+            XCTAssertNil(result.error)
+            XCTAssertNotNil(result.response)
+            XCTAssertEqual(result.response!.body as? NSData, alternateBody)
+            expectation.fulfill()
+        })
+        
+        self.waitForExpectationsWithTimeout(5, handler: nil)
     }
     
     ///
@@ -83,7 +184,35 @@ class FoundationResponseTests: XCTestCase {
     ///
     func testResponseClosureAdapterError()
     {
-        XCTFail("Test not implemented!");
+        let baseUrl = "http://localhost"
+        let requestPath = "test/request/path"
+        let expectation = self.expectationWithDescription(self.name)
+        let body = "test".dataUsingEncoding(NSUTF8StringEncoding)
+        let alternateBody = "rest".dataUsingEncoding(NSUTF8StringEncoding)
+        
+        stub(isHost("localhost"), response: {
+            (request:NSURLRequest) in
+            
+            return OHHTTPStubsResponse(data: body!, statusCode: 200, headers: nil)
+        })
+        
+        let responseProcessor = ResponseProcessorClosureAdapter(closure: {
+            (response) in
+            let response = MutableResponse(response)
+            response.body = alternateBody
+            let error = NSError(domain: "JustApisSwiftSDK.ResponseProcessorClosureAdapter", code: -1, userInfo: nil)
+            return (request:response.request, response: response, error:error)
+        })
+        
+        let gateway:Gateway = CompositedGateway(baseUrl: NSURL(string: baseUrl)!, requestPreparer: nil, responseProcessor: responseProcessor)
+        gateway.get(requestPath, callback: { (result) in
+            XCTAssertNotNil(result.error)
+            XCTAssertNotNil(result.response)
+            XCTAssertEqual(result.response!.body as? NSData, alternateBody)
+            expectation.fulfill()
+        })
+        
+        self.waitForExpectationsWithTimeout(5, handler: nil)
     }
     
     ///

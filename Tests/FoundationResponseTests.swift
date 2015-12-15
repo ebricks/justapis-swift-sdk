@@ -25,7 +25,7 @@ class FoundationResponseTests: XCTestCase {
     ///
     func testResponseSuccess()
     {
-        
+        XCTFail("Test not implemented!");
     }
     
     ///
@@ -33,7 +33,7 @@ class FoundationResponseTests: XCTestCase {
     ///
     func testResponse4xxFailure()
     {
-        
+        XCTFail("Test not implemented!");
     }
     
     ///
@@ -41,7 +41,7 @@ class FoundationResponseTests: XCTestCase {
     ///
     func testBodyDataInResponse()
     {
-        
+        XCTFail("Test not implemented!");
     }
     
     ///
@@ -49,7 +49,7 @@ class FoundationResponseTests: XCTestCase {
     ///
     func testHeadersInResponse()
     {
-        
+        XCTFail("Test not implemented!");
     }
     
     ///
@@ -57,7 +57,7 @@ class FoundationResponseTests: XCTestCase {
     ///
     func testFollowedRedirect()
     {
-        
+        XCTFail("Test not implemented!");
     }
     
     ///
@@ -65,7 +65,7 @@ class FoundationResponseTests: XCTestCase {
     ///
     func testRejectedRedirect()
     {
-        
+        XCTFail("Test not implemented!");
     }
     
     ///
@@ -73,7 +73,7 @@ class FoundationResponseTests: XCTestCase {
     ///
     func testResponseClosureAdapterModification()
     {
-        
+        XCTFail("Test not implemented!");
     }
     
     ///
@@ -81,7 +81,7 @@ class FoundationResponseTests: XCTestCase {
     ///
     func testResponseClosureAdapterError()
     {
-        
+        XCTFail("Test not implemented!");
     }
     
     ///
@@ -89,7 +89,7 @@ class FoundationResponseTests: XCTestCase {
     ///
     func testJsonObjectResponse()
     {
-        
+        XCTFail("Test not implemented!");
     }
     
     ///
@@ -97,7 +97,7 @@ class FoundationResponseTests: XCTestCase {
     ///
     func testJsonArrayResponse()
     {
-        
+        XCTFail("Test not implemented!");
     }
     
     ///
@@ -105,7 +105,7 @@ class FoundationResponseTests: XCTestCase {
     ///
     func testJsonError()
     {
-        
+        XCTFail("Test not implemented!");        
     }
     
 }

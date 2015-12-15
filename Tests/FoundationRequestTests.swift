@@ -28,7 +28,7 @@ class FoundationRequestTests: XCTestCase {
     ///
     func testSimplePathAppend()
     {
-        // TODO
+        XCTFail("Test not implemented!");
     }
 
     ///
@@ -36,7 +36,7 @@ class FoundationRequestTests: XCTestCase {
     ///
     func testRelativePathAppend()
     {
-        // TODO
+        XCTFail("Test not implemented!");
     }
     
     ///
@@ -44,7 +44,7 @@ class FoundationRequestTests: XCTestCase {
     ///
     func testInvalidBaseUrl()
     {
-        
+        XCTFail("Test not implemented!");
     }
     
     ///
@@ -52,7 +52,7 @@ class FoundationRequestTests: XCTestCase {
     ///
     func testInvalidRequestPath()
     {
-        
+        XCTFail("Test not implemented!");
     }
     
     ///
@@ -60,7 +60,7 @@ class FoundationRequestTests: XCTestCase {
     ///
     func testQueryParameterEncoding()
     {
-        
+        XCTFail("Test not implemented!");
     }
     
     ///
@@ -68,7 +68,7 @@ class FoundationRequestTests: XCTestCase {
     ///
     func testComplexQueryParameterEncoding()
     {
-        
+        XCTFail("Test not implemented!");
     }
     
     ///
@@ -76,7 +76,7 @@ class FoundationRequestTests: XCTestCase {
     ///
     func testHeaderEncoding()
     {
-        
+        XCTFail("Test not implemented!");
     }
     
     ///
@@ -84,7 +84,7 @@ class FoundationRequestTests: XCTestCase {
     ///
     func testDefaultHeaders()
     {
-        
+        XCTFail("Test not implemented!");
     }
     
     ///
@@ -92,7 +92,7 @@ class FoundationRequestTests: XCTestCase {
     ///
     func testDefaultQueryParameters()
     {
-        
+        XCTFail("Test not implemented!");
     }
     
     ///
@@ -100,7 +100,7 @@ class FoundationRequestTests: XCTestCase {
     ///
     func testRequestClosureAdapterModification()
     {
-        
+        XCTFail("Test not implemented!");
     }
     
     ///
@@ -108,6 +108,6 @@ class FoundationRequestTests: XCTestCase {
     ///
     func testRequestClosureAdapterError()
     {
-        
+        XCTFail("Test not implemented!");        
     }
 }

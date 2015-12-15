@@ -49,7 +49,7 @@ class FoundationResponseTests: XCTestCase {
     }
     
     ///
-    /// Tests that 4xx respones are returned as a Response and an error
+    /// Tests that 4xx respones are returned as a Response and no error
     ///
     func testResponse4xxFailure()
     {
@@ -65,9 +65,35 @@ class FoundationResponseTests: XCTestCase {
         
         let gateway:Gateway = CompositedGateway(baseUrl: NSURL(string: baseUrl)!)
         gateway.get(requestPath, callback: { (result) in
-            XCTAssertNotNil(result.error)
+            XCTAssertNil(result.error) // 4xx not an error at this layer. Callback or responseProcessor can check
             XCTAssertNotNil(result.response)
             XCTAssertEqual(result.response!.statusCode, 404)
+            expectation.fulfill()
+        })
+        
+        self.waitForExpectationsWithTimeout(5, handler: nil)
+    }
+    
+    ///
+    /// Tests that a connection failure returns an error and no response
+    ///
+    func testConnectionFailure()
+    {
+        let baseUrl = "http://localhost"
+        let requestPath = "test/request/path"
+        let expectation = self.expectationWithDescription(self.name)
+        
+        stub(isHost("localhost"), response: {
+            (request:NSURLRequest) in
+
+            let notConnectedError = NSError(domain:NSURLErrorDomain, code:Int(CFNetworkErrors.CFURLErrorNotConnectedToInternet.rawValue), userInfo:nil)
+            return OHHTTPStubsResponse(error:notConnectedError)
+        })
+        
+        let gateway:Gateway = CompositedGateway(baseUrl: NSURL(string: baseUrl)!)
+        gateway.get(requestPath, callback: { (result) in
+            XCTAssertNotNil(result.error) // 4xx not an error at this layer. Callback or responseProcessor can check
+            XCTAssertNil(result.response)
             expectation.fulfill()
         })
         

@@ -203,7 +203,7 @@ class FoundationResponseTests: XCTestCase {
             
             if request.URL?.path == requestPath
             {
-                return OHHTTPStubsResponse(data: NSData(), statusCode: 302, headers: ["Location": redirectedUrl.absoluteString])
+                return OHHTTPStubsResponse(data: NSData(), statusCode: 301, headers: ["Location": redirectedUrl.absoluteString])
             }
             else
             {

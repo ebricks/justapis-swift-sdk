@@ -10,6 +10,8 @@ import Foundation
 
 public class FoundationNetworkAdapter : NSObject, NetworkAdapter, NSURLSessionDataDelegate
 {
+    typealias TaskCompletionHandler =  (data:NSData?, response:NSURLResponse?, error:NSError?) -> Void;
+    
     public override init()
     {
         super.init()
@@ -17,14 +19,14 @@ public class FoundationNetworkAdapter : NSObject, NetworkAdapter, NSURLSessionDa
     }
     
     private var session:NSURLSession!
-    private var taskToRequestMap = [Int: Request]()
+    private var taskToRequestMap = [Int: (request:Request, handler:TaskCompletionHandler)]()
     
     @objc public func URLSession(session: NSURLSession, task: NSURLSessionTask, willPerformHTTPRedirection response:
         NSHTTPURLResponse, newRequest request: NSURLRequest, completionHandler: (NSURLRequest?) -> Void) {
 
             if let taskRequest = self.taskToRequestMap[task.taskIdentifier]
             {
-                if (taskRequest.followRedirects)
+                if (taskRequest.request.followRedirects)
                 {
                     // Allow redirect
                     completionHandler(request)
@@ -33,6 +35,11 @@ public class FoundationNetworkAdapter : NSObject, NetworkAdapter, NSURLSessionDa
                 {
                     // Reject redirect
                     completionHandler(nil)
+                    
+                    // HACK: For a currently unclear reason, the data task's completion handler doesn't
+                    // get called by the NSURLSession framework if we reject the redirect here. 
+                    // So we call it here explicitly.
+                    taskRequest.handler(data:nil, response: response, error:nil)
                 }
             }
             else
@@ -51,17 +58,10 @@ public class FoundationNetworkAdapter : NSObject, NetworkAdapter, NSURLSessionDa
         }
         
         var taskIdentifier:Int!
-        
-        // Submit the request on the session
-        let task = self.session.dataTaskWithRequest(urlRequest, completionHandler: { [weak self]
+        let taskCompletionHandler = { [weak self]
             (data:NSData?, response:NSURLResponse?, error:NSError?) -> Void in
             
             var gatewayResponse:ImmutableResponse? = nil
-            
-            if ((response as? NSHTTPURLResponse)?.statusCode == 302)
-            {
-                print("302 redirect")
-            }
             
             // Generate a Gateway Response, if there's
             if let foundationResponse = response as? NSHTTPURLResponse
@@ -72,10 +72,13 @@ public class FoundationNetworkAdapter : NSObject, NetworkAdapter, NSURLSessionDa
             self?.taskToRequestMap.removeValueForKey(taskIdentifier)
             
             callback((request:request, response:gatewayResponse, error:error))
-        })
+        }
+        
+        // Submit the request on the session
+        let task = self.session.dataTaskWithRequest(urlRequest, completionHandler: taskCompletionHandler)
         
         taskIdentifier = task.taskIdentifier
-        self.taskToRequestMap[taskIdentifier] = request
+        self.taskToRequestMap[taskIdentifier] = (request, taskCompletionHandler)
         task.resume()
     }
 }

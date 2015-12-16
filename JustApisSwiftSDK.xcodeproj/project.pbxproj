@@ -32,10 +32,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5303C3851C21F2E100E5A7AF /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		5303C3861C21F2E100E5A7AF /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		53122FDB1C20828D0052E8A5 /* JustApisSwiftSDKTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "JustApisSwiftSDKTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		53122FDC1C20828E0052E8A5 /* FoundationRequestTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoundationRequestTests.swift; sourceTree = "<group>"; };
 		53122FDE1C2088D90052E8A5 /* FoundationResponseTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoundationResponseTests.swift; sourceTree = "<group>"; };
-		53122FE01C20993E0052E8A5 /* OHHTTPStubs.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OHHTTPStubs.framework; path = "Tests/Submodules/OHHTTPStubs/OHHTTPStubs/build/Debug-iphoneos/OHHTTPStubs.framework"; sourceTree = "<group>"; };
+		53122FE01C20993E0052E8A5 /* OHHTTPStubs.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OHHTTPStubs.framework; path = "Submodules/OHHTTPStubs/OHHTTPStubs/build/Debug-iphoneos/OHHTTPStubs.framework"; sourceTree = "<group>"; };
 		5386B1A61C18B503001D8D31 /* JustApisSwiftSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = JustApisSwiftSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5386B1A91C18B503001D8D31 /* JustApisSwiftSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JustApisSwiftSDK.h; sourceTree = "<group>"; };
 		5386B1AB1C18B503001D8D31 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -70,10 +72,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		5386B19C1C18B503001D8D31 = {
+		5303C3841C21F2D100E5A7AF /* Docs */ = {
+			isa = PBXGroup;
+			children = (
+				5303C3851C21F2E100E5A7AF /* LICENSE */,
+				5303C3861C21F2E100E5A7AF /* README.md */,
+			);
+			name = Docs;
+			sourceTree = "<group>";
+		};
+		5303C3891C21F2F700E5A7AF /* Dependencies */ = {
 			isa = PBXGroup;
 			children = (
 				53122FE01C20993E0052E8A5 /* OHHTTPStubs.framework */,
+			);
+			name = Dependencies;
+			sourceTree = "<group>";
+		};
+		5386B19C1C18B503001D8D31 = {
+			isa = PBXGroup;
+			children = (
+				5303C3841C21F2D100E5A7AF /* Docs */,
 				5386B1A81C18B503001D8D31 /* Source */,
 				5386B1B41C18B503001D8D31 /* Tests */,
 				5386B1A71C18B503001D8D31 /* Products */,
@@ -105,6 +124,7 @@
 		5386B1B41C18B503001D8D31 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				5303C3891C21F2F700E5A7AF /* Dependencies */,
 				5386B1B71C18B503001D8D31 /* Info.plist */,
 				53122FDC1C20828E0052E8A5 /* FoundationRequestTests.swift */,
 				53122FDB1C20828D0052E8A5 /* JustApisSwiftSDKTests-Bridging-Header.h */,

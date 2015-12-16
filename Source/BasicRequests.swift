@@ -21,7 +21,7 @@ public struct ImmutableRequest : Request
     public let body:NSData?
     public let followRedirects:Bool
     
-    public init(method:String, path:String, params:QueryParameters? = nil, headers:Headers? = nil, body:NSData? = nil, followRedirects:Bool = false)
+    public init(method:String, path:String, params:QueryParameters? = nil, headers:Headers? = nil, body:NSData? = nil, followRedirects:Bool = true)
     {
         self.method = method
         self.path = path
@@ -61,7 +61,7 @@ public class MutableRequest : Request
     public var body:NSData?
     public var followRedirects:Bool
     
-    public init(method:String, path:String, params:QueryParameters? = nil, headers:Headers? = nil, body:NSData? = nil, followRedirects:Bool = false)
+    public init(method:String, path:String, params:QueryParameters? = nil, headers:Headers? = nil, body:NSData? = nil, followRedirects:Bool = true)
     {
         self.method = method
         self.path = path

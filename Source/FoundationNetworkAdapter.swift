@@ -8,8 +8,39 @@
 
 import Foundation
 
-public class FoundationNetworkAdapter : NetworkAdapter
+public class FoundationNetworkAdapter : NSObject, NetworkAdapter, NSURLSessionDataDelegate
 {
+    public override init()
+    {
+        super.init()
+        self.session = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration(), delegate: self, delegateQueue: nil)
+    }
+    
+    private var session:NSURLSession!
+    private var taskToRequestMap = [Int: Request]()
+    
+    @objc public func URLSession(session: NSURLSession, task: NSURLSessionTask, willPerformHTTPRedirection response:
+        NSHTTPURLResponse, newRequest request: NSURLRequest, completionHandler: (NSURLRequest?) -> Void) {
+
+            if let taskRequest = self.taskToRequestMap[task.taskIdentifier]
+            {
+                if (taskRequest.followRedirects)
+                {
+                    // Allow redirect
+                    completionHandler(request)
+                }
+                else
+                {
+                    // Reject redirect
+                    completionHandler(nil)
+                }
+            }
+            else
+            {
+                completionHandler(request)
+            }
+    }
+    
     public func performRequest(request: Request, gateway:Gateway, callback: RequestCallback)
     {
         // Build the request
@@ -19,23 +50,32 @@ public class FoundationNetworkAdapter : NetworkAdapter
             return
         }
         
-        // Get an NSURLSession
-        let session:NSURLSession = NSURLSession.sharedSession()
+        var taskIdentifier:Int!
         
-        // Submit the request on that session
-        let task = session.dataTaskWithRequest(urlRequest, completionHandler: {
+        // Submit the request on the session
+        let task = self.session.dataTaskWithRequest(urlRequest, completionHandler: { [weak self]
             (data:NSData?, response:NSURLResponse?, error:NSError?) -> Void in
             
             var gatewayResponse:ImmutableResponse? = nil
-
+            
+            if ((response as? NSHTTPURLResponse)?.statusCode == 302)
+            {
+                print("302 redirect")
+            }
+            
             // Generate a Gateway Response, if there's
             if let foundationResponse = response as? NSHTTPURLResponse
             {
                 gatewayResponse = ImmutableResponse(foundationResponse, data:data, requestedURL:urlRequest.URL!, gateway: gateway, request: request)
             }
             
+            self?.taskToRequestMap.removeValueForKey(taskIdentifier)
+            
             callback((request:request, response:gatewayResponse, error:error))
         })
+        
+        taskIdentifier = task.taskIdentifier
+        self.taskToRequestMap[taskIdentifier] = request
         task.resume()
     }
 }
@@ -73,7 +113,7 @@ internal extension Request
         let endpointUrl:NSURL = gateway.baseUrl.URLByAppendingPathComponent(self.path);
         
         var url:NSURL = endpointUrl
-
+        
         // If params are assigned, apply them
         if nil != self.params && self.params!.count > 0
         {
@@ -85,7 +125,7 @@ internal extension Request
                 // Could not parse NSURL through this technique
                 return nil
             }
-
+            
             // Build query list
             var queryItems = Array<NSURLQueryItem>()
             for (key,value) in params
@@ -114,13 +154,13 @@ internal extension Request
             }
             url = completeUrl
         }
-
+        
         // Create the request object
         let urlRequest:NSMutableURLRequest = NSMutableURLRequest(URL: url);
         
         // Set the method
         urlRequest.HTTPMethod = self.method;
-
+        
         // If headers were assigned, apply them
         if nil != self.headers && self.headers!.count > 0
         {
@@ -135,7 +175,7 @@ internal extension Request
         if let body = self.body
         {
             urlRequest.HTTPBody = body
-        }        
+        }
         
         return urlRequest
     }

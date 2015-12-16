@@ -159,7 +159,33 @@ class FoundationResponseTests: XCTestCase {
     ///
     func testFollowedRedirect()
     {
-        XCTFail("Test not implemented!");
+        let baseUrl = "http://localhost"
+        let requestPath = "/test/request/path"
+        let expectation = self.expectationWithDescription(self.name)
+        let redirectedUrl = NSURL(string:"http://localhost/alternate/request/path")!
+        
+        stub(isHost("localhost"), response: {
+            (request:NSURLRequest) in
+            
+            if request.URL?.path == requestPath
+            {
+                return OHHTTPStubsResponse(data: NSData(), statusCode: 301, headers: ["Location": redirectedUrl.absoluteString])
+            }
+            else
+            {
+                return OHHTTPStubsResponse(data: NSData(), statusCode: 200, headers: nil)
+            }
+        })
+
+        let gateway:Gateway = CompositedGateway(baseUrl: NSURL(string: baseUrl)!)
+        gateway.get(requestPath, callback: { (result) in
+            XCTAssertNil(result.error)
+            XCTAssert(result.response != nil)
+            XCTAssertEqual(result.response?.resolvedURL, redirectedUrl)
+            expectation.fulfill()
+        })
+        
+        self.waitForExpectationsWithTimeout(5, handler: nil)
     }
     
     ///
@@ -167,7 +193,33 @@ class FoundationResponseTests: XCTestCase {
     ///
     func testRejectedRedirect()
     {
-        XCTFail("Test not implemented!");
+        let baseUrl = "http://localhost"
+        let requestPath = "/test/request/path"
+        let expectation = self.expectationWithDescription(self.name)
+        let redirectedUrl = NSURL(string:"http://localhost/alternate/request/path")!
+        
+        stub(isHost("localhost"), response: {
+            (request:NSURLRequest) in
+            
+            if request.URL?.path == requestPath
+            {
+                return OHHTTPStubsResponse(data: NSData(), statusCode: 302, headers: ["Location": redirectedUrl.absoluteString])
+            }
+            else
+            {
+                return OHHTTPStubsResponse(data: NSData(), statusCode: 200, headers: nil)
+            }
+        })
+        
+        let gateway:Gateway = CompositedGateway(baseUrl: NSURL(string: baseUrl)!)
+        gateway.get(requestPath, params: nil, headers:nil, body:nil, followRedirects: false, callback: { (result) in
+            XCTAssertNil(result.error)
+            XCTAssert(result.response != nil)
+            XCTAssertEqual(result.response!.statusCode, 301)
+            expectation.fulfill()
+        })
+        
+        self.waitForExpectationsWithTimeout(5, handler: nil)
     }
     
     ///

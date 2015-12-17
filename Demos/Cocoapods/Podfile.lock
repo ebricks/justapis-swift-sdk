@@ -1,0 +1,19 @@
+PODS:
+  - JustApisSwiftSDK (0.1.0)
+
+DEPENDENCIES:
+  - JustApisSwiftSDK (from `https://github.com/AnyPresence/justapis-swift-sdk.git`)
+
+EXTERNAL SOURCES:
+  JustApisSwiftSDK:
+    :git: https://github.com/AnyPresence/justapis-swift-sdk.git
+
+CHECKOUT OPTIONS:
+  JustApisSwiftSDK:
+    :commit: 7a03f23a146cfe8a410ac446a1afa1733f70a000
+    :git: https://github.com/AnyPresence/justapis-swift-sdk.git
+
+SPEC CHECKSUMS:
+  JustApisSwiftSDK: 9cfc3b4e7105cbff50344ccbeda302be939462c8
+
+COCOAPODS: 0.39.0

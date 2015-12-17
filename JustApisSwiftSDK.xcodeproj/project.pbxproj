@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5303C3AA1C234E5E00E5A7AF /* RequestPreparers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5386B1CD1C18D761001D8D31 /* RequestPreparers.swift */; };
+		5303C3AB1C234E5E00E5A7AF /* BasicRequests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5386B1C41C18D4A4001D8D31 /* BasicRequests.swift */; };
+		5303C3AC1C234E5E00E5A7AF /* CoreTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5386B1C01C18B903001D8D31 /* CoreTypes.swift */; };
+		5303C3AD1C234E5E00E5A7AF /* CompositedGateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5386B1C21C18CCE9001D8D31 /* CompositedGateway.swift */; };
+		5303C3AE1C234E5E00E5A7AF /* FoundationNetworkAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5386B1C91C18D728001D8D31 /* FoundationNetworkAdapter.swift */; };
+		5303C3AF1C234E5E00E5A7AF /* BasicResponses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5386B1C61C18D6DA001D8D31 /* BasicResponses.swift */; };
+		5303C3B01C234E5E00E5A7AF /* ResponseProcessors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5386B1CB1C18D750001D8D31 /* ResponseProcessors.swift */; };
+		5303C3B31C234E5E00E5A7AF /* JustApisSwiftSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 5386B1A91C18B503001D8D31 /* JustApisSwiftSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		53122FDD1C20828E0052E8A5 /* FoundationRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53122FDC1C20828E0052E8A5 /* FoundationRequestTests.swift */; };
 		53122FDF1C2088D90052E8A5 /* FoundationResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53122FDE1C2088D90052E8A5 /* FoundationResponseTests.swift */; };
 		53122FE11C20993E0052E8A5 /* OHHTTPStubs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53122FE01C20993E0052E8A5 /* OHHTTPStubs.framework */; };
@@ -34,6 +42,8 @@
 /* Begin PBXFileReference section */
 		5303C3851C21F2E100E5A7AF /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		5303C3861C21F2E100E5A7AF /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		5303C3B81C234E5E00E5A7AF /* JustApisSwiftSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = JustApisSwiftSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5303C3B91C234E5F00E5A7AF /* Info-OSX.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Info-OSX.plist"; path = "/Users/andrewpalumbo/Projects/AnyPresence/justapis-swift-sdk/Source/Info-OSX.plist"; sourceTree = "<absolute>"; };
 		53122FDB1C20828D0052E8A5 /* JustApisSwiftSDKTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "JustApisSwiftSDKTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		53122FDC1C20828E0052E8A5 /* FoundationRequestTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoundationRequestTests.swift; sourceTree = "<group>"; };
 		53122FDE1C2088D90052E8A5 /* FoundationResponseTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoundationResponseTests.swift; sourceTree = "<group>"; };
@@ -53,6 +63,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		5303C3B11C234E5E00E5A7AF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		5386B1A21C18B503001D8D31 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -104,6 +121,7 @@
 			children = (
 				5386B1A61C18B503001D8D31 /* JustApisSwiftSDK.framework */,
 				5386B1B01C18B503001D8D31 /* JustApisSwiftSDKTests.xctest */,
+				5303C3B81C234E5E00E5A7AF /* JustApisSwiftSDK.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -113,6 +131,7 @@
 			children = (
 				5386B1C81C18D6ED001D8D31 /* CompositedGateway */,
 				5386B1A91C18B503001D8D31 /* JustApisSwiftSDK.h */,
+				5303C3B91C234E5F00E5A7AF /* Info-OSX.plist */,
 				5386B1AB1C18B503001D8D31 /* Info.plist */,
 				5386B1C01C18B903001D8D31 /* CoreTypes.swift */,
 				5386B1C41C18D4A4001D8D31 /* BasicRequests.swift */,
@@ -147,6 +166,14 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		5303C3B21C234E5E00E5A7AF /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5303C3B31C234E5E00E5A7AF /* JustApisSwiftSDK.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		5386B1A31C18B503001D8D31 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -158,6 +185,24 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		5303C3A81C234E5E00E5A7AF /* JustApisSwiftSDK-OSX */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5303C3B51C234E5E00E5A7AF /* Build configuration list for PBXNativeTarget "JustApisSwiftSDK-OSX" */;
+			buildPhases = (
+				5303C3A91C234E5E00E5A7AF /* Sources */,
+				5303C3B11C234E5E00E5A7AF /* Frameworks */,
+				5303C3B21C234E5E00E5A7AF /* Headers */,
+				5303C3B41C234E5E00E5A7AF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "JustApisSwiftSDK-OSX";
+			productName = JustApisSwiftSDK;
+			productReference = 5303C3B81C234E5E00E5A7AF /* JustApisSwiftSDK.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 		5386B1A51C18B503001D8D31 /* JustApisSwiftSDK */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 5386B1BA1C18B503001D8D31 /* Build configuration list for PBXNativeTarget "JustApisSwiftSDK" */;
@@ -226,11 +271,19 @@
 			targets = (
 				5386B1A51C18B503001D8D31 /* JustApisSwiftSDK */,
 				5386B1AF1C18B503001D8D31 /* JustApisSwiftSDKTests */,
+				5303C3A81C234E5E00E5A7AF /* JustApisSwiftSDK-OSX */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		5303C3B41C234E5E00E5A7AF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		5386B1A41C18B503001D8D31 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -248,6 +301,20 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		5303C3A91C234E5E00E5A7AF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5303C3AA1C234E5E00E5A7AF /* RequestPreparers.swift in Sources */,
+				5303C3AB1C234E5E00E5A7AF /* BasicRequests.swift in Sources */,
+				5303C3AC1C234E5E00E5A7AF /* CoreTypes.swift in Sources */,
+				5303C3AD1C234E5E00E5A7AF /* CompositedGateway.swift in Sources */,
+				5303C3AE1C234E5E00E5A7AF /* FoundationNetworkAdapter.swift in Sources */,
+				5303C3AF1C234E5E00E5A7AF /* BasicResponses.swift in Sources */,
+				5303C3B01C234E5E00E5A7AF /* ResponseProcessors.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		5386B1A11C18B503001D8D31 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -282,6 +349,45 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		5303C3B61C234E5E00E5A7AF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Source/Info-OSX.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.anypresence.JustApisSwiftSDK;
+				PRODUCT_NAME = JustApisSwiftSDK;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = macosx;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		5303C3B71C234E5E00E5A7AF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Source/Info-OSX.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.anypresence.JustApisSwiftSDK;
+				PRODUCT_NAME = JustApisSwiftSDK;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = macosx;
+			};
+			name = Release;
+		};
 		5386B1B81C18B503001D8D31 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -442,6 +548,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		5303C3B51C234E5E00E5A7AF /* Build configuration list for PBXNativeTarget "JustApisSwiftSDK-OSX" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5303C3B61C234E5E00E5A7AF /* Debug */,
+				5303C3B71C234E5E00E5A7AF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		5386B1A01C18B503001D8D31 /* Build configuration list for PBXProject "JustApisSwiftSDK" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

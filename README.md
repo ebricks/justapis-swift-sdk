@@ -7,7 +7,11 @@ Lightweight Swift SDK to connect to a JustAPIs gateway through an iOS client.
 ##Dependencies
 
 ### Development/Production
-There are no dependencies when using this framework in your own project.
+There are no external dependencies when using this framework in your own project. 
+
+However, this SDK is a Swift dynamic framework, and is written in Swift 2.1 and needs a minimum deployment target of iOS 8.0. 
+
+Some features used in the SDK (i.e. tuples, structs) are not currently available in Objective-C code. If you want to use this framework in an Objective-C app, you'll need to marshall these features through Swift code of your own. 
 
 ### Unit Testing
 If you want to perform unit tests on this framework, it requires [OHHTTPStubs](https://github.com/AliSoftware/OHHTTPStubs/) in order to mock requests. It's already included as a submodule in this repository, so you can run:
@@ -47,11 +51,40 @@ Two sample `ResponseProcessor`s are included in the SDK. `JsonResponseProcessor`
 
 ##Setup
 
-The preferred way to include the SDK in your project is by using [Cocoapods](https://cocoapods.org).
+### Framework Integration
+
+#### Cocoapods
+
+The preferred way to include the SDK in your project is by using [Cocoapods](https://cocoapods.org). 
+
+For the bleeding edge version of this SDK, you can add the following directive to the target definition in your Podfile:
+
+`pod 'JustApisSwiftSDK', :git => 'https://github.com/AnyPresence/justapis-swift-sdk.git'`
+
+Since this SDK is a dynamic framework that uses Swift 2.1, you'll also need to make sure that your Podfile targets iOS 8.0 or higher and is set to use dynamic frameworks:
+
+```ruby
+platform :ios 8.0
+use_frameworks!
+```
+
+The repository includes a basic Demo project that uses Cocoapods. You're encoraged to look at it and its Podfile for a better understanding.
+
+#### Carthage
+
+Coming soon.
+
+#### Manual
+
+Coming soon.
+
+### Module Import
 
 Once the framework is included in your project, simply import the module into your own code using:
 
 `import JustApisSwiftSDK`
+
+## Usage
 
 ### Making requests
 
@@ -117,6 +150,8 @@ gateway.get('/foo', params:["id":123], callback:
 
 ##Development
 
-If you would like to develop in the SDK, you just need to clone or fork this repository and hack away. 
+The SDK is designed to be lightweight and modular so that you can enhance and modify its functionality without modifying its code directly. 
+
+However, if you would like to make changes to the SDK, you are welcome to  clone or fork this repository. You will also need to modify your apps to make sure they integrate your code rather than what's hosted in this repository.
 
 Unit Testing does require that you OHHTTPStubs is available in order to mock requests, but this is bundled in as a git submodule. See **Dependencies** for more information.

@@ -14,8 +14,8 @@ import Foundation
 ///
 public class DefaultFieldsRequestPreparer : RequestPreparer
 {
-    public var defaultHeaders:Headers = Headers()
-    public var defaultQueryParameters:QueryParameters = QueryParameters()
+    public var defaultHeaders:Headers!
+    public var defaultQueryParameters:QueryParameters!
     
     public func prepareRequest(request: Request) -> Request
     {
@@ -24,33 +24,32 @@ public class DefaultFieldsRequestPreparer : RequestPreparer
             // Nothing to do. Don't even make our working copy
             return request;
         }
-        let request:MutableRequest = MutableRequest(request)
+        var request:Request = request
 
         // Infill defaultHeaders into request.headers if they're missing
         for (key, value) in self.defaultHeaders
         {
-            request.headers = request.headers ?? Headers()
-            if (nil == request.headers![key])
+            if (request.headers?[key] == nil)
             {
-                request.headers![key] = value
+                request = request.header(key, value)
             }
         }
         
         // Infill defaultQueryParameters into request.queryParameters
         for (key, value) in self.defaultQueryParameters
         {
-            request.params = request.params ?? QueryParameters()
-            if (nil == request.params![key])
+            if (request.params?[key] == nil)
             {
-                request.params![key] = value
+                request = request.param(key, value)
             }
         }
         return request
     }
     
-    public init()
+    public init(headers:Headers? = nil, params:QueryParameters? = nil)
     {
-        
+        self.defaultHeaders = headers ?? Headers();
+        self.defaultQueryParameters = params ?? QueryParameters()
     }
 }
 

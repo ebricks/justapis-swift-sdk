@@ -32,8 +32,10 @@ public protocol RequestPreparer
 ///
 public protocol ResponseProcessor
 {
-    func processResponse(response:Response) -> (RequestResult)
+    func processResponse(response:Response, callback:ResponseProcessorCallback)
 }
+
+public typealias ResponseProcessorCallback = ((response:Response, error:ErrorType?) -> Void)
 
 ///
 /// Invoked by the CompositedGateway to send the request along the wire
@@ -45,7 +47,7 @@ public protocol ResponseProcessor
 ///
 public protocol NetworkAdapter
 {
-    func performRequest(request:Request, gateway:Gateway, callback:RequestCallback)
+    func submitRequest(request:Request, gateway:CompositedGateway)
 }
 
 ///
@@ -59,6 +61,8 @@ public class CompositedGateway : Gateway
     private let networkAdapter:NetworkAdapter
     private let requestPreparer:RequestPreparer?
     private let responseProcessor:ResponseProcessor?
+    private let contentTypeParser:ContentTypeParser
+    private var callbacks = [InternalRequest: RequestCallback]()
     
     public init(
         baseUrl:NSURL,
@@ -72,7 +76,8 @@ public class CompositedGateway : Gateway
         var networkAdapter = networkAdapter
         self.requestPreparer = requestPreparer
         self.responseProcessor = responseProcessor
-        
+        self.contentTypeParser = ContentTypeParser()
+
         // Assign the given network adapter, or init the default one
         if (nil == networkAdapter)
         {
@@ -81,50 +86,154 @@ public class CompositedGateway : Gateway
         self.networkAdapter = networkAdapter!
     }
     
-    public func performRequest(request:Request, callback:RequestCallback?)
+    ///
+    /// Sets a ResponseProcessor to run when the given contentType is encountered in a response
+    ///
+    public func setParser(parser:ResponseProcessor?, contentType:String)
     {
-        var request = request
-        
-        // Apply an empty callback if none was provided. It makes the logic cleaner below
-        let callback:RequestCallback = nil != callback ? callback! : {(_:RequestResult) in }
+        if (parser != nil)
+        {
+            self.contentTypeParser.contentTypes[contentType] = parser
+        }
+        else
+        {
+            self.contentTypeParser.contentTypes.removeValueForKey(contentType)
+        }
+    }
+    
+    public func submitRequest(request:RequestProperties, callback:RequestCallback?)
+    {
+        let request = self.prepareInternalRequest(request)
+        self.submitInternalRequest(request, callback: callback)
+    }
+    
+    ///
+    /// Called by CacheProvider or NetworkAdapter once a response is ready
+    ///
+    public func fulfillRequest(request:Request, response:ResponseProperties?, error:ErrorType?)
+    {
+        guard let request = request as? InternalRequest else
+        {
+            // TODO: THROW serious error. The Request was corrupted!
+            return
+        }
 
+        // Apply an empty callback if none was provided. It makes the logic cleaner below
+        let callback:RequestCallback? = self.callbacks[request]
+        let response:InternalResponse? = (response != nil) ? self.prepareInternalResponse(response!) : nil
+
+        // Remove the
+        self.callbacks.removeValueForKey(request)
+
+        var result:RequestResult = (request:request, response:response, error:error)
+
+        // Check if there was an error
+        guard error == nil else
+        {
+            callback?(result)
+            return
+        }
+        
+        // Check if there was no response; that's an error itself!
+        guard response != nil else
+        {
+            // TODO: create meaningful error
+            result.error = createError(0, context:nil, description:"")
+            callback?(result)
+            return
+        }
+        
+        // Compound 0+ response processors for this response
+        let compoundResponseProcessor = CompoundResponseProcessor()
+        
+        // Add the content type parser
+        compoundResponseProcessor.responseProcessors.append(contentTypeParser)
+
+        // Add any all-response processor
+        if let responseProcessor = self.responseProcessor
+        {
+            compoundResponseProcessor.responseProcessors.append(responseProcessor)
+        }
+        
+        // TODO: add any cache-storing response processors
+        
+        // Run the compound processor in a dispatch group
+        let responseProcessingDispatchGroup = dispatch_group_create()
+        dispatch_group_enter(responseProcessingDispatchGroup)
+        compoundResponseProcessor.processResponse(result.response!,
+            callback:
+            {
+                (response:Response, error:ErrorType?) in
+                
+                result = (request:request, response:response, error:error)
+                dispatch_group_leave(responseProcessingDispatchGroup)
+            }
+        )
+
+        // When the dispatch group is emptied, run the callback
+        dispatch_group_notify(responseProcessingDispatchGroup, dispatch_get_main_queue(), {
+            // Pass result back to caller
+            callback?(result)
+        })
+    }
+    
+    ///
+    /// Wraps raw ResponseProperties as an InternalResponse
+    ///
+    private func prepareInternalResponse(response:ResponseProperties) -> InternalResponse
+    {
+        // Downcast to an InternalResponse, or wrap externally prepared properties
+        var internalResponse:InternalResponse = (response as? InternalResponse) ?? InternalResponse(self, response:response)
+        
+        if (internalResponse.gateway !== self)
+        {
+            // response was prepared for another gateway. Associate it with this one!
+            internalResponse = internalResponse.gateway(self)
+        }
+        
+        return internalResponse
+    }
+
+    ///
+    /// Prepares RequestProperties as an InteralRequest and performs preflight prep
+    ///
+    private func prepareInternalRequest(request:RequestProperties) -> InternalRequest
+    {
+        // Downcast to an InternalRequest, or wrap externally prepared properties
+        var internalRequest:InternalRequest = (request as? InternalRequest) ?? InternalRequest(self, request:request)
+
+        if (internalRequest.gateway !== self)
+        {
+            // request was prepared for another gateway. Associate it with this one!
+            internalRequest = internalRequest.gateway(self)
+        }
+        
         // Prepare the request if a preparer is available
         if let requestPreparer = self.requestPreparer
         {
-            request = requestPreparer.prepareRequest(request)
+            // TODO?: change interface to something async; may need to do something complex
+            internalRequest = requestPreparer.prepareRequest(internalRequest) as! InternalRequest
         }
 
+        // TODO: assign an identifer?
+
+        return internalRequest
+    }
+    
+    ///
+    /// Checks CacheProvider for matching Response or submits InternalRequest to NetworkAdapter
+    ///
+    private func submitInternalRequest(request:InternalRequest, callback:RequestCallback?)
+    {
+        if (nil != callback)
+        {
+            self.callbacks[request] = callback
+        }
+
+        // TODO: check cache
+        
         // Send the request to the network adapter
-        self.networkAdapter.performRequest(request, gateway:self, callback: {
-            (result:RequestResult) -> (Void) in
-            
-            var result = result
-            
-            // Check if there was an error
-            guard result.error == nil else
-            {
-                callback(result)
-                return
-            }
-            
-            // Check if there was no response
-            guard result.response != nil else
-            {
-                // TODO: create error
-                callback(result)
-                return
-            }
-            
-            // Post-process the response if a processor is available
-            if let responseProcessor = self.responseProcessor
-            {
-                // TODO: invoke this on a background thread. Parsing could take a while
-                result = responseProcessor.processResponse(result.response!)
-            }
-            
-            // Pass result back to caller
-            callback(result)
-        })
+        self.networkAdapter.submitRequest(request, gateway:self)
     }
 }
 

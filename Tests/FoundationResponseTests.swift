@@ -241,9 +241,7 @@ class FoundationResponseTests: XCTestCase {
         
         let responseProcessor = ResponseProcessorClosureAdapter(closure: {
             (response) in
-            let response = MutableResponse(response)
-            response.body = alternateBody
-            return (request:response.request, response: response, error:nil)
+            return (request:response.request, response: response.body(alternateBody), error:nil)
         })
         
         let gateway:Gateway = CompositedGateway(baseUrl: NSURL(string: baseUrl)!, requestPreparer: nil, responseProcessor: responseProcessor)
@@ -276,9 +274,8 @@ class FoundationResponseTests: XCTestCase {
         
         let responseProcessor = ResponseProcessorClosureAdapter(closure: {
             (response) in
-            let response = MutableResponse(response)
-            response.body = alternateBody
             let error = NSError(domain: "JustApisSwiftSDK.ResponseProcessorClosureAdapter", code: -1, userInfo: nil)
+            let response = response.body(alternateBody)
             return (request:response.request, response: response, error:error)
         })
         

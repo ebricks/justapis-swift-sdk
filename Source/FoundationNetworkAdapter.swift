@@ -48,7 +48,7 @@ public class FoundationNetworkAdapter : NSObject, NetworkAdapter, NSURLSessionDa
             }
     }
     
-    public func performRequest(request: Request, gateway:Gateway, callback: RequestCallback)
+    public func submitRequest(request: Request, gateway:CompositedGateway)
     {
         // Build the request
         guard let urlRequest:NSURLRequest = request.toNSURLRequest(gateway) else
@@ -61,17 +61,18 @@ public class FoundationNetworkAdapter : NSObject, NetworkAdapter, NSURLSessionDa
         let taskCompletionHandler = { [weak self]
             (data:NSData?, response:NSURLResponse?, error:NSError?) -> Void in
             
-            var gatewayResponse:ImmutableResponse? = nil
+            var gatewayResponse:MutableResponseProperties? = nil
             
             // Generate a Gateway Response, if there's
             if let foundationResponse = response as? NSHTTPURLResponse
             {
-                gatewayResponse = ImmutableResponse(foundationResponse, data:data, requestedURL:urlRequest.URL!, gateway: gateway, request: request)
+                gatewayResponse = MutableResponseProperties(foundationResponse, data:data, requestedURL:urlRequest.URL!, gateway: gateway, request: request)
             }
             
             self?.taskToRequestMap.removeValueForKey(taskIdentifier)
             
-            callback((request:request, response:gatewayResponse, error:error))
+            // TODO: Let the gateway finish processing the response
+            gateway.fulfillRequest(request, response:gatewayResponse, error:error);
         }
         
         // Submit the request on the session
@@ -83,7 +84,7 @@ public class FoundationNetworkAdapter : NSObject, NetworkAdapter, NSURLSessionDa
     }
 }
 
-internal extension ImmutableResponse
+internal extension MutableResponseProperties
 {
     // Internal initializer method to populate an Immutable Response
     internal init(_ response:NSHTTPURLResponse, data:NSData?, requestedURL:NSURL, gateway:Gateway, request:Request)

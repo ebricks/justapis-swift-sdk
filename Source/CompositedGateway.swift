@@ -147,7 +147,10 @@ public class CompositedGateway : Gateway
         let compoundResponseProcessor = CompoundResponseProcessor()
         
         // Add the content type parser
-        compoundResponseProcessor.responseProcessors.append(contentTypeParser)
+        if request.applyContentTypeParsing
+        {
+            compoundResponseProcessor.responseProcessors.append(contentTypeParser)
+        }
 
         // Add any all-response processor
         if let responseProcessor = self.responseProcessor
@@ -242,8 +245,9 @@ public class CompositedGateway : Gateway
 ///
 public class JsonGateway : CompositedGateway
 {
-    public init(baseUrl: NSURL, requestPreparer: RequestPreparer? = nil, networkAdapter: NetworkAdapter? = nil)
+    public override init(baseUrl: NSURL, requestPreparer: RequestPreparer? = nil, responseProcessor:ResponseProcessor? = nil, networkAdapter: NetworkAdapter? = nil)
     {
-        super.init(baseUrl: baseUrl, requestPreparer:requestPreparer, responseProcessor:JsonResponseProcessor(), networkAdapter:networkAdapter)
+        super.init(baseUrl: baseUrl, requestPreparer:requestPreparer, responseProcessor:nil, networkAdapter:networkAdapter)
+        super.setParser(JsonResponseProcessor(), contentType: "application/json")
     }
 }

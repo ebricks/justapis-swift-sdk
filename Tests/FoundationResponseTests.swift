@@ -302,7 +302,7 @@ class FoundationResponseTests: XCTestCase {
         stub(isHost("localhost"), response: {
             (request:NSURLRequest) in
             
-            return OHHTTPStubsResponse(JSONObject: ["a":123], statusCode: 200, headers: nil)
+            return OHHTTPStubsResponse(JSONObject: ["a":123], statusCode: 200, headers: ["Content-Type":"application/json"])
         })
         
         let gateway:Gateway = JsonGateway(baseUrl: NSURL(string: baseUrl)!)
@@ -331,7 +331,7 @@ class FoundationResponseTests: XCTestCase {
         stub(isHost("localhost"), response: {
             (request:NSURLRequest) in
             
-            return OHHTTPStubsResponse(JSONObject: [123, 456], statusCode: 200, headers: nil)
+            return OHHTTPStubsResponse(JSONObject: [123, 456], statusCode: 200, headers: ["Content-Type":"application/json"])
         })
         
         let gateway:Gateway = JsonGateway(baseUrl: NSURL(string: baseUrl)!)
@@ -361,7 +361,7 @@ class FoundationResponseTests: XCTestCase {
         stub(isHost("localhost"), response: {
             (request:NSURLRequest) in
             
-            return OHHTTPStubsResponse(data: "2".dataUsingEncoding(NSUTF8StringEncoding)! , statusCode: 200, headers: nil)
+            return OHHTTPStubsResponse(data: "2".dataUsingEncoding(NSUTF8StringEncoding)! , statusCode: 200, headers: ["Content-Type":"application/json"])
         })
         
         let gateway:Gateway = JsonGateway(baseUrl: NSURL(string: baseUrl)!)

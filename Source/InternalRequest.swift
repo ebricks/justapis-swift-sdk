@@ -28,6 +28,8 @@ internal struct MutableInternalRequestProperties : InternalRequestProperties
     var headers:Headers?
     var body:NSData?
     var followRedirects:Bool
+    var applyContentTypeParsing:Bool
+    var contentTypeOverride:String?
     
     init(_ request:InternalRequestProperties)
     {
@@ -38,6 +40,8 @@ internal struct MutableInternalRequestProperties : InternalRequestProperties
         self.headers = request.headers
         self.body = request.body
         self.followRedirects = request.followRedirects
+        self.applyContentTypeParsing = request.applyContentTypeParsing
+        self.contentTypeOverride = request.contentTypeOverride
     }
 }
 
@@ -53,17 +57,8 @@ internal struct InternalRequest : Request, InternalRequestProperties, Hashable
     let headers:Headers?
     let body:NSData?
     let followRedirects:Bool
-    
-    init(gateway:CompositedGateway, method:String, path:String, params:QueryParameters? = nil, headers:Headers? = nil, body:NSData? = nil, followRedirects:Bool = true)
-    {
-        self.gateway = gateway
-        self.method = method
-        self.path = path
-        self.params = params
-        self.headers = headers
-        self.body = body
-        self.followRedirects = followRedirects
-    }
+    let applyContentTypeParsing:Bool
+    let contentTypeOverride:String?
     
     init(_ request:InternalRequestProperties)
     {
@@ -74,6 +69,8 @@ internal struct InternalRequest : Request, InternalRequestProperties, Hashable
         self.headers = request.headers
         self.body = request.body
         self.followRedirects = request.followRedirects
+        self.applyContentTypeParsing = request.applyContentTypeParsing
+        self.contentTypeOverride = request.contentTypeOverride
     }
     
     init(_ gateway:CompositedGateway, request:RequestProperties)
@@ -85,6 +82,8 @@ internal struct InternalRequest : Request, InternalRequestProperties, Hashable
         self.headers = request.headers
         self.body = request.body
         self.followRedirects = request.followRedirects
+        self.applyContentTypeParsing = request.applyContentTypeParsing
+        self.contentTypeOverride = request.contentTypeOverride
     }
     
     func getMutableProperties() -> MutableInternalRequestProperties
@@ -182,6 +181,18 @@ extension InternalRequest : RequestBuilderMethods
         var properties = self.getMutableProperties()
         properties.followRedirects = value
         return InternalRequest(properties);
+    }
+    
+    func applyContentTypeParsing(value: Bool) -> InternalRequest {
+        var properties = self.getMutableProperties()
+        properties.applyContentTypeParsing = value
+        return InternalRequest(properties)
+    }
+    
+    func contentTypeOverride(value: String?) -> InternalRequest {
+        var properties = self.getMutableProperties()
+        properties.contentTypeOverride = value
+        return InternalRequest(properties)
     }
 }
 

@@ -14,27 +14,41 @@ import Foundation
 ///
 public protocol RequestProperties
 {
+    ///
+    /// Fundamental Request Properties:
+    /// ----
+    
     /// The HTTP Verb to use
     var method:String { get }
     
-    // The path to request, relative to the Gateway's baseURL
+    /// The path to request, relative to the Gateway's baseURL
     var path:String { get }
     
-    // A Dictionary of query string parameters to append to the path
+    /// A Dictionary of query string parameters to append to the path
     var params:QueryParameters? { get }
     
-    // HTTP headers to be sent with the request
+    /// HTTP headers to be sent with the request
     var headers:Headers? { get }
     
-    // Any body data to send along with the request
+    /// Any body data to send along with the request
     var body:NSData? { get }
     
-    // Whether HTTP redirects should be followed before a response is handled
+    /// Whether HTTP redirects should be followed before a response is handled
     var followRedirects:Bool { get }
+
+    ///
+    /// Autoparsing Options, for use with the ContentTypeParser:
+    /// ----
+
+    /// Whether to use contentTypeParsing
+    var applyContentTypeParsing:Bool { get }
+
+    /// The Content-Type to assume for any results, disregarding response headers
+    var contentTypeOverride:String? { get }
+    
     
     // TODO: add cache-control properties
     
-    // TODO: add autoparse properties
 }
 
 ///
@@ -65,6 +79,12 @@ public protocol RequestBuilderMethods
     
     /// Returns a new Request with the HTTP redirect support flag set to the provided value
     func followRedirects(value:Bool) -> Self
+    
+    /// Returns a new Request with applyContentTypeParsing set to the provided value
+    func applyContentTypeParsing(value:Bool) -> Self
+    
+    /// Returns a new Request with contentTypeOverride set to the provided value
+    func contentTypeOverride(value:String?) -> Self
 }
 
 ///
@@ -86,5 +106,8 @@ public struct MutableRequestProperties : RequestProperties
     public var headers:Headers?
     public var body:NSData?
     public var followRedirects:Bool
+
+    public var applyContentTypeParsing:Bool = true
+    public var contentTypeOverride:String? = nil
 }
 

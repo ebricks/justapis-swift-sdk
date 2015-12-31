@@ -29,7 +29,7 @@ public extension Gateway
     /// A convenience method for sending a GET request
     func get(path:String, params:QueryParameters?, headers:Headers?, body:NSData?, followRedirects:Bool, callback:RequestCallback?)
     {
-        let request = MutableRequestProperties(method:"GET", path:path, params:params, headers:headers, body:body, followRedirects:followRedirects)
+        let request = MutableRequestProperties(method:"GET", path:path, params:params, headers:headers, body:body, followRedirects:followRedirects, applyContentTypeParsing: true, contentTypeOverride: nil)
         
         self.submitRequest(request, callback: callback)
     }
@@ -67,7 +67,7 @@ public extension Gateway
     /// A convenience method for sending a POST request
     func post(path:String, params:QueryParameters?, headers:Headers?, body:NSData?, followRedirects:Bool, callback:RequestCallback?)
     {
-        let request = MutableRequestProperties(method:"POST", path:path, params:params, headers:headers, body:body, followRedirects:followRedirects)
+        let request = MutableRequestProperties(method:"POST", path:path, params:params, headers:headers, body:body, followRedirects:followRedirects, applyContentTypeParsing: true, contentTypeOverride: nil)
         
         self.submitRequest(request, callback: callback)
     }
@@ -105,7 +105,7 @@ public extension Gateway
     /// A convenience method for sending a PUT request
     func put(path:String, params:QueryParameters?, headers:Headers?, body:NSData?, followRedirects:Bool, callback:RequestCallback?)
     {
-        let request = MutableRequestProperties(method:"PUT", path:path, params:params, headers:headers, body:body, followRedirects:followRedirects)
+        let request = MutableRequestProperties(method:"PUT", path:path, params:params, headers:headers, body:body, followRedirects:followRedirects, applyContentTypeParsing: true, contentTypeOverride: nil)
         
         self.submitRequest(request, callback: callback)
     }
@@ -143,7 +143,7 @@ public extension Gateway
     /// A convenience method for sending a DELETE request
     func delete(path:String, params:QueryParameters?, headers:Headers?, body:NSData?, followRedirects:Bool, callback:RequestCallback?)
     {
-        let request = MutableRequestProperties(method:"PUT", path:path, params:params, headers:headers, body:body, followRedirects:followRedirects)
+        let request = MutableRequestProperties(method:"PUT", path:path, params:params, headers:headers, body:body, followRedirects:followRedirects, applyContentTypeParsing: true, contentTypeOverride: nil)
         
         self.submitRequest(request, callback: callback)
     }

@@ -73,17 +73,26 @@ public class CompoundResponseProcessor : ResponseProcessor
     }
 }
 
+///
+/// Dispatches a ResponseProcessor for a matched Content-Type header (or overriden Content-Type)
+///
 public class ContentTypeParser : ResponseProcessor
 {
+    /// Map of "Content-Type" value to ResponseProcessor
     public var contentTypes = [String:ResponseProcessor]()
     
     public func processResponse(response: Response, callback: ResponseProcessorCallback) {
-        // TODO:
-        // 1. Check if the response.request has forced the contentType to parse
-        // 2. If not, check the header for a content type
-        // 3. If we have a content type, see if a ResponseProcessor has been registered for it
-        // 4. If we have a ResponseProcessor, call it! Else continue with no error
 
+        if let contentType = response.request.contentTypeOverride ?? response.headers["Content-Type"]
+        {
+            if let processor:ResponseProcessor = contentTypes[contentType]
+            {
+                processor.processResponse(response, callback: callback)
+                return
+            }
+        }
+        
+        // There was either no contentType or no ResponseProcess. Just pass along our input:
         callback(response: response, error: nil)
     }
 }

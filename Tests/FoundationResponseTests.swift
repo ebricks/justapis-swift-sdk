@@ -120,7 +120,7 @@ class FoundationResponseTests: XCTestCase {
         gateway.get(requestPath, callback: { (result) in
             XCTAssertNil(result.error)
             XCTAssertNotNil(result.response)
-            XCTAssertEqual(result.response!.body as? NSData, body!)
+            XCTAssertEqual(result.response!.body, body!)
             expectation.fulfill()
         })
         
@@ -248,7 +248,7 @@ class FoundationResponseTests: XCTestCase {
         gateway.get(requestPath, callback: { (result) in
             XCTAssertNil(result.error)
             XCTAssertNotNil(result.response)
-            XCTAssertEqual(result.response!.body as? NSData, alternateBody)
+            XCTAssertEqual(result.response!.body, alternateBody)
             expectation.fulfill()
         })
         
@@ -283,7 +283,7 @@ class FoundationResponseTests: XCTestCase {
         gateway.get(requestPath, callback: { (result) in
             XCTAssertNotNil(result.error)
             XCTAssertNotNil(result.response)
-            XCTAssertEqual(result.response!.body as? NSData, alternateBody)
+            XCTAssertEqual(result.response!.body, alternateBody)
             expectation.fulfill()
         })
         
@@ -310,8 +310,8 @@ class FoundationResponseTests: XCTestCase {
             XCTAssertNil(result.error)
             XCTAssert(result.response != nil)
             XCTAssertEqual(result.response!.statusCode, 200)
-            XCTAssertNotNil(result.response!.body as? [String: AnyObject])
-            let content = (result.response!.body as! [String: AnyObject])
+            XCTAssertNotNil(result.response!.parsedBody as? [String: AnyObject])
+            let content = (result.response!.parsedBody as! [String: AnyObject])
             XCTAssertEqual(content["a"] as? Int, 123)
             expectation.fulfill()
         })
@@ -339,8 +339,8 @@ class FoundationResponseTests: XCTestCase {
             XCTAssertNil(result.error)
             XCTAssert(result.response != nil)
             XCTAssertEqual(result.response!.statusCode, 200)
-            XCTAssertNotNil(result.response!.body as? [AnyObject])
-            let content = (result.response!.body as! [AnyObject])
+            XCTAssertNotNil(result.response!.parsedBody as? [AnyObject])
+            let content = (result.response!.parsedBody as! [AnyObject])
             XCTAssertEqual(content[0] as? Int, 123)
             XCTAssertEqual(content[1] as? Int, 456)
             expectation.fulfill()

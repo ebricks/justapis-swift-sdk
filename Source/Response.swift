@@ -32,11 +32,13 @@ public protocol ResponseProperties
     var headers:Headers { get }
     
     /// Any body data returned by the server
-    var body:AnyObject? { get }
+    var body:NSData? { get }
+
+    /// Any parsed body data
+    var parsedBody:AnyObject? { get }
     
     /// TODO: Add cache data (did this come from the cache? how old is it?)
     
-    /// TODO: Add autoparse data
 }
 
 public protocol ResponseBuilderMethods
@@ -63,7 +65,10 @@ public protocol ResponseBuilderMethods
     func header(key:String, value:String?) -> Self
     
     /// Returns a new Response with body set to the provided value
-    func body(value:AnyObject?) -> Self
+    func body(value:NSData?) -> Self
+    
+    /// Returns a new Response with parsedBody set to the provided value
+    func parsedBody(value:AnyObject?) -> Self
 }
 
 public protocol Response : ResponseProperties, ResponseBuilderMethods
@@ -82,5 +87,17 @@ public struct MutableResponseProperties : ResponseProperties
     public var resolvedURL:NSURL?
     public var statusCode:Int
     public var headers:Headers
-    public var body:AnyObject?
+    public var body:NSData?
+    public var parsedBody:AnyObject?
+
+    public init(gateway:Gateway, request:Request, requestedURL:NSURL, resolvedURL:NSURL, statusCode:Int, headers:Headers, body:NSData?, parsedBody:AnyObject?) {
+        self.gateway = gateway
+        self.request = request
+        self.requestedURL = requestedURL
+        self.resolvedURL = resolvedURL
+        self.statusCode = statusCode
+        self.headers = headers
+        self.body = body
+        self.parsedBody = parsedBody
+    }
 }

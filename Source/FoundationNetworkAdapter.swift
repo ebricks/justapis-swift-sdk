@@ -105,6 +105,7 @@ internal extension MutableResponseProperties
         self.requestedURL = requestedURL
         self.resolvedURL = response.URL ?? nil
         self.body = data
+        self.parsedBody = nil
     }
 }
 

@@ -21,7 +21,8 @@ internal struct MutableInternalResponseProperties : InternalResponseProperties
     var resolvedURL:NSURL?
     var statusCode:Int
     var headers:Headers
-    var body:AnyObject?
+    var body:NSData?
+    var parsedBody:AnyObject?
     var internalRequest:InternalRequest? { get { return request as? InternalRequest } }
 
     init(_ response:InternalResponseProperties)
@@ -33,6 +34,7 @@ internal struct MutableInternalResponseProperties : InternalResponseProperties
         self.statusCode = response.statusCode
         self.headers = response.headers
         self.body = response.body
+        self.parsedBody = response.parsedBody
     }
     
 }
@@ -50,19 +52,9 @@ internal struct InternalResponse: Response, InternalResponseProperties
     let resolvedURL:NSURL?
     let statusCode:Int
     let headers:Headers
-    let body:AnyObject?
+    let body:NSData?
+    let parsedBody:AnyObject?
     var internalRequest:InternalRequest? { get { return request as? InternalRequest } }
-
-    init(gateway:Gateway, request:Request, requestedURL:NSURL, resolvedURL:NSURL?, statusCode:Int, headers:Headers, body:AnyObject?)
-    {
-        self.gateway = gateway
-        self.request = request
-        self.requestedURL = requestedURL
-        self.resolvedURL = resolvedURL
-        self.statusCode = statusCode
-        self.headers = headers
-        self.body = body
-    }
     
     init(_ response:InternalResponseProperties)
     {
@@ -73,6 +65,7 @@ internal struct InternalResponse: Response, InternalResponseProperties
         self.statusCode = response.statusCode
         self.headers = response.headers
         self.body = response.body
+        self.parsedBody = response.parsedBody
     }
     
     init(_ gateway:CompositedGateway, response:ResponseProperties)
@@ -84,6 +77,7 @@ internal struct InternalResponse: Response, InternalResponseProperties
         self.statusCode = response.statusCode
         self.headers = response.headers
         self.body = response.body
+        self.parsedBody = response.parsedBody
     }
 
     func getMutableProperties() -> MutableInternalResponseProperties
@@ -97,37 +91,37 @@ extension InternalResponse : ResponseBuilderMethods
     func gateway(value: Gateway) -> InternalResponse {
         var properties = self.getMutableProperties()
         properties.gateway = value
-        return InternalResponse(properties);
+        return InternalResponse(properties)
     }
     
     func request(value: Request) -> InternalResponse {
         var properties = self.getMutableProperties()
         properties.request = value
-        return InternalResponse(properties);
+        return InternalResponse(properties)
     }
         
     func requestedURL(value: NSURL) -> InternalResponse {
         var properties = self.getMutableProperties()
         properties.requestedURL = value
-        return InternalResponse(properties);
+        return InternalResponse(properties)
     }
     
     func resolvedURL(value: NSURL) -> InternalResponse {
         var properties = self.getMutableProperties()
         properties.resolvedURL = value
-        return InternalResponse(properties);
+        return InternalResponse(properties)
     }
     
     func statusCode(value: Int) -> InternalResponse {
         var properties = self.getMutableProperties()
         properties.statusCode = value
-        return InternalResponse(properties);
+        return InternalResponse(properties)
     }
     
     func headers(value: Headers) -> InternalResponse {
         var properties = self.getMutableProperties()
         properties.headers = value
-        return InternalResponse(properties);
+        return InternalResponse(properties)
     }
     
     func header(key: String, value: String?) -> InternalResponse {
@@ -141,12 +135,18 @@ extension InternalResponse : ResponseBuilderMethods
         {
             properties.headers.removeValueForKey(key)
         }
-        return InternalResponse(properties);
+        return InternalResponse(properties)
     }
     
-    func body(value: AnyObject?) -> InternalResponse {
+    func body(value: NSData?) -> InternalResponse {
         var properties = self.getMutableProperties()
         properties.body = value
-        return InternalResponse(properties);
+        return InternalResponse(properties)
+    }
+    
+    func parsedBody(value: AnyObject?) -> InternalResponse {
+        var properties = self.getMutableProperties()
+        properties.parsedBody = value
+        return InternalResponse(properties)
     }
 }

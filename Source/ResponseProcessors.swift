@@ -105,7 +105,7 @@ public class JsonResponseProcessor : ResponseProcessor
     public func processResponse(response: Response, callback:ResponseProcessorCallback)
     {
         // Make sure the body is an NSData object, as expected
-        guard let body = response.body as? NSData else
+        guard let body = response.body else
         {
             // TODO create an error to indicate no body data and return
             let error:ErrorType? = nil
@@ -123,7 +123,7 @@ public class JsonResponseProcessor : ResponseProcessor
 
             // TODO: Parsing should use different properties! Not overwrite body!
             // Build a new Response with the parsed data replacing the original NSData
-            response = response.body(jsonData)
+            response = response.parsedBody(jsonData)
         }
         catch let jsonError
         {

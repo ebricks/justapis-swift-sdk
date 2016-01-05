@@ -226,7 +226,7 @@ public class CompositedGateway : Gateway
     ///
     /// Wraps raw ResponseProperties as an InternalResponse
     ///
-    private func internalizeResponse(response:ResponseProperties) -> InternalResponse
+    internal func internalizeResponse(response:ResponseProperties) -> InternalResponse
     {
         // Downcast to an InternalResponse, or wrap externally prepared properties
         var internalResponse:InternalResponse = (response as? InternalResponse) ?? InternalResponse(self, response:response)
@@ -243,7 +243,7 @@ public class CompositedGateway : Gateway
     ///
     /// Prepares RequestProperties as an InteralRequest and performs preflight prep
     ///
-    private func internalizeRequest(request:RequestProperties) -> InternalRequest
+    internal func internalizeRequest(request:RequestProperties) -> InternalRequest
     {
         // Downcast to an InternalRequest, or wrap externally prepared properties
         var internalRequest:InternalRequest = (request as? InternalRequest) ?? InternalRequest(self, request:request)
@@ -254,13 +254,6 @@ public class CompositedGateway : Gateway
             internalRequest = internalRequest.gateway(self)
         }
         
-        // Prepare the request if a preparer is available
-        if let requestPreparer = self.requestPreparer
-        {
-            // TODO?: change interface to something async; may need to do something complex
-            internalRequest = requestPreparer.prepareRequest(internalRequest) as! InternalRequest
-        }
-
         return internalRequest
     }
     
@@ -269,6 +262,15 @@ public class CompositedGateway : Gateway
     ///
     private func submitInternalRequest(request:InternalRequest, callback:RequestCallback?)
     {
+        var request = request
+        
+        // Prepare the request if a preparer is available
+        if let requestPreparer = self.requestPreparer
+        {
+            // TODO?: change interface to something async; may need to do something complex
+            request = requestPreparer.prepareRequest(request) as! InternalRequest
+        }
+
         if (nil != callback)
         {
             self.callbacks[request] = callback

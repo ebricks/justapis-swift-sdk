@@ -9,6 +9,16 @@
 import Foundation
 
 ///
+/// A Request Preparer implementation that does nothing
+///
+public class NullRequestPreparer : RequestPreparer
+{
+    public func prepareRequest(request:Request) -> Request {
+        return request
+    }
+}
+
+///
 /// Implementation of RequestPreparer that infills default values
 /// for headers and query parameters
 ///

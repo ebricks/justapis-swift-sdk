@@ -9,6 +9,16 @@
 import Foundation
 
 ///
+/// A Response Processor implementation that does nothing
+///
+public class NullResponseProcessor : ResponseProcessor
+{
+    public func processResponse(response: Response, callback: ResponseProcessorCallback) {
+        callback(response: response, error: nil)
+    }
+}
+
+///
 /// A ResponseProcessor that dispatches its functionality to
 /// a closure provided at initialization
 ///

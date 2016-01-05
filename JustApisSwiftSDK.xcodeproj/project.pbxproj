@@ -64,6 +64,11 @@
 		53C4DCC21C3AFB5D0067B671 /* InMemoryCacheProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C4DCC01C3AFB5D0067B671 /* InMemoryCacheProvider.swift */; };
 		53C4DCC31C3AFB5D0067B671 /* InMemoryCacheProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C4DCC01C3AFB5D0067B671 /* InMemoryCacheProvider.swift */; };
 		53C4DCC41C3AFB5D0067B671 /* InMemoryCacheProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C4DCC01C3AFB5D0067B671 /* InMemoryCacheProvider.swift */; };
+		53C4DCC81C3C675B0067B671 /* InternalRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C4DCC71C3C675B0067B671 /* InternalRequestTests.swift */; };
+		53C4DCCA1C3C67EF0067B671 /* InternalResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C4DCC91C3C67EF0067B671 /* InternalResponseTests.swift */; };
+		53C4DCCC1C3C687A0067B671 /* CachingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C4DCCB1C3C687A0067B671 /* CachingTests.swift */; };
+		53C4DCCE1C3C69190067B671 /* ContentTypeParsingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C4DCCD1C3C69190067B671 /* ContentTypeParsingTests.swift */; };
+		53C4DCD01C3C69DB0067B671 /* CompoundResponseProcessorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C4DCCF1C3C69DB0067B671 /* CompoundResponseProcessorTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -106,6 +111,11 @@
 		5386B1CB1C18D750001D8D31 /* ResponseProcessors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResponseProcessors.swift; sourceTree = "<group>"; };
 		5386B1CD1C18D761001D8D31 /* RequestPreparers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestPreparers.swift; sourceTree = "<group>"; };
 		53C4DCC01C3AFB5D0067B671 /* InMemoryCacheProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InMemoryCacheProvider.swift; sourceTree = "<group>"; };
+		53C4DCC71C3C675B0067B671 /* InternalRequestTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternalRequestTests.swift; sourceTree = "<group>"; };
+		53C4DCC91C3C67EF0067B671 /* InternalResponseTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternalResponseTests.swift; sourceTree = "<group>"; };
+		53C4DCCB1C3C687A0067B671 /* CachingTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CachingTests.swift; sourceTree = "<group>"; };
+		53C4DCCD1C3C69190067B671 /* ContentTypeParsingTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentTypeParsingTests.swift; sourceTree = "<group>"; };
+		53C4DCCF1C3C69DB0067B671 /* CompoundResponseProcessorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CompoundResponseProcessorTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -214,6 +224,11 @@
 				53122FDC1C20828E0052E8A5 /* FoundationRequestTests.swift */,
 				53122FDB1C20828D0052E8A5 /* JustApisSwiftSDKTests-Bridging-Header.h */,
 				53122FDE1C2088D90052E8A5 /* FoundationResponseTests.swift */,
+				53C4DCC71C3C675B0067B671 /* InternalRequestTests.swift */,
+				53C4DCC91C3C67EF0067B671 /* InternalResponseTests.swift */,
+				53C4DCCB1C3C687A0067B671 /* CachingTests.swift */,
+				53C4DCCD1C3C69190067B671 /* ContentTypeParsingTests.swift */,
+				53C4DCCF1C3C69DB0067B671 /* CompoundResponseProcessorTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -519,8 +534,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				53C4DCCE1C3C69190067B671 /* ContentTypeParsingTests.swift in Sources */,
 				53122FDD1C20828E0052E8A5 /* FoundationRequestTests.swift in Sources */,
+				53C4DCCA1C3C67EF0067B671 /* InternalResponseTests.swift in Sources */,
+				53C4DCD01C3C69DB0067B671 /* CompoundResponseProcessorTests.swift in Sources */,
 				53122FDF1C2088D90052E8A5 /* FoundationResponseTests.swift in Sources */,
+				53C4DCCC1C3C687A0067B671 /* CachingTests.swift in Sources */,
+				53C4DCC81C3C675B0067B671 /* InternalRequestTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

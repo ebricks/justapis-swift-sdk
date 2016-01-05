@@ -65,6 +65,20 @@ public protocol CacheProvider
 public typealias CacheProviderCallback = ((ResponseProperties?) -> Void)
 
 ///
+/// A Cache Provider implementation that does nothing. Useful to disable caching without changing your request logic
+///
+public class NullCacheProvider : CacheProvider
+{
+    public func cachedResponseForIdentifier(identifier: String, callback: CacheProviderCallback) {
+        return callback(nil)
+    }
+    
+    public func setCachedResponseForIdentifier(identifier: String, response: ResponseProperties, expirationSeconds: UInt) {
+        return
+    }
+}
+
+///
 /// Implementation of Gateway protocol that dispatches most details to
 /// helper classes.
 ///

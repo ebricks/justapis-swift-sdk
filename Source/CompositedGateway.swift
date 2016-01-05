@@ -306,9 +306,9 @@ public class CompositedGateway : Gateway
 ///
 public class JsonGateway : CompositedGateway
 {
-    public override init(baseUrl: NSURL, requestPreparer: RequestPreparer? = nil, responseProcessor:ResponseProcessor? = nil, cacheProvider:CacheProvider? = nil, networkAdapter: NetworkAdapter? = nil)
+    public override init(baseUrl: NSURL, defaultRequestProperties:DefaultRequestPropertySet? = nil, requestPreparer: RequestPreparer? = nil, responseProcessor:ResponseProcessor? = nil, cacheProvider:CacheProvider? = nil, networkAdapter: NetworkAdapter? = nil)
     {
-        super.init(baseUrl: baseUrl, requestPreparer:requestPreparer, responseProcessor:nil, networkAdapter:networkAdapter)
+        super.init(baseUrl: baseUrl, defaultRequestProperties: defaultRequestProperties, requestPreparer:requestPreparer, responseProcessor:responseProcessor, networkAdapter:networkAdapter)
         super.setParser(JsonResponseProcessor(), contentType: "application/json")
     }
 }

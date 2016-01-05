@@ -85,6 +85,7 @@ public class NullCacheProvider : CacheProvider
 public class CompositedGateway : Gateway
 {
     public let baseUrl:NSURL
+    public let defaultRequestProperties:DefaultRequestPropertySet
     
     private let networkAdapter:NetworkAdapter
     private let cacheProvider:CacheProvider
@@ -95,6 +96,7 @@ public class CompositedGateway : Gateway
         
     public init(
         baseUrl:NSURL,
+        defaultRequestProperties:DefaultRequestPropertySet? = nil,
         requestPreparer:RequestPreparer? = nil,
         responseProcessor:ResponseProcessor? = nil,
         cacheProvider:CacheProvider? = nil,
@@ -102,26 +104,18 @@ public class CompositedGateway : Gateway
         )
     {
         self.baseUrl = baseUrl
-        
-        var networkAdapter = networkAdapter
-        var cacheProvider = cacheProvider
+
+        // Use the GatewayDefaultRequestProperties if none were provided
+        self.defaultRequestProperties = defaultRequestProperties ?? GatewayDefaultRequestProperties()
         self.requestPreparer = requestPreparer
         self.responseProcessor = responseProcessor
         self.contentTypeParser = ContentTypeParser()
-        
-        // Assign the given cacheProvider, or init the default one
-        if (nil == cacheProvider)
-        {
-            cacheProvider = InMemoryCacheProvider()
-        }
-        self.cacheProvider = cacheProvider!
 
-        // Assign the given network adapter, or init the default one
-        if (nil == networkAdapter)
-        {
-            networkAdapter = FoundationNetworkAdapter()
-        }
-        self.networkAdapter = networkAdapter!
+        // Use the InMemory Cache Provider if none was provided
+        self.cacheProvider = cacheProvider ?? InMemoryCacheProvider()
+        
+        // Use the Foundation Network Adapter if none was provided
+        self.networkAdapter = networkAdapter ?? FoundationNetworkAdapter()
     }
     
     ///

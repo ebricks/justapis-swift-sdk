@@ -7,7 +7,7 @@
 //
 
 import XCTest
-import JustApisSwiftSDK
+@testable import JustApisSwiftSDK
 
 class InternalRequestTests: XCTestCase {
 

@@ -141,3 +141,39 @@ public struct MutableRequestProperties : RequestProperties
     public var customCacheIdentifier:String? = nil
 }
 
+///
+/// Provides default request properties to use for specific methods
+///
+public protocol DefaultRequestPropertySet
+{
+    var get:MutableRequestProperties { get }
+    var post:MutableRequestProperties { get }
+    var put:MutableRequestProperties { get }
+    var delete:MutableRequestProperties { get }
+}
+
+///
+/// An flexible implementation of the DefaultRequestPropertySet
+///
+public struct GatewayDefaultRequestProperties : DefaultRequestPropertySet
+{
+    public let get:MutableRequestProperties
+    public let post:MutableRequestProperties
+    public let put:MutableRequestProperties
+    public let delete:MutableRequestProperties
+    
+    public init(
+        get:MutableRequestProperties? = nil,
+        post:MutableRequestProperties? = nil,
+        put:MutableRequestProperties? = nil,
+        delete:MutableRequestProperties? = nil)
+    {
+        self.get = get ?? MutableRequestProperties(method:"GET", path:"/", params:nil, headers:nil, body:nil, followRedirects:true, applyContentTypeParsing: true, contentTypeOverride: nil, allowCachedResponse: true, cacheResponseWithExpiration: kGatewayDefaultCacheExpiration, customCacheIdentifier: nil)
+        
+        self.post = post ?? MutableRequestProperties(method:"POST", path:"/", params:nil, headers:nil, body:nil, followRedirects:true, applyContentTypeParsing: true, contentTypeOverride: nil, allowCachedResponse: false, cacheResponseWithExpiration: 0, customCacheIdentifier: nil)
+        
+        self.put = put ?? MutableRequestProperties(method:"PUT", path:"/", params:nil, headers:nil, body:nil, followRedirects:true, applyContentTypeParsing: true, contentTypeOverride: nil, allowCachedResponse: false, cacheResponseWithExpiration: 0, customCacheIdentifier: nil)
+        
+        self.delete = delete ?? MutableRequestProperties(method:"DELETE", path:"/", params:nil, headers:nil, body:nil, followRedirects:true, applyContentTypeParsing: true, contentTypeOverride: nil, allowCachedResponse: false, cacheResponseWithExpiration: 0, customCacheIdentifier: nil)
+    }
+}

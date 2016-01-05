@@ -17,11 +17,11 @@ public protocol Gateway : class
 {
     /// The Base URL to which requests will be sent
     var baseUrl:NSURL { get }
+    var defaultRequestProperties:DefaultRequestPropertySet { get }
     
     /// Sends a request to the gateway
     func submitRequest(request:RequestProperties, callback:RequestCallback?)
 }
-
 
 ///
 /// A protocol extension to Gateway that adds convenience methods for preparing GET requests
@@ -31,8 +31,13 @@ public extension Gateway
     /// A convenience method for sending a GET request
     func get(path:String, params:QueryParameters?, headers:Headers?, body:NSData?, followRedirects:Bool, callback:RequestCallback?)
     {
-        let request = MutableRequestProperties(method:"GET", path:path, params:params, headers:headers, body:body, followRedirects:followRedirects, applyContentTypeParsing: true, contentTypeOverride: nil, allowCachedResponse: true, cacheResponseWithExpiration: kGatewayDefaultCacheExpiration, customCacheIdentifier: nil)
-        
+        var request = self.defaultRequestProperties.get
+        request.path = path
+        request.params = params ?? request.params
+        request.headers = headers ?? request.headers
+        request.body = body
+        request.followRedirects = followRedirects
+
         self.submitRequest(request, callback: callback)
     }
     
@@ -69,7 +74,12 @@ public extension Gateway
     /// A convenience method for sending a POST request
     func post(path:String, params:QueryParameters?, headers:Headers?, body:NSData?, followRedirects:Bool, callback:RequestCallback?)
     {
-        let request = MutableRequestProperties(method:"POST", path:path, params:params, headers:headers, body:body, followRedirects:followRedirects, applyContentTypeParsing: true, contentTypeOverride: nil, allowCachedResponse: false, cacheResponseWithExpiration: 0, customCacheIdentifier: nil)
+        var request = self.defaultRequestProperties.post
+        request.path = path
+        request.params = params ?? request.params
+        request.headers = headers ?? request.headers
+        request.body = body
+        request.followRedirects = followRedirects
         
         self.submitRequest(request, callback: callback)
     }
@@ -107,7 +117,12 @@ public extension Gateway
     /// A convenience method for sending a PUT request
     func put(path:String, params:QueryParameters?, headers:Headers?, body:NSData?, followRedirects:Bool, callback:RequestCallback?)
     {
-        let request = MutableRequestProperties(method:"PUT", path:path, params:params, headers:headers, body:body, followRedirects:followRedirects, applyContentTypeParsing: true, contentTypeOverride: nil, allowCachedResponse: false, cacheResponseWithExpiration: 0, customCacheIdentifier: nil)
+        var request = self.defaultRequestProperties.put
+        request.path = path
+        request.params = params ?? request.params
+        request.headers = headers ?? request.headers
+        request.body = body
+        request.followRedirects = followRedirects
         
         self.submitRequest(request, callback: callback)
     }
@@ -145,7 +160,12 @@ public extension Gateway
     /// A convenience method for sending a DELETE request
     func delete(path:String, params:QueryParameters?, headers:Headers?, body:NSData?, followRedirects:Bool, callback:RequestCallback?)
     {
-        let request = MutableRequestProperties(method:"PUT", path:path, params:params, headers:headers, body:body, followRedirects:followRedirects, applyContentTypeParsing: true, contentTypeOverride: nil, allowCachedResponse: false, cacheResponseWithExpiration: 0, customCacheIdentifier: nil)
+        var request = self.defaultRequestProperties.delete
+        request.path = path
+        request.params = params ?? request.params
+        request.headers = headers ?? request.headers
+        request.body = body
+        request.followRedirects = followRedirects
         
         self.submitRequest(request, callback: callback)
     }

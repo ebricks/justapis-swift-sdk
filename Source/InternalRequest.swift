@@ -31,6 +31,10 @@ internal struct MutableInternalRequestProperties : InternalRequestProperties
     var applyContentTypeParsing:Bool
     var contentTypeOverride:String?
     
+    var allowCachedResponse:Bool
+    var cacheResponseWithExpiration:UInt
+    var customCacheIdentifier:String?
+    
     init(_ request:InternalRequestProperties)
     {
         self.gateway = request.gateway
@@ -42,6 +46,9 @@ internal struct MutableInternalRequestProperties : InternalRequestProperties
         self.followRedirects = request.followRedirects
         self.applyContentTypeParsing = request.applyContentTypeParsing
         self.contentTypeOverride = request.contentTypeOverride
+        self.allowCachedResponse = request.allowCachedResponse
+        self.cacheResponseWithExpiration = request.cacheResponseWithExpiration
+        self.customCacheIdentifier = request.customCacheIdentifier
     }
 }
 
@@ -59,6 +66,9 @@ internal struct InternalRequest : Request, InternalRequestProperties, Hashable
     let followRedirects:Bool
     let applyContentTypeParsing:Bool
     let contentTypeOverride:String?
+    let allowCachedResponse:Bool
+    let cacheResponseWithExpiration:UInt
+    let customCacheIdentifier:String?
     
     init(_ request:InternalRequestProperties)
     {
@@ -71,6 +81,9 @@ internal struct InternalRequest : Request, InternalRequestProperties, Hashable
         self.followRedirects = request.followRedirects
         self.applyContentTypeParsing = request.applyContentTypeParsing
         self.contentTypeOverride = request.contentTypeOverride
+        self.allowCachedResponse = request.allowCachedResponse
+        self.cacheResponseWithExpiration = request.cacheResponseWithExpiration
+        self.customCacheIdentifier = request.customCacheIdentifier
     }
     
     init(_ gateway:CompositedGateway, request:RequestProperties)
@@ -84,6 +97,9 @@ internal struct InternalRequest : Request, InternalRequestProperties, Hashable
         self.followRedirects = request.followRedirects
         self.applyContentTypeParsing = request.applyContentTypeParsing
         self.contentTypeOverride = request.contentTypeOverride
+        self.allowCachedResponse = request.allowCachedResponse
+        self.cacheResponseWithExpiration = request.cacheResponseWithExpiration
+        self.customCacheIdentifier = request.customCacheIdentifier
     }
     
     func getMutableProperties() -> MutableInternalRequestProperties
@@ -192,6 +208,24 @@ extension InternalRequest : RequestBuilderMethods
     func contentTypeOverride(value: String?) -> InternalRequest {
         var properties = self.getMutableProperties()
         properties.contentTypeOverride = value
+        return InternalRequest(properties)
+    }
+    
+    func allowCachedResponse(value: Bool) -> InternalRequest {
+        var properties = self.getMutableProperties()
+        properties.allowCachedResponse = value
+        return InternalRequest(properties)
+    }
+    
+    func cacheResponseWithExpiration(value: UInt) -> InternalRequest {
+        var properties = self.getMutableProperties()
+        properties.cacheResponseWithExpiration = value
+        return InternalRequest(properties)
+    }
+    
+    func customCacheIdentifier(value: String?) -> InternalRequest {
+        var properties = self.getMutableProperties()
+        properties.customCacheIdentifier = value
         return InternalRequest(properties)
     }
 }

@@ -37,8 +37,8 @@ public protocol ResponseProperties
     /// Any parsed body data
     var parsedBody:AnyObject? { get }
     
-    /// TODO: Add cache data (did this come from the cache? how old is it?)
-    
+    /// Indicates that this response was retrieved from a local cache
+    var retreivedFromCache:Bool { get }
 }
 
 public protocol ResponseBuilderMethods
@@ -69,6 +69,9 @@ public protocol ResponseBuilderMethods
     
     /// Returns a new Response with parsedBody set to the provided value
     func parsedBody(value:AnyObject?) -> Self
+    
+    // Returns a new Response with retreivedFromCache set to the provided value
+    func retreivedFromCache(value:Bool) -> Self
 }
 
 public protocol Response : ResponseProperties, ResponseBuilderMethods
@@ -89,8 +92,9 @@ public struct MutableResponseProperties : ResponseProperties
     public var headers:Headers
     public var body:NSData?
     public var parsedBody:AnyObject?
+    public var retreivedFromCache:Bool
 
-    public init(gateway:Gateway, request:Request, requestedURL:NSURL, resolvedURL:NSURL, statusCode:Int, headers:Headers, body:NSData?, parsedBody:AnyObject?) {
+    public init(gateway:Gateway, request:Request, requestedURL:NSURL, resolvedURL:NSURL, statusCode:Int, headers:Headers, body:NSData?, parsedBody:AnyObject?, retreivedFromCache:Bool) {
         self.gateway = gateway
         self.request = request
         self.requestedURL = requestedURL
@@ -99,5 +103,6 @@ public struct MutableResponseProperties : ResponseProperties
         self.headers = headers
         self.body = body
         self.parsedBody = parsedBody
+        self.retreivedFromCache = retreivedFromCache
     }
 }

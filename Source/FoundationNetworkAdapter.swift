@@ -71,8 +71,10 @@ public class FoundationNetworkAdapter : NSObject, NetworkAdapter, NSURLSessionDa
             
             self?.taskToRequestMap.removeValueForKey(taskIdentifier)
             
-            // TODO: Let the gateway finish processing the response
-            gateway.fulfillRequest(request, response:gatewayResponse, error:error);
+            // Let the gateway finish processing the response (on main thread)
+            dispatch_async(dispatch_get_main_queue(), {
+                gateway.fulfillRequest(request, response:gatewayResponse, error:error);
+            })
         }
         
         // Submit the request on the session
@@ -106,6 +108,7 @@ internal extension MutableResponseProperties
         self.resolvedURL = response.URL ?? nil
         self.body = data
         self.parsedBody = nil
+        self.retreivedFromCache = false
     }
 }
 

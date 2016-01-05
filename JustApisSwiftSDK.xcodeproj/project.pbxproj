@@ -60,6 +60,10 @@
 		5386B1CA1C18D728001D8D31 /* FoundationNetworkAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5386B1C91C18D728001D8D31 /* FoundationNetworkAdapter.swift */; };
 		5386B1CC1C18D750001D8D31 /* ResponseProcessors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5386B1CB1C18D750001D8D31 /* ResponseProcessors.swift */; };
 		5386B1CE1C18D761001D8D31 /* RequestPreparers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5386B1CD1C18D761001D8D31 /* RequestPreparers.swift */; };
+		53C4DCC11C3AFB5D0067B671 /* InMemoryCacheProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C4DCC01C3AFB5D0067B671 /* InMemoryCacheProvider.swift */; };
+		53C4DCC21C3AFB5D0067B671 /* InMemoryCacheProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C4DCC01C3AFB5D0067B671 /* InMemoryCacheProvider.swift */; };
+		53C4DCC31C3AFB5D0067B671 /* InMemoryCacheProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C4DCC01C3AFB5D0067B671 /* InMemoryCacheProvider.swift */; };
+		53C4DCC41C3AFB5D0067B671 /* InMemoryCacheProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C4DCC01C3AFB5D0067B671 /* InMemoryCacheProvider.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -101,6 +105,7 @@
 		5386B1C91C18D728001D8D31 /* FoundationNetworkAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoundationNetworkAdapter.swift; sourceTree = "<group>"; };
 		5386B1CB1C18D750001D8D31 /* ResponseProcessors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResponseProcessors.swift; sourceTree = "<group>"; };
 		5386B1CD1C18D761001D8D31 /* RequestPreparers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestPreparers.swift; sourceTree = "<group>"; };
+		53C4DCC01C3AFB5D0067B671 /* InMemoryCacheProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InMemoryCacheProvider.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -222,6 +227,7 @@
 				5386B1CD1C18D761001D8D31 /* RequestPreparers.swift */,
 				5303C4081C3487F700E5A7AF /* InternalRequest.swift */,
 				5303C40D1C348E5400E5A7AF /* InternalResponse.swift */,
+				53C4DCC01C3AFB5D0067B671 /* InMemoryCacheProvider.swift */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -446,6 +452,7 @@
 				5303C3AD1C234E5E00E5A7AF /* CompositedGateway.swift in Sources */,
 				5303C40F1C348E5400E5A7AF /* InternalResponse.swift in Sources */,
 				5303C4051C331C5700E5A7AF /* Errors.swift in Sources */,
+				53C4DCC21C3AFB5D0067B671 /* InMemoryCacheProvider.swift in Sources */,
 				5303C3AE1C234E5E00E5A7AF /* FoundationNetworkAdapter.swift in Sources */,
 				5303C3B01C234E5E00E5A7AF /* ResponseProcessors.swift in Sources */,
 			);
@@ -464,6 +471,7 @@
 				5303C3D31C23529500E5A7AF /* CompositedGateway.swift in Sources */,
 				5303C4101C348E5400E5A7AF /* InternalResponse.swift in Sources */,
 				5303C4061C331C5700E5A7AF /* Errors.swift in Sources */,
+				53C4DCC31C3AFB5D0067B671 /* InMemoryCacheProvider.swift in Sources */,
 				5303C3D41C23529500E5A7AF /* FoundationNetworkAdapter.swift in Sources */,
 				5303C3D61C23529500E5A7AF /* ResponseProcessors.swift in Sources */,
 			);
@@ -482,6 +490,7 @@
 				5303C3E51C2353CC00E5A7AF /* CompositedGateway.swift in Sources */,
 				5303C4111C348E5400E5A7AF /* InternalResponse.swift in Sources */,
 				5303C4071C331C5700E5A7AF /* Errors.swift in Sources */,
+				53C4DCC41C3AFB5D0067B671 /* InMemoryCacheProvider.swift in Sources */,
 				5303C3E61C2353CC00E5A7AF /* FoundationNetworkAdapter.swift in Sources */,
 				5303C3E81C2353CC00E5A7AF /* ResponseProcessors.swift in Sources */,
 			);
@@ -500,6 +509,7 @@
 				5386B1C31C18CCE9001D8D31 /* CompositedGateway.swift in Sources */,
 				5303C40E1C348E5400E5A7AF /* InternalResponse.swift in Sources */,
 				5303C4041C331C5700E5A7AF /* Errors.swift in Sources */,
+				53C4DCC11C3AFB5D0067B671 /* InMemoryCacheProvider.swift in Sources */,
 				5386B1CA1C18D728001D8D31 /* FoundationNetworkAdapter.swift in Sources */,
 				5386B1CC1C18D750001D8D31 /* ResponseProcessors.swift in Sources */,
 			);

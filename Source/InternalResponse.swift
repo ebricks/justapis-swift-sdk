@@ -23,6 +23,7 @@ internal struct MutableInternalResponseProperties : InternalResponseProperties
     var headers:Headers
     var body:NSData?
     var parsedBody:AnyObject?
+    var retreivedFromCache:Bool
     var internalRequest:InternalRequest? { get { return request as? InternalRequest } }
 
     init(_ response:InternalResponseProperties)
@@ -35,6 +36,7 @@ internal struct MutableInternalResponseProperties : InternalResponseProperties
         self.headers = response.headers
         self.body = response.body
         self.parsedBody = response.parsedBody
+        self.retreivedFromCache = response.retreivedFromCache
     }
     
 }
@@ -54,6 +56,7 @@ internal struct InternalResponse: Response, InternalResponseProperties
     let headers:Headers
     let body:NSData?
     let parsedBody:AnyObject?
+    let retreivedFromCache:Bool
     var internalRequest:InternalRequest? { get { return request as? InternalRequest } }
     
     init(_ response:InternalResponseProperties)
@@ -66,6 +69,7 @@ internal struct InternalResponse: Response, InternalResponseProperties
         self.headers = response.headers
         self.body = response.body
         self.parsedBody = response.parsedBody
+        self.retreivedFromCache = response.retreivedFromCache
     }
     
     init(_ gateway:CompositedGateway, response:ResponseProperties)
@@ -78,6 +82,7 @@ internal struct InternalResponse: Response, InternalResponseProperties
         self.headers = response.headers
         self.body = response.body
         self.parsedBody = response.parsedBody
+        self.retreivedFromCache = response.retreivedFromCache
     }
 
     func getMutableProperties() -> MutableInternalResponseProperties
@@ -147,6 +152,12 @@ extension InternalResponse : ResponseBuilderMethods
     func parsedBody(value: AnyObject?) -> InternalResponse {
         var properties = self.getMutableProperties()
         properties.parsedBody = value
+        return InternalResponse(properties)
+    }
+    
+    func retreivedFromCache(value: Bool) -> InternalResponse {
+        var properties = self.getMutableProperties()
+        properties.retreivedFromCache = value
         return InternalResponse(properties)
     }
 }

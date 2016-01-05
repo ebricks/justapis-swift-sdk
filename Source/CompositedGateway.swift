@@ -51,6 +51,20 @@ public protocol NetworkAdapter
 }
 
 ///
+/// Invoked by the CompositedGateway to save and retrieve responses locally cached responses
+///
+public protocol CacheProvider
+{
+    /// Called to retrieve a Response from the cache. Should call the callback with nil or the retrieved response
+    func cachedResponseForIdentifier(identifier:String, callback:CacheProviderCallback)
+
+    /// Called to save a Response to the cache. The expiration should be considered a preference, not a guarantee.
+    func setCachedResponseForIdentifier(identifier:String, response:ResponseProperties, expirationSeconds:UInt)
+}
+
+public typealias CacheProviderCallback = ((ResponseProperties?) -> Void)
+
+///
 /// Implementation of Gateway protocol that dispatches most details to
 /// helper classes.
 ///
@@ -59,24 +73,34 @@ public class CompositedGateway : Gateway
     public let baseUrl:NSURL
     
     private let networkAdapter:NetworkAdapter
+    private let cacheProvider:CacheProvider
     private let requestPreparer:RequestPreparer?
     private let responseProcessor:ResponseProcessor?
     private let contentTypeParser:ContentTypeParser
     private var callbacks = [InternalRequest: RequestCallback]()
-    
+        
     public init(
         baseUrl:NSURL,
         requestPreparer:RequestPreparer? = nil,
         responseProcessor:ResponseProcessor? = nil,
+        cacheProvider:CacheProvider? = nil,
         networkAdapter:NetworkAdapter? = nil
         )
     {
         self.baseUrl = baseUrl
         
         var networkAdapter = networkAdapter
+        var cacheProvider = cacheProvider
         self.requestPreparer = requestPreparer
         self.responseProcessor = responseProcessor
         self.contentTypeParser = ContentTypeParser()
+        
+        // Assign the given cacheProvider, or init the default one
+        if (nil == cacheProvider)
+        {
+            cacheProvider = InMemoryCacheProvider()
+        }
+        self.cacheProvider = cacheProvider!
 
         // Assign the given network adapter, or init the default one
         if (nil == networkAdapter)
@@ -103,14 +127,14 @@ public class CompositedGateway : Gateway
     
     public func submitRequest(request:RequestProperties, callback:RequestCallback?)
     {
-        let request = self.prepareInternalRequest(request)
+        let request = self.internalizeRequest(request)
         self.submitInternalRequest(request, callback: callback)
     }
     
     ///
     /// Called by CacheProvider or NetworkAdapter once a response is ready
     ///
-    public func fulfillRequest(request:Request, response:ResponseProperties?, error:ErrorType?)
+    public func fulfillRequest(request:Request, response:ResponseProperties?, error:ErrorType?, fromCache:Bool = false)
     {
         guard let request = request as? InternalRequest else
         {
@@ -120,12 +144,14 @@ public class CompositedGateway : Gateway
 
         // Apply an empty callback if none was provided. It makes the logic cleaner below
         let callback:RequestCallback? = self.callbacks[request]
-        let response:InternalResponse? = (response != nil) ? self.prepareInternalResponse(response!) : nil
+        let response:InternalResponse? = (response != nil) ? self.internalizeResponse(response!) : nil
 
         // Remove the
         self.callbacks.removeValueForKey(request)
 
-        var result:RequestResult = (request:request, response:response, error:error)
+        var result:RequestResult = (request:request,
+                                    response:response?.retreivedFromCache(fromCache),
+                                    error:error)
 
         // Check if there was an error
         guard error == nil else
@@ -158,8 +184,6 @@ public class CompositedGateway : Gateway
             compoundResponseProcessor.responseProcessors.append(responseProcessor)
         }
         
-        // TODO: add any cache-storing response processors
-        
         // Run the compound processor in a dispatch group
         let responseProcessingDispatchGroup = dispatch_group_create()
         dispatch_group_enter(responseProcessingDispatchGroup)
@@ -173,8 +197,19 @@ public class CompositedGateway : Gateway
             }
         )
 
-        // When the dispatch group is emptied, run the callback
+        // When the dispatch group is emptied, cache the response and run the callback
         dispatch_group_notify(responseProcessingDispatchGroup, dispatch_get_main_queue(), {
+            
+            
+            if result.error == nil // There's no error
+                && result.response != nil // And there is a response
+                && !fromCache // And the response isn't already from the cache
+                && request.cacheResponseWithExpiration > 0 // And we're supposed to cache it
+            {
+                // Cache the response
+                self.cacheProvider.setCachedResponseForIdentifier(request.cacheIdentifier, response: result.response!, expirationSeconds:request.cacheResponseWithExpiration)
+            }
+            
             // Pass result back to caller
             callback?(result)
         })
@@ -183,7 +218,7 @@ public class CompositedGateway : Gateway
     ///
     /// Wraps raw ResponseProperties as an InternalResponse
     ///
-    private func prepareInternalResponse(response:ResponseProperties) -> InternalResponse
+    private func internalizeResponse(response:ResponseProperties) -> InternalResponse
     {
         // Downcast to an InternalResponse, or wrap externally prepared properties
         var internalResponse:InternalResponse = (response as? InternalResponse) ?? InternalResponse(self, response:response)
@@ -200,7 +235,7 @@ public class CompositedGateway : Gateway
     ///
     /// Prepares RequestProperties as an InteralRequest and performs preflight prep
     ///
-    private func prepareInternalRequest(request:RequestProperties) -> InternalRequest
+    private func internalizeRequest(request:RequestProperties) -> InternalRequest
     {
         // Downcast to an InternalRequest, or wrap externally prepared properties
         var internalRequest:InternalRequest = (request as? InternalRequest) ?? InternalRequest(self, request:request)
@@ -218,8 +253,6 @@ public class CompositedGateway : Gateway
             internalRequest = requestPreparer.prepareRequest(internalRequest) as! InternalRequest
         }
 
-        // TODO: assign an identifer?
-
         return internalRequest
     }
     
@@ -233,10 +266,30 @@ public class CompositedGateway : Gateway
             self.callbacks[request] = callback
         }
 
-        // TODO: check cache
+        if request.allowCachedResponse
+        {
+            // Check the cache
+            self.cacheProvider.cachedResponseForIdentifier(request.cacheIdentifier, callback: {
+                (response:ResponseProperties?) in
+                
+                if let response = response
+                {
+                    // There was a subitably fresh response in the cache. Use it
+                    self.fulfillRequest(request, response: response, error: nil, fromCache:true)
+                }
+                else
+                {
+                    // Otherwise, send the request to the network adapter
+                    self.networkAdapter.submitRequest(request, gateway:self)
+                }
+            })
+        }
+        else
+        {
+            // Ignore anything in the cache, and send the request to the network adapter immediately
+            self.networkAdapter.submitRequest(request, gateway:self)
+        }
         
-        // Send the request to the network adapter
-        self.networkAdapter.submitRequest(request, gateway:self)
     }
 }
 
@@ -245,7 +298,7 @@ public class CompositedGateway : Gateway
 ///
 public class JsonGateway : CompositedGateway
 {
-    public override init(baseUrl: NSURL, requestPreparer: RequestPreparer? = nil, responseProcessor:ResponseProcessor? = nil, networkAdapter: NetworkAdapter? = nil)
+    public override init(baseUrl: NSURL, requestPreparer: RequestPreparer? = nil, responseProcessor:ResponseProcessor? = nil, cacheProvider:CacheProvider? = nil, networkAdapter: NetworkAdapter? = nil)
     {
         super.init(baseUrl: baseUrl, requestPreparer:requestPreparer, responseProcessor:nil, networkAdapter:networkAdapter)
         super.setParser(JsonResponseProcessor(), contentType: "application/json")

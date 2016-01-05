@@ -47,8 +47,25 @@ public protocol RequestProperties
     var contentTypeOverride:String? { get }
     
     
-    // TODO: add cache-control properties
+    ///
+    /// Cache Control Options
+    /// ----
     
+    /// Whether to check the gateway's response cache before sending
+    var allowCachedResponse:Bool { get }
+    
+    /// How long to store responses in the cache. 0 to not cache response at all
+    var cacheResponseWithExpiration:UInt { get }
+    
+    /// A custom identifier to use for caching. Default is METHOD + PATH + PARAMS
+    var customCacheIdentifier:String? { get }
+    
+}
+
+extension RequestProperties
+{
+    /// Cache identifier: either the customCacheIdentifier if provided, or METHOD + PATH + PARAMS
+    var cacheIdentifier:String { return customCacheIdentifier ?? "\(self.method) \(self.path)?\(self.params)" }
 }
 
 ///
@@ -85,6 +102,15 @@ public protocol RequestBuilderMethods
     
     /// Returns a new Request with contentTypeOverride set to the provided value
     func contentTypeOverride(value:String?) -> Self
+    
+    /// Returns a new Request with allowCachedResponse set to the provided value
+    func allowCachedResponse(value:Bool) -> Self
+    
+    /// Returns a new Request with cacheResponseWithExpiration set to the provided value
+    func cacheResponseWithExpiration(value:UInt) -> Self
+    
+    /// Returns a new Request with customCacheIdentifier set to the provided value
+    func customCacheIdentifier(value:String?) -> Self
 }
 
 ///
@@ -109,5 +135,9 @@ public struct MutableRequestProperties : RequestProperties
 
     public var applyContentTypeParsing:Bool = true
     public var contentTypeOverride:String? = nil
+    
+    public var allowCachedResponse:Bool = false
+    public var cacheResponseWithExpiration:UInt = 0
+    public var customCacheIdentifier:String? = nil
 }
 

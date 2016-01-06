@@ -7,7 +7,7 @@
 //
 
 import XCTest
-import JustApisSwiftSDK
+@testable import JustApisSwiftSDK
 
 class CompoundResponseProcessorTests: XCTestCase {
 
@@ -20,25 +20,141 @@ class CompoundResponseProcessorTests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
     }
+    
+    private func getDefaultMockResponse() -> InternalResponse
+    {
+        let gateway:CompositedGateway = CompositedGateway(baseUrl: NSURL(string:"http://localhost")!)
+        let mockRequestDefaults:MutableRequestProperties = MutableRequestProperties(
+            method: "GET",
+            path: "/",
+            params: ["foo":"bar"],
+            headers: ["foo-header":"bar-value"],
+            body: nil,
+            followRedirects: true,
+            applyContentTypeParsing: true,
+            contentTypeOverride: "test/content-type",
+            allowCachedResponse: false,
+            cacheResponseWithExpiration: 0,
+            customCacheIdentifier: nil)
+        let mockRequest = gateway.internalizeRequest(mockRequestDefaults)
+        
+        let mockResponseDefaults:MutableResponseProperties = MutableResponseProperties(
+            gateway: gateway,
+            request: mockRequest,
+            requestedURL: gateway.baseUrl.URLByAppendingPathComponent("/?foo=bar"),
+            resolvedURL: gateway.baseUrl,
+            statusCode: 400,
+            headers: ["test-response-header":"foo bar"],
+            body: "test".dataUsingEncoding(NSUTF8StringEncoding),
+            parsedBody: "test",
+            retreivedFromCache: false)
+        
+        return gateway.internalizeResponse(mockResponseDefaults)
+    }
+    
 
     func testNoProcessors() {
-        XCTFail("Not implemented!")
+        let processor = CompoundResponseProcessor()
+        let response = getDefaultMockResponse()
+        let expectation = self.expectationWithDescription(self.name)
+
+        XCTAssertEqual(processor.responseProcessors.count, 0)
+
+        processor.processResponse(response, callback: {
+            (response:Response, error:ErrorType?) in
+            
+            XCTAssertTrue(true)
+            expectation.fulfill()
+        })
+        
+        self.waitForExpectationsWithTimeout(5, handler: nil)
     }
     
     func testOneProcessor() {
-        XCTFail("Not implemented!")
+        let processor = CompoundResponseProcessor()
+        let response = getDefaultMockResponse().statusCode(0)
+        let expectation = self.expectationWithDescription(self.name)
+        
+        XCTAssertEqual(processor.responseProcessors.count, 0)
+        
+        let statusIncrementingProcessor = ResponseProcessorClosureAdapter(closure: {
+            (response:Response) in
+            return (request:response.request, response:response.statusCode(response.statusCode + 1), error:nil)
+        })
+        
+        processor.responseProcessors.append(statusIncrementingProcessor)
+        XCTAssertEqual(processor.responseProcessors.count, 1)
+
+        processor.processResponse(response, callback: {
+            (response:Response, error:ErrorType?) in
+            
+            XCTAssertEqual(response.statusCode, 1)
+            expectation.fulfill()
+        })
+        
+        self.waitForExpectationsWithTimeout(5, handler: nil)
     }
     
     func testManySuccessfulProcessors() {
-        XCTFail("Not implemented!")
+        let processor = CompoundResponseProcessor()
+        let response = getDefaultMockResponse().statusCode(0)
+        let expectation = self.expectationWithDescription(self.name)
+        
+        XCTAssertEqual(processor.responseProcessors.count, 0)
+        
+        let statusIncrementingProcessor = ResponseProcessorClosureAdapter(closure: {
+            (response:Response) in
+            return (request:response.request, response:response.statusCode(response.statusCode + 1), error:nil)
+        })
+        processor.responseProcessors.append(statusIncrementingProcessor)
+        processor.responseProcessors.append(statusIncrementingProcessor)
+        processor.responseProcessors.append(statusIncrementingProcessor)
+        processor.responseProcessors.append(statusIncrementingProcessor)
+        processor.responseProcessors.append(statusIncrementingProcessor)
+        XCTAssertEqual(processor.responseProcessors.count, 5)
+
+        processor.processResponse(response, callback: {
+            (response:Response, error:ErrorType?) in
+            
+            XCTAssertEqual(response.statusCode, 5)
+            expectation.fulfill()
+        })
+        
+        self.waitForExpectationsWithTimeout(5, handler: nil)
     }
 
     func testErrorInFirstOfManyProcessors() {
-        XCTFail("NotImplemented!")
+        let processor = CompoundResponseProcessor()
+        let response = getDefaultMockResponse().statusCode(0)
+        let expectation = self.expectationWithDescription(self.name)
+        
+        XCTAssertEqual(processor.responseProcessors.count, 0)
+        
+        let failingProcessor = ResponseProcessorClosureAdapter(closure: {
+            (response:Response) in
+            return (request:response.request, response:response, error:createError(1))
+        })
+
+        let statusIncrementingProcessor = ResponseProcessorClosureAdapter(closure: {
+            (response:Response) in
+            return (request:response.request, response:response.statusCode(response.statusCode + 1), error:nil)
+        })
+        processor.responseProcessors.append(failingProcessor)
+        processor.responseProcessors.append(statusIncrementingProcessor)
+        processor.responseProcessors.append(statusIncrementingProcessor)
+        processor.responseProcessors.append(statusIncrementingProcessor)
+        processor.responseProcessors.append(statusIncrementingProcessor)
+        processor.responseProcessors.append(statusIncrementingProcessor)
+        XCTAssertEqual(processor.responseProcessors.count, 6)
+        
+        processor.processResponse(response, callback: {
+            (response:Response, error:ErrorType?) in
+            
+            XCTAssertEqual(response.statusCode, 0)
+            XCTAssertNotNil(error ?? nil)
+            expectation.fulfill()
+        })
+        
+        self.waitForExpectationsWithTimeout(5, handler: nil)
     }
-    
-    func testRecursiveCompoundProcessors() {
-        XCTFail("Not implemented!")
-    }
-    
 }

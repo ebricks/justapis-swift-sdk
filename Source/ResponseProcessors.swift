@@ -81,6 +81,11 @@ public class CompoundResponseProcessor : ResponseProcessor
             callback(response:response, error: error)
         })
     }
+    
+    public init()
+    {
+        
+    }
 }
 
 ///

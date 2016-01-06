@@ -69,6 +69,11 @@
 		53C4DCCC1C3C687A0067B671 /* CachingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C4DCCB1C3C687A0067B671 /* CachingTests.swift */; };
 		53C4DCCE1C3C69190067B671 /* ContentTypeParsingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C4DCCD1C3C69190067B671 /* ContentTypeParsingTests.swift */; };
 		53C4DCD01C3C69DB0067B671 /* CompoundResponseProcessorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C4DCCF1C3C69DB0067B671 /* CompoundResponseProcessorTests.swift */; };
+		53C4DCD21C3D8AD20067B671 /* SSLCertificate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C4DCD11C3D8AD20067B671 /* SSLCertificate.swift */; };
+		53C4DCD31C3D8AD20067B671 /* SSLCertificate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C4DCD11C3D8AD20067B671 /* SSLCertificate.swift */; };
+		53C4DCD41C3D8AD20067B671 /* SSLCertificate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C4DCD11C3D8AD20067B671 /* SSLCertificate.swift */; };
+		53C4DCD51C3D8AD20067B671 /* SSLCertificate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C4DCD11C3D8AD20067B671 /* SSLCertificate.swift */; };
+		53C4DCD91C3D9B990067B671 /* SSLCertificatePinningTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C4DCD81C3D9B990067B671 /* SSLCertificatePinningTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -116,6 +121,8 @@
 		53C4DCCB1C3C687A0067B671 /* CachingTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CachingTests.swift; sourceTree = "<group>"; };
 		53C4DCCD1C3C69190067B671 /* ContentTypeParsingTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentTypeParsingTests.swift; sourceTree = "<group>"; };
 		53C4DCCF1C3C69DB0067B671 /* CompoundResponseProcessorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CompoundResponseProcessorTests.swift; sourceTree = "<group>"; };
+		53C4DCD11C3D8AD20067B671 /* SSLCertificate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSLCertificate.swift; sourceTree = "<group>"; };
+		53C4DCD81C3D9B990067B671 /* SSLCertificatePinningTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSLCertificatePinningTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -229,6 +236,7 @@
 				53C4DCCB1C3C687A0067B671 /* CachingTests.swift */,
 				53C4DCCD1C3C69190067B671 /* ContentTypeParsingTests.swift */,
 				53C4DCCF1C3C69DB0067B671 /* CompoundResponseProcessorTests.swift */,
+				53C4DCD81C3D9B990067B671 /* SSLCertificatePinningTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -243,6 +251,7 @@
 				5303C4081C3487F700E5A7AF /* InternalRequest.swift */,
 				5303C40D1C348E5400E5A7AF /* InternalResponse.swift */,
 				53C4DCC01C3AFB5D0067B671 /* InMemoryCacheProvider.swift */,
+				53C4DCD11C3D8AD20067B671 /* SSLCertificate.swift */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -461,6 +470,7 @@
 				5303C3AA1C234E5E00E5A7AF /* RequestPreparers.swift in Sources */,
 				5303C3F61C331BEF00E5A7AF /* Request.swift in Sources */,
 				5303C3AC1C234E5E00E5A7AF /* CoreTypes.swift in Sources */,
+				53C4DCD31C3D8AD20067B671 /* SSLCertificate.swift in Sources */,
 				5303C4001C331C0400E5A7AF /* Gateway.swift in Sources */,
 				5303C3FB1C331BFA00E5A7AF /* Response.swift in Sources */,
 				5303C40A1C3487F700E5A7AF /* InternalRequest.swift in Sources */,
@@ -480,6 +490,7 @@
 				5303C3D01C23529500E5A7AF /* RequestPreparers.swift in Sources */,
 				5303C3F71C331BEF00E5A7AF /* Request.swift in Sources */,
 				5303C3D21C23529500E5A7AF /* CoreTypes.swift in Sources */,
+				53C4DCD41C3D8AD20067B671 /* SSLCertificate.swift in Sources */,
 				5303C4011C331C0400E5A7AF /* Gateway.swift in Sources */,
 				5303C3FC1C331BFA00E5A7AF /* Response.swift in Sources */,
 				5303C40B1C3487F700E5A7AF /* InternalRequest.swift in Sources */,
@@ -499,6 +510,7 @@
 				5303C3E21C2353CC00E5A7AF /* RequestPreparers.swift in Sources */,
 				5303C3F81C331BEF00E5A7AF /* Request.swift in Sources */,
 				5303C3E41C2353CC00E5A7AF /* CoreTypes.swift in Sources */,
+				53C4DCD51C3D8AD20067B671 /* SSLCertificate.swift in Sources */,
 				5303C4021C331C0400E5A7AF /* Gateway.swift in Sources */,
 				5303C3FD1C331BFA00E5A7AF /* Response.swift in Sources */,
 				5303C40C1C3487F700E5A7AF /* InternalRequest.swift in Sources */,
@@ -518,6 +530,7 @@
 				5386B1CE1C18D761001D8D31 /* RequestPreparers.swift in Sources */,
 				5303C3F51C331BEF00E5A7AF /* Request.swift in Sources */,
 				5386B1C11C18B903001D8D31 /* CoreTypes.swift in Sources */,
+				53C4DCD21C3D8AD20067B671 /* SSLCertificate.swift in Sources */,
 				5303C3FF1C331C0400E5A7AF /* Gateway.swift in Sources */,
 				5303C3FA1C331BFA00E5A7AF /* Response.swift in Sources */,
 				5303C4091C3487F700E5A7AF /* InternalRequest.swift in Sources */,
@@ -538,6 +551,7 @@
 				53122FDD1C20828E0052E8A5 /* FoundationRequestTests.swift in Sources */,
 				53C4DCCA1C3C67EF0067B671 /* InternalResponseTests.swift in Sources */,
 				53C4DCD01C3C69DB0067B671 /* CompoundResponseProcessorTests.swift in Sources */,
+				53C4DCD91C3D9B990067B671 /* SSLCertificatePinningTests.swift in Sources */,
 				53122FDF1C2088D90052E8A5 /* FoundationResponseTests.swift in Sources */,
 				53C4DCCC1C3C687A0067B671 /* CachingTests.swift in Sources */,
 				53C4DCC81C3C675B0067B671 /* InternalRequestTests.swift in Sources */,

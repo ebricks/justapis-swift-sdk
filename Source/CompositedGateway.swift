@@ -79,12 +79,44 @@ public class NullCacheProvider : CacheProvider
 }
 
 ///
+/// Convenience object for configuring a composited gateway. Can be passed into Gateway initializer
+///
+public struct CompositedGatewayConfiguration
+{
+    var baseUrl:NSURL
+    var sslCertificate:SSLCertificate? = nil
+    var defaultRequestProperties:DefaultRequestPropertySet? = nil
+    var networkAdapter:NetworkAdapter? = nil
+    var cacheProvider:CacheProvider? = nil
+    var requestPreparer:RequestPreparer? = nil
+    var responseProcessor:ResponseProcessor? = nil
+    
+    public init(baseUrl:NSURL,
+        sslCertificate:SSLCertificate? = nil,
+        defaultRequestProperties:DefaultRequestPropertySet? = nil,
+        requestPreparer:RequestPreparer? = nil,
+        responseProcessor:ResponseProcessor? = nil,
+        cacheProvider:CacheProvider? = nil,
+        networkAdapter:NetworkAdapter? = nil)
+    {
+        self.baseUrl = baseUrl
+        self.sslCertificate = sslCertificate
+        self.defaultRequestProperties = defaultRequestProperties
+        self.requestPreparer = requestPreparer
+        self.responseProcessor = responseProcessor
+        self.cacheProvider = cacheProvider
+        self.networkAdapter = networkAdapter
+    }
+}
+
+///
 /// Implementation of Gateway protocol that dispatches most details to
 /// helper classes.
 ///
 public class CompositedGateway : Gateway
 {
     public let baseUrl:NSURL
+    public let sslCertificate:SSLCertificate?
     public let defaultRequestProperties:DefaultRequestPropertySet
     
     private let networkAdapter:NetworkAdapter
@@ -93,9 +125,13 @@ public class CompositedGateway : Gateway
     private let responseProcessor:ResponseProcessor?
     private let contentTypeParser:ContentTypeParser
     private var callbacks = [InternalRequest: RequestCallback]()
-        
+    
+    ///
+    /// Designated initializer
+    ///
     public init(
         baseUrl:NSURL,
+        sslCertificate:SSLCertificate? = nil,
         defaultRequestProperties:DefaultRequestPropertySet? = nil,
         requestPreparer:RequestPreparer? = nil,
         responseProcessor:ResponseProcessor? = nil,
@@ -104,6 +140,7 @@ public class CompositedGateway : Gateway
         )
     {
         self.baseUrl = baseUrl
+        self.sslCertificate = sslCertificate
 
         // Use the GatewayDefaultRequestProperties if none were provided
         self.defaultRequestProperties = defaultRequestProperties ?? GatewayDefaultRequestProperties()
@@ -115,7 +152,23 @@ public class CompositedGateway : Gateway
         self.cacheProvider = cacheProvider ?? InMemoryCacheProvider()
         
         // Use the Foundation Network Adapter if none was provided
-        self.networkAdapter = networkAdapter ?? FoundationNetworkAdapter()
+        self.networkAdapter = networkAdapter ?? FoundationNetworkAdapter(sslCertificate: sslCertificate)
+    }
+    
+    ///
+    /// Convenience initializer for use with CompositedGatewayConfiguration
+    ///
+    public convenience init(configuration:CompositedGatewayConfiguration)
+    {
+        self.init(
+            baseUrl:configuration.baseUrl,
+            sslCertificate:configuration.sslCertificate,
+            defaultRequestProperties:configuration.defaultRequestProperties,
+            requestPreparer:configuration.requestPreparer,
+            responseProcessor:configuration.responseProcessor,
+            cacheProvider:configuration.cacheProvider,
+            networkAdapter:configuration.networkAdapter
+                  )
     }
     
     ///
@@ -308,7 +361,7 @@ public class CompositedGateway : Gateway
 ///
 public class JsonGateway : CompositedGateway
 {
-    public override init(baseUrl: NSURL, defaultRequestProperties:DefaultRequestPropertySet? = nil, requestPreparer: RequestPreparer? = nil, responseProcessor:ResponseProcessor? = nil, cacheProvider:CacheProvider? = nil, networkAdapter: NetworkAdapter? = nil)
+    public override init(baseUrl: NSURL, sslCertificate:SSLCertificate? = nil, defaultRequestProperties:DefaultRequestPropertySet? = nil, requestPreparer: RequestPreparer? = nil, responseProcessor:ResponseProcessor? = nil, cacheProvider:CacheProvider? = nil, networkAdapter: NetworkAdapter? = nil)
     {
         super.init(baseUrl: baseUrl, defaultRequestProperties: defaultRequestProperties, requestPreparer:requestPreparer, responseProcessor:responseProcessor, networkAdapter:networkAdapter)
         super.setParser(JsonResponseProcessor(), contentType: "application/json")

@@ -8,16 +8,19 @@
 
 import Foundation
 
-public class FoundationNetworkAdapter : NSObject, NetworkAdapter, NSURLSessionDataDelegate
+public class FoundationNetworkAdapter : NSObject, NetworkAdapter, NSURLSessionDataDelegate, NSURLSessionDelegate
 {
     typealias TaskCompletionHandler =  (data:NSData?, response:NSURLResponse?, error:NSError?) -> Void;
     
-    public override init()
+    public init(sslCertificate:SSLCertificate? = nil)
     {
+        self.sslCertificate = sslCertificate
         super.init()
+        
         self.session = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration(), delegate: self, delegateQueue: nil)
     }
     
+    private let sslCertificate:SSLCertificate?
     private var session:NSURLSession!
     private var taskToRequestMap = [Int: (request:Request, handler:TaskCompletionHandler)]()
     
@@ -46,6 +49,52 @@ public class FoundationNetworkAdapter : NSObject, NetworkAdapter, NSURLSessionDa
             {
                 completionHandler(request)
             }
+    }
+    
+    @objc public func URLSession(session: NSURLSession, didReceiveChallenge challenge: NSURLAuthenticationChallenge, completionHandler: (NSURLSessionAuthChallengeDisposition, NSURLCredential?) -> Void) {
+
+        // If we have a SSL certificate for certificate pinning, verify it
+
+        guard let serverTrust = challenge.protectionSpace.serverTrust else
+        {
+            // APPROVE: This isn't the challenge we're looking for
+            completionHandler(NSURLSessionAuthChallengeDisposition.UseCredential, nil)
+            return
+        }
+     
+        let credential = NSURLCredential(forTrust: serverTrust)
+
+        guard let sslCertificate = self.sslCertificate else
+        {
+            // APPROVE: We're not worried about trusting the server as we have no certificate pinned
+            challenge.sender?.useCredential(credential, forAuthenticationChallenge: challenge)
+            completionHandler(NSURLSessionAuthChallengeDisposition.UseCredential, credential)
+            return
+        }
+        
+        guard let remoteCertificate = SecTrustGetCertificateAtIndex(serverTrust, 0) else
+        {
+            // FAIL: We want to verify the server ceritifate, but it didn't give us one!
+            challenge.sender?.cancelAuthenticationChallenge(challenge)
+            completionHandler(NSURLSessionAuthChallengeDisposition.CancelAuthenticationChallenge, nil)
+            return
+        }
+        
+        guard let
+            remoteCertificateData:NSData = SecCertificateCopyData(remoteCertificate)
+            where
+            remoteCertificateData.isEqualToData(sslCertificate.data) else
+        {
+            // FAIL: The certificates didn't match!
+            challenge.sender?.cancelAuthenticationChallenge(challenge)
+            completionHandler(NSURLSessionAuthChallengeDisposition.CancelAuthenticationChallenge, nil)
+            return
+        }
+        
+        // APPROVE: We checked for a certificate and it was valid!
+        challenge.sender?.useCredential(credential, forAuthenticationChallenge: challenge)
+        completionHandler(NSURLSessionAuthChallengeDisposition.UseCredential, credential)
+        return
     }
     
     public func submitRequest(request: Request, gateway:CompositedGateway)

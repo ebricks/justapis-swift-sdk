@@ -7,10 +7,23 @@
 //
 
 import XCTest
-import JustApisSwiftSDK
+@testable import JustApisSwiftSDK
 
 class CachingTests: XCTestCase {
 
+    private let mockRequestDefaults:MutableRequestProperties = MutableRequestProperties(
+        method: "GET",
+        path: "/",
+        params: ["foo":"bar"],
+        headers: ["foo-header":"bar-value"],
+        body: nil,
+        followRedirects: true,
+        applyContentTypeParsing: true,
+        contentTypeOverride: "test/content-type",
+        allowCachedResponse: false,
+        cacheResponseWithExpiration: 0,
+        customCacheIdentifier: nil)
+    
     override func setUp() {
         super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -21,27 +34,261 @@ class CachingTests: XCTestCase {
         super.tearDown()
     }
     
+    private func getDefaultMockResponse() -> InternalResponse
+    {
+        let gateway:CompositedGateway = CompositedGateway(baseUrl: NSURL(string:"http://localhost")!)
+        let mockRequestDefaults:MutableRequestProperties = MutableRequestProperties(
+            method: "GET",
+            path: "/",
+            params: ["foo":"bar"],
+            headers: ["foo-header":"bar-value"],
+            body: nil,
+            followRedirects: true,
+            applyContentTypeParsing: true,
+            contentTypeOverride: "test/content-type",
+            allowCachedResponse: false,
+            cacheResponseWithExpiration: 0,
+            customCacheIdentifier: nil)
+        let mockRequest = gateway.internalizeRequest(mockRequestDefaults)
+        
+        let mockResponseDefaults:MutableResponseProperties = MutableResponseProperties(
+            gateway: gateway,
+            request: mockRequest,
+            requestedURL: gateway.baseUrl.URLByAppendingPathComponent("/?foo=bar"),
+            resolvedURL: gateway.baseUrl,
+            statusCode: 400,
+            headers: ["test-response-header":"foo bar"],
+            body: "test".dataUsingEncoding(NSUTF8StringEncoding),
+            parsedBody: "test",
+            retreivedFromCache: false)
+        
+        return gateway.internalizeResponse(mockResponseDefaults)
+    }
+    
+    func testInMemoryCacheProviderDirectAccess() {
+        let expectation = self.expectationWithDescription(self.name)
+        let cache = InMemoryCacheProvider()
+        
+        let response = self.getDefaultMockResponse()
+        cache.setCachedResponseForIdentifier("a", response: response, expirationSeconds: 5)
+        cache.cachedResponseForIdentifier("a", callback: { (cachedResponse:ResponseProperties?) in
+            XCTAssertNotNil(cachedResponse ?? nil)
+            XCTAssertEqual(response.request.path, cachedResponse?.request.path)
+            XCTAssertEqual(response.request.method, cachedResponse?.request.method)
+            expectation.fulfill()
+        })
+        self.waitForExpectationsWithTimeout(5, handler: nil)
+
+    }
+    
     func testInMemoryCachingDisabled() {
-        XCTFail("Not implemented!")
+        let gateway:CompositedGateway = CompositedGateway(baseUrl: NSURL(string:"http://localhost")!)
+        let expectation = self.expectationWithDescription(self.name)
+
+        var numberOfRequestsReceivedByStub = 0
+        stub(isHost("localhost"), response: {
+            (request:NSURLRequest) in
+            
+            numberOfRequestsReceivedByStub += 1
+            return OHHTTPStubsResponse(data: NSData(), statusCode: 200, headers: nil)
+        })
+
+        var request1 = mockRequestDefaults
+        request1.allowCachedResponse = false
+        
+        let request2 = request1
+        
+        gateway.submitRequest(request1, callback: { _ in
+            XCTAssertEqual(numberOfRequestsReceivedByStub, 1)
+
+            gateway.submitRequest(request2, callback: { _ in
+                XCTAssertEqual(numberOfRequestsReceivedByStub, 2)
+                expectation.fulfill()
+            })
+        })
+
+        
+        self.waitForExpectationsWithTimeout(5, handler: nil)
     }
     
     func testInMemoryCachingEnabled() {
-        XCTFail("Not implemented!")
+        let gateway:CompositedGateway = CompositedGateway(baseUrl: NSURL(string:"http://localhost")!)
+        let expectation = self.expectationWithDescription(self.name)
+        
+        var request1 = mockRequestDefaults
+        request1.allowCachedResponse = true
+        request1.cacheResponseWithExpiration = 10
+        
+        let request2 = request1
+        
+        XCTAssertEqual(request1.cacheIdentifier, request2.cacheIdentifier)
+
+        var numberOfRequestsReceivedByStub = 0
+        stub(isHost("localhost"), response: {
+            (request:NSURLRequest) in
+            
+            numberOfRequestsReceivedByStub += 1
+            return OHHTTPStubsResponse(data: NSData(), statusCode: 200, headers: nil)
+        })
+        
+        gateway.submitRequest(request1, callback: { (result:RequestResult) in
+            XCTAssertEqual(result.response?.retreivedFromCache, false)
+            XCTAssertEqual(numberOfRequestsReceivedByStub, 1)
+
+            gateway.submitRequest(request2, callback: { (result:RequestResult) in
+                XCTAssertEqual(result.response?.retreivedFromCache, true)
+                XCTAssertEqual(numberOfRequestsReceivedByStub, 1)
+                expectation.fulfill()
+            })
+        })
+        
+        self.waitForExpectationsWithTimeout(5, handler: nil)
     }
     
     func testInMemoryCachingExpiration() {
-        XCTFail("Not implemented!")
+        let gateway:CompositedGateway = CompositedGateway(baseUrl: NSURL(string:"http://localhost")!)
+        let expectation = self.expectationWithDescription(self.name)
+        
+        var request1 = mockRequestDefaults
+        request1.allowCachedResponse = true
+        request1.cacheResponseWithExpiration = 1
+        
+        let request2 = request1
+        
+        XCTAssertEqual(request1.cacheIdentifier, request2.cacheIdentifier)
+        
+        var numberOfRequestsReceivedByStub = 0
+        stub(isHost("localhost"), response: {
+            (request:NSURLRequest) in
+            
+            numberOfRequestsReceivedByStub += 1
+            return OHHTTPStubsResponse(data: NSData(), statusCode: 200, headers: nil)
+        })
+        
+        gateway.submitRequest(request1, callback: { (result:RequestResult) in
+            XCTAssertEqual(result.response?.retreivedFromCache, false)
+            XCTAssertEqual(numberOfRequestsReceivedByStub, 1)
+            
+            NSThread.sleepForTimeInterval(2)
+            gateway.submitRequest(request2, callback: { (result:RequestResult) in
+                XCTAssertEqual(numberOfRequestsReceivedByStub, 2)
+                XCTAssertEqual(result.response?.retreivedFromCache, false)
+                expectation.fulfill()
+            })
+        })
+        
+        self.waitForExpectationsWithTimeout(5, handler: nil)
     }
     
-    func testInMemoryCachingNoExpiration() {
-        XCTFail("Not implemented!")
+    func testInMemoryCachingDoNotStore() {
+        let gateway:CompositedGateway = CompositedGateway(baseUrl: NSURL(string:"http://localhost")!)
+        let expectation = self.expectationWithDescription(self.name)
+        
+        var request1 = mockRequestDefaults
+        request1.allowCachedResponse = true
+        request1.cacheResponseWithExpiration = 0
+        
+        let request2 = request1
+        
+        XCTAssertEqual(request1.cacheIdentifier, request2.cacheIdentifier)
+        
+        var numberOfRequestsReceivedByStub = 0
+        stub(isHost("localhost"), response: {
+            (request:NSURLRequest) in
+            
+            numberOfRequestsReceivedByStub += 1
+            return OHHTTPStubsResponse(data: NSData(), statusCode: 200, headers: nil)
+        })
+        
+        gateway.submitRequest(request1, callback: { (result:RequestResult) in
+            XCTAssertEqual(result.response?.retreivedFromCache, false)
+            XCTAssertEqual(numberOfRequestsReceivedByStub, 1)
+            
+            NSThread.sleepForTimeInterval(2)
+            gateway.submitRequest(request2, callback: { (result:RequestResult) in
+                XCTAssertEqual(numberOfRequestsReceivedByStub, 2)
+                XCTAssertEqual(result.response?.retreivedFromCache, false)
+                expectation.fulfill()
+            })
+        })
+        
+        self.waitForExpectationsWithTimeout(5, handler: nil)
     }
     
     func testCustomCacheIdentifier() {
-        XCTFail("Not implemented!")
+        let gateway:CompositedGateway = CompositedGateway(baseUrl: NSURL(string:"http://localhost")!)
+        let expectation = self.expectationWithDescription(self.name)
+        
+        var request1 = mockRequestDefaults
+        request1.path = "/some/unique/path"
+        request1.allowCachedResponse = true
+        request1.cacheResponseWithExpiration = 10
+        
+        var request2 = request1
+        request2.path = "/some/different/path/entirely"
+        request2.allowCachedResponse = true
+        request2.cacheResponseWithExpiration = 10
+        
+        XCTAssertNotEqual(request1.cacheIdentifier, request2.cacheIdentifier)
+        
+        request1.customCacheIdentifier = "Some.App.Determined.Identifier"
+        request2.customCacheIdentifier = "Some.App.Determined.Identifier"
+        XCTAssertEqual(request1.cacheIdentifier, request2.cacheIdentifier)
+        
+        var numberOfRequestsReceivedByStub = 0
+        stub(isHost("localhost"), response: {
+            (request:NSURLRequest) in
+            
+            numberOfRequestsReceivedByStub += 1
+            return OHHTTPStubsResponse(data: NSData(), statusCode: 200, headers: nil)
+        })
+        
+        gateway.submitRequest(request1, callback: { (result:RequestResult) in
+            XCTAssertEqual(result.response?.retreivedFromCache, false)
+            XCTAssertEqual(numberOfRequestsReceivedByStub, 1)
+            
+            gateway.submitRequest(request2, callback: { (result:RequestResult) in
+                XCTAssertEqual(result.response?.retreivedFromCache, true)
+                XCTAssertEqual(numberOfRequestsReceivedByStub, 1)
+                expectation.fulfill()
+            })
+        })
+        
+        self.waitForExpectationsWithTimeout(5, handler: nil)
     }
     
     func testNullCacheProvider() {
-        XCTFail("Not implemented!")
+        let gateway:CompositedGateway = CompositedGateway(baseUrl: NSURL(string:"http://localhost")!, defaultRequestProperties:nil, cacheProvider:NullCacheProvider())
+        let expectation = self.expectationWithDescription(self.name)
+        
+        var request1 = mockRequestDefaults
+        request1.allowCachedResponse = true
+        request1.cacheResponseWithExpiration = 10
+        
+        let request2 = request1
+        
+        XCTAssertEqual(request1.cacheIdentifier, request2.cacheIdentifier)
+        
+        var numberOfRequestsReceivedByStub = 0
+        stub(isHost("localhost"), response: {
+            (request:NSURLRequest) in
+            
+            numberOfRequestsReceivedByStub += 1
+            return OHHTTPStubsResponse(data: NSData(), statusCode: 200, headers: nil)
+        })
+        
+        gateway.submitRequest(request1, callback: { (result:RequestResult) in
+            XCTAssertEqual(result.response?.retreivedFromCache, false)
+            XCTAssertEqual(numberOfRequestsReceivedByStub, 1)
+            
+            NSThread.sleepForTimeInterval(2)
+            gateway.submitRequest(request2, callback: { (result:RequestResult) in
+                XCTAssertEqual(numberOfRequestsReceivedByStub, 2)
+                XCTAssertEqual(result.response?.retreivedFromCache, false)
+                expectation.fulfill()
+            })
+        })
+        
+        self.waitForExpectationsWithTimeout(5, handler: nil)
     }
 }

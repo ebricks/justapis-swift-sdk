@@ -168,7 +168,7 @@ public struct GatewayDefaultRequestProperties : DefaultRequestPropertySet
         put:MutableRequestProperties? = nil,
         delete:MutableRequestProperties? = nil)
     {
-        self.get = get ?? MutableRequestProperties(method:"GET", path:"/", params:nil, headers:nil, body:nil, followRedirects:true, applyContentTypeParsing: true, contentTypeOverride: nil, allowCachedResponse: true, cacheResponseWithExpiration: kGatewayDefaultCacheExpiration, customCacheIdentifier: nil)
+        self.get = get ?? MutableRequestProperties(method:"GET", path:"/", params:nil, headers:nil, body:nil, followRedirects:true, applyContentTypeParsing: true, contentTypeOverride: nil, allowCachedResponse: false, cacheResponseWithExpiration: kGatewayDefaultCacheExpiration, customCacheIdentifier: nil)
         
         self.post = post ?? MutableRequestProperties(method:"POST", path:"/", params:nil, headers:nil, body:nil, followRedirects:true, applyContentTypeParsing: true, contentTypeOverride: nil, allowCachedResponse: false, cacheResponseWithExpiration: 0, customCacheIdentifier: nil)
         

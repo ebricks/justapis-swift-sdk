@@ -53,6 +53,8 @@
 		53122FDD1C20828E0052E8A5 /* FoundationRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53122FDC1C20828E0052E8A5 /* FoundationRequestTests.swift */; };
 		53122FDF1C2088D90052E8A5 /* FoundationResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53122FDE1C2088D90052E8A5 /* FoundationResponseTests.swift */; };
 		53122FE11C20993E0052E8A5 /* OHHTTPStubs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53122FE01C20993E0052E8A5 /* OHHTTPStubs.framework */; };
+		5334A0F51C3EFDEE00429E6F /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5334A0F41C3EFDEE00429E6F /* Helpers.swift */; };
+		5334A0F71C44551000429E6F /* RequestQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5334A0F61C44551000429E6F /* RequestQueueTests.swift */; };
 		5386B1AA1C18B503001D8D31 /* JustApisSwiftSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 5386B1A91C18B503001D8D31 /* JustApisSwiftSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5386B1B11C18B503001D8D31 /* JustApisSwiftSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5386B1A61C18B503001D8D31 /* JustApisSwiftSDK.framework */; };
 		5386B1C11C18B903001D8D31 /* CoreTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5386B1C01C18B903001D8D31 /* CoreTypes.swift */; };
@@ -74,6 +76,10 @@
 		53C4DCD41C3D8AD20067B671 /* SSLCertificate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C4DCD11C3D8AD20067B671 /* SSLCertificate.swift */; };
 		53C4DCD51C3D8AD20067B671 /* SSLCertificate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C4DCD11C3D8AD20067B671 /* SSLCertificate.swift */; };
 		53C4DCD91C3D9B990067B671 /* SSLCertificatePinningTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C4DCD81C3D9B990067B671 /* SSLCertificatePinningTests.swift */; };
+		53C4DCDB1C3ED9500067B671 /* InternalRequestQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C4DCDA1C3ED9500067B671 /* InternalRequestQueue.swift */; };
+		53C4DCDC1C3ED9500067B671 /* InternalRequestQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C4DCDA1C3ED9500067B671 /* InternalRequestQueue.swift */; };
+		53C4DCDD1C3ED9500067B671 /* InternalRequestQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C4DCDA1C3ED9500067B671 /* InternalRequestQueue.swift */; };
+		53C4DCDE1C3ED9500067B671 /* InternalRequestQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C4DCDA1C3ED9500067B671 /* InternalRequestQueue.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -105,6 +111,8 @@
 		53122FDC1C20828E0052E8A5 /* FoundationRequestTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoundationRequestTests.swift; sourceTree = "<group>"; };
 		53122FDE1C2088D90052E8A5 /* FoundationResponseTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoundationResponseTests.swift; sourceTree = "<group>"; };
 		53122FE01C20993E0052E8A5 /* OHHTTPStubs.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OHHTTPStubs.framework; path = "Submodules/OHHTTPStubs/OHHTTPStubs/build/Debug-iphoneos/OHHTTPStubs.framework"; sourceTree = "<group>"; };
+		5334A0F41C3EFDEE00429E6F /* Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
+		5334A0F61C44551000429E6F /* RequestQueueTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestQueueTests.swift; sourceTree = "<group>"; };
 		5386B1A61C18B503001D8D31 /* JustApisSwiftSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = JustApisSwiftSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5386B1A91C18B503001D8D31 /* JustApisSwiftSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JustApisSwiftSDK.h; sourceTree = "<group>"; };
 		5386B1AB1C18B503001D8D31 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -123,6 +131,7 @@
 		53C4DCCF1C3C69DB0067B671 /* CompoundResponseProcessorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CompoundResponseProcessorTests.swift; sourceTree = "<group>"; };
 		53C4DCD11C3D8AD20067B671 /* SSLCertificate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSLCertificate.swift; sourceTree = "<group>"; };
 		53C4DCD81C3D9B990067B671 /* SSLCertificatePinningTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSLCertificatePinningTests.swift; sourceTree = "<group>"; };
+		53C4DCDA1C3ED9500067B671 /* InternalRequestQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternalRequestQueue.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -237,6 +246,7 @@
 				53C4DCCD1C3C69190067B671 /* ContentTypeParsingTests.swift */,
 				53C4DCCF1C3C69DB0067B671 /* CompoundResponseProcessorTests.swift */,
 				53C4DCD81C3D9B990067B671 /* SSLCertificatePinningTests.swift */,
+				5334A0F61C44551000429E6F /* RequestQueueTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -252,6 +262,8 @@
 				5303C40D1C348E5400E5A7AF /* InternalResponse.swift */,
 				53C4DCC01C3AFB5D0067B671 /* InMemoryCacheProvider.swift */,
 				53C4DCD11C3D8AD20067B671 /* SSLCertificate.swift */,
+				53C4DCDA1C3ED9500067B671 /* InternalRequestQueue.swift */,
+				5334A0F41C3EFDEE00429E6F /* Helpers.swift */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -474,6 +486,7 @@
 				5303C4001C331C0400E5A7AF /* Gateway.swift in Sources */,
 				5303C3FB1C331BFA00E5A7AF /* Response.swift in Sources */,
 				5303C40A1C3487F700E5A7AF /* InternalRequest.swift in Sources */,
+				53C4DCDC1C3ED9500067B671 /* InternalRequestQueue.swift in Sources */,
 				5303C3AD1C234E5E00E5A7AF /* CompositedGateway.swift in Sources */,
 				5303C40F1C348E5400E5A7AF /* InternalResponse.swift in Sources */,
 				5303C4051C331C5700E5A7AF /* Errors.swift in Sources */,
@@ -494,6 +507,7 @@
 				5303C4011C331C0400E5A7AF /* Gateway.swift in Sources */,
 				5303C3FC1C331BFA00E5A7AF /* Response.swift in Sources */,
 				5303C40B1C3487F700E5A7AF /* InternalRequest.swift in Sources */,
+				53C4DCDD1C3ED9500067B671 /* InternalRequestQueue.swift in Sources */,
 				5303C3D31C23529500E5A7AF /* CompositedGateway.swift in Sources */,
 				5303C4101C348E5400E5A7AF /* InternalResponse.swift in Sources */,
 				5303C4061C331C5700E5A7AF /* Errors.swift in Sources */,
@@ -514,6 +528,7 @@
 				5303C4021C331C0400E5A7AF /* Gateway.swift in Sources */,
 				5303C3FD1C331BFA00E5A7AF /* Response.swift in Sources */,
 				5303C40C1C3487F700E5A7AF /* InternalRequest.swift in Sources */,
+				53C4DCDE1C3ED9500067B671 /* InternalRequestQueue.swift in Sources */,
 				5303C3E51C2353CC00E5A7AF /* CompositedGateway.swift in Sources */,
 				5303C4111C348E5400E5A7AF /* InternalResponse.swift in Sources */,
 				5303C4071C331C5700E5A7AF /* Errors.swift in Sources */,
@@ -534,9 +549,11 @@
 				5303C3FF1C331C0400E5A7AF /* Gateway.swift in Sources */,
 				5303C3FA1C331BFA00E5A7AF /* Response.swift in Sources */,
 				5303C4091C3487F700E5A7AF /* InternalRequest.swift in Sources */,
+				53C4DCDB1C3ED9500067B671 /* InternalRequestQueue.swift in Sources */,
 				5386B1C31C18CCE9001D8D31 /* CompositedGateway.swift in Sources */,
 				5303C40E1C348E5400E5A7AF /* InternalResponse.swift in Sources */,
 				5303C4041C331C5700E5A7AF /* Errors.swift in Sources */,
+				5334A0F51C3EFDEE00429E6F /* Helpers.swift in Sources */,
 				53C4DCC11C3AFB5D0067B671 /* InMemoryCacheProvider.swift in Sources */,
 				5386B1CA1C18D728001D8D31 /* FoundationNetworkAdapter.swift in Sources */,
 				5386B1CC1C18D750001D8D31 /* ResponseProcessors.swift in Sources */,
@@ -552,6 +569,7 @@
 				53C4DCCA1C3C67EF0067B671 /* InternalResponseTests.swift in Sources */,
 				53C4DCD01C3C69DB0067B671 /* CompoundResponseProcessorTests.swift in Sources */,
 				53C4DCD91C3D9B990067B671 /* SSLCertificatePinningTests.swift in Sources */,
+				5334A0F71C44551000429E6F /* RequestQueueTests.swift in Sources */,
 				53122FDF1C2088D90052E8A5 /* FoundationResponseTests.swift in Sources */,
 				53C4DCCC1C3C687A0067B671 /* CachingTests.swift in Sources */,
 				53C4DCC81C3C675B0067B671 /* InternalRequestTests.swift in Sources */,

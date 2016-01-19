@@ -195,10 +195,19 @@ internal extension Request
                         queryItems.append(queryItem)
                     }
                 }
+                else if let _ = value as? NSNull
+                {
+                    let queryItem:NSURLQueryItem = NSURLQueryItem(name: key, value: nil);
+                    queryItems.append(queryItem)
+                }
+                else if let stringValue = value as? CustomStringConvertible
+                {
+                    let queryItem:NSURLQueryItem = NSURLQueryItem(name: key, value: String(stringValue));
+                    queryItems.append(queryItem)
+                }
                 else
                 {
-                    let queryItem:NSURLQueryItem = NSURLQueryItem(name: key, value: nil != value ? String(value!) : nil);
-                    queryItems.append(queryItem)
+                    assert(false, "Unsupported query item value. Must be array, NSNull, or a CustomStringConvertible type")
                 }
             }
             urlComponents.queryItems = queryItems

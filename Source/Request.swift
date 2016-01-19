@@ -113,6 +113,39 @@ public protocol RequestBuilderMethods
     func customCacheIdentifier(value:String?) -> Self
 }
 
+extension RequestProperties
+{
+    func toJsonCompatibleDictionary() -> [String:AnyObject]
+    {
+        // TODO: Must santize values as NSString, NSNumber, NSArray, NSDictionary, or NSNull
+        
+        var rep = [String:AnyObject]()
+        
+        rep["method"] = self.method
+        rep["path"] = self.path
+        if let params = self.params
+        {
+            rep["params"] = params
+        }
+        else
+        {
+            rep["params"] = NSNull()
+        }
+        rep["headers"] = (self.headers != nil) ? self.headers! : NSNull()
+        
+        rep["body"] = self.body != nil ? self.body?.base64EncodedStringWithOptions(NSDataBase64EncodingOptions(rawValue:0)) : NSNull()
+        rep["followRedirects"] = self.followRedirects
+        
+        rep["applyContentTypeParsing"] = self.applyContentTypeParsing
+        rep["contentTypeOverride"] = self.contentTypeOverride ?? NSNull()
+        
+        rep["allowCachedResponse"] = self.allowCachedResponse
+        rep["cacheResponseWithExpiration"] = self.cacheResponseWithExpiration
+        rep["customCacheIdentifier"] = self.customCacheIdentifier ?? NSNull()
+        return rep
+    }
+}
+
 ///
 /// A Request suitable for the JustApi SDK Gateway
 ///
@@ -139,6 +172,61 @@ public struct MutableRequestProperties : RequestProperties
     public var allowCachedResponse:Bool = false
     public var cacheResponseWithExpiration:UInt = 0
     public var customCacheIdentifier:String? = nil
+}
+
+extension MutableRequestProperties
+{
+    init?(jsonCompatibleDictionary d:[String:AnyObject])
+    {
+        guard
+            let method = d["method"] as? String,
+            let path = d["path"] as? String,
+            let followRedirects = d["followRedirects"] as? Bool,
+            let applyContentTypeParsing = d["applyContentTypeParsing"] as? Bool,
+            let allowCachedResponse = d["allowCachedResponse"] as? Bool,
+            let cacheResponseWithExpiration = d["cacheResponseWithExpiration"] as? UInt
+        else
+        {
+            return nil
+        }
+        guard d["params"] != nil
+            && d["headers"] != nil
+            && d["body"] != nil
+            && d["contentTypeOverride"] != nil
+            && d["customCacheIdentifer"] != nil
+        else
+        {
+            return nil
+        }
+
+        self.method = method
+        self.path = path
+        self.followRedirects = followRedirects
+        self.applyContentTypeParsing = applyContentTypeParsing
+        self.allowCachedResponse = allowCachedResponse
+        self.cacheResponseWithExpiration = cacheResponseWithExpiration
+        
+        if let params = d["params"] as? [String:AnyObject]
+        {
+            self.params = params
+        }
+        if let headers = d["headers"] as? [String:String]
+        {
+            self.headers = headers
+        }
+        if let bodyString = d["body"] as? String
+        {
+            self.body = NSData(base64EncodedString: bodyString, options: NSDataBase64DecodingOptions.IgnoreUnknownCharacters)
+        }
+        if let contentTypeOverride = d["contentTypeOverride"] as? String
+        {
+            self.contentTypeOverride = contentTypeOverride
+        }
+        if let customCacheIdentifier = d["customCacheIdentifer"] as? String
+        {
+            self.customCacheIdentifier = customCacheIdentifier
+        }
+    }
 }
 
 ///

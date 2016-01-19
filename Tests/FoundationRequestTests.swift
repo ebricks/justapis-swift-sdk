@@ -201,7 +201,7 @@ class FoundationRequestTests: XCTestCase {
     {
         let baseUrl = "http://localhost/"
         let requestPath = "test/request/path"
-        let queryParams:QueryParameters = ["a":nil]
+        let queryParams:QueryParameters = ["a":NSNull()]
         let expectedURL = NSURL(string:"http://localhost/test/request/path?a")!
         let expectation = self.expectationWithDescription(self.name)
         

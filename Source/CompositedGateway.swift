@@ -119,12 +119,20 @@ public class CompositedGateway : Gateway
     public let sslCertificate:SSLCertificate?
     public let defaultRequestProperties:DefaultRequestPropertySet
     
+    
     private let networkAdapter:NetworkAdapter
     private let cacheProvider:CacheProvider
     private let requestPreparer:RequestPreparer?
     private let responseProcessor:ResponseProcessor?
     private let contentTypeParser:ContentTypeParser
-    private var callbacks = [InternalRequest: RequestCallback]()
+    
+    private var requests:InternalRequestQueue = InternalRequestQueue()
+    public var pendingRequests:[Request] { return self.requests.pendingRequests }
+    public var isPaused:Bool { return _isPaused }
+    private var _isPaused:Bool = true
+    
+    /// TODO: Make this configurable?
+    public var maxActiveRequests:Int = 2
     
     ///
     /// Designated initializer
@@ -153,6 +161,8 @@ public class CompositedGateway : Gateway
         
         // Use the Foundation Network Adapter if none was provided
         self.networkAdapter = networkAdapter ?? FoundationNetworkAdapter(sslCertificate: sslCertificate)
+        
+        self.resume()
     }
     
     ///
@@ -169,6 +179,50 @@ public class CompositedGateway : Gateway
             cacheProvider:configuration.cacheProvider,
             networkAdapter:configuration.networkAdapter
                   )
+    }
+    
+    ///
+    /// Pauses the gateway. No more pending requests will be processed until resume() is called.
+    ///
+    public func pause()
+    {
+        self._isPaused = true
+        // Now that the
+    }
+    
+    ///
+    /// Unpauses the gateway. Pending requests will continue being processed.
+    ///
+    public func resume()
+    {
+        self._isPaused = false
+        self.conditionallyProcessRequestQueue()
+    }
+    
+    ///
+    /// Removes a request from this gateway's pending request queue
+    ///
+    public func cancelRequest(request: Request) -> Bool {
+        guard let internalRequest = request as? InternalRequest where internalRequest.gateway === self else
+        {
+            /// Do nothing. This request wasn't associated with this gateway.
+            return false
+        }
+        return self.requests.cancelPendingRequest(internalRequest)
+    }
+    
+    ///
+    /// Takes a Request from the queue and begins processing it if conditions are met
+    //
+    private func conditionallyProcessRequestQueue()
+    {
+        // If not paused, not already at max active requests, and if there are requests pending
+        if (false == self._isPaused
+            && self.requests.numberActive < self.maxActiveRequests
+            && self.requests.numberPending > 0)
+        {
+            self.processNextInternalRequest()
+        }
     }
     
     ///
@@ -203,13 +257,8 @@ public class CompositedGateway : Gateway
             return
         }
 
-        // Apply an empty callback if none was provided. It makes the logic cleaner below
-        let callback:RequestCallback? = self.callbacks[request]
+        // Build the result object
         let response:InternalResponse? = (response != nil) ? self.internalizeResponse(response!) : nil
-
-        // Remove the
-        self.callbacks.removeValueForKey(request)
-
         var result:RequestResult = (request:request,
                                     response:response?.retreivedFromCache(fromCache),
                                     error:error)
@@ -217,7 +266,7 @@ public class CompositedGateway : Gateway
         // Check if there was an error
         guard error == nil else
         {
-            callback?(result)
+            self.requests.fulfillRequest(request, result: result)
             return
         }
         
@@ -226,7 +275,7 @@ public class CompositedGateway : Gateway
         {
             // TODO: create meaningful error
             result.error = createError(0, context:nil, description:"")
-            callback?(result)
+            self.requests.fulfillRequest(request, result: result)
             return
         }
         
@@ -272,7 +321,10 @@ public class CompositedGateway : Gateway
             }
             
             // Pass result back to caller
-            callback?(result)
+            self.requests.fulfillRequest(request, result: result)
+            
+            // Keep the processor running, if appropriate
+            self.conditionallyProcessRequestQueue()
         })
     }
     
@@ -324,35 +376,51 @@ public class CompositedGateway : Gateway
             request = requestPreparer.prepareRequest(request) as! InternalRequest
         }
 
-        if (nil != callback)
+        // Add the request to the queue
+        self.requests.appendRequest(request, callback: callback)
+        
+        // Keep the queue moving, if appropriate
+        self.conditionallyProcessRequestQueue()
+    }
+    
+    ///
+    /// [Background] Starts processing the next request from the queue
+    ///
+    private func processNextInternalRequest()
+    {
+        guard let request = self.requests.nextRequest() else
         {
-            self.callbacks[request] = callback
-        }
-
-        if request.allowCachedResponse
-        {
-            // Check the cache
-            self.cacheProvider.cachedResponseForIdentifier(request.cacheIdentifier, callback: {
-                (response:ResponseProperties?) in
-                
-                if let response = response
-                {
-                    // There was a subitably fresh response in the cache. Use it
-                    self.fulfillRequest(request, response: response, error: nil, fromCache:true)
-                }
-                else
-                {
-                    // Otherwise, send the request to the network adapter
-                    self.networkAdapter.submitRequest(request, gateway:self)
-                }
-            })
-        }
-        else
-        {
-            // Ignore anything in the cache, and send the request to the network adapter immediately
-            self.networkAdapter.submitRequest(request, gateway:self)
+            // No request to process
+            return
         }
         
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
+            
+            if request.allowCachedResponse
+            {
+                // Check the cache
+                self.cacheProvider.cachedResponseForIdentifier(request.cacheIdentifier, callback: {
+                    (response:ResponseProperties?) in
+                    
+                    if let response = response
+                    {
+                        // There was a subitably fresh response in the cache. Use it
+                        self.fulfillRequest(request, response: response, error: nil, fromCache:true)
+                    }
+                    else
+                    {
+                        // Otherwise, send the request to the network adapter
+                        self.networkAdapter.submitRequest(request, gateway:self)
+                    }
+                })
+            }
+            else
+            {
+                // Ignore anything in the cache, and send the request to the network adapter immediately
+                self.networkAdapter.submitRequest(request, gateway:self)
+            }
+            
+        })
     }
 }
 

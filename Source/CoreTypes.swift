@@ -21,12 +21,9 @@ public typealias RequestResult = (request:Request, response:Response?, error:Err
 public typealias RequestCallback = ((RequestResult) -> Void)
 
 /// A semantic alias for Key-Value hashes used as Query Parameters
-public typealias QueryParameters = Dictionary<String, AnyObject?>
+public typealias QueryParameters = Dictionary<String, AnyObject>
 
 /// A semantic alias for Key-Value hashes used as HTTP Headers
 public typealias Headers = Dictionary<String, String>
-
-
-
 
 

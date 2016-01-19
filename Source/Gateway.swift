@@ -21,6 +21,37 @@ public protocol Gateway : class
     
     /// Sends a request to the gateway
     func submitRequest(request:RequestProperties, callback:RequestCallback?)
+
+    
+    ///
+    /// Request Queue
+    /// ---
+    /// Requests submitted to this gateway enter a queue.
+    ///
+    /// Features:
+    /// * The queue can be rate-limited so that only a certain number of
+    ///   requests are active at any time.
+    /// * The queue can be paused to prevent any requests from being processed
+    /// * You can retrieve the list of unstarted requests the queue for persistence
+    
+    /// Requests that have been submitted to the gateway but not yet executed
+    var pendingRequests:[Request] { get }
+    
+    /// The number of requests that may execute simultaneously on this gateway
+    var maxActiveRequests:Int { get set }
+    
+    /// Indicated whether this gateway is currently paused
+    var isPaused:Bool { get }
+    
+    /// Stops request processing on this Gateay
+    func pause()
+    
+    /// Resumes request processing on this Gateway
+    func resume()
+    
+    /// Removes a request from the queue, if it hasn't yet been started. The request must
+    /// be from this gateway's pendingRequests queue
+    func cancelRequest(request:Request) -> Bool
 }
 
 ///

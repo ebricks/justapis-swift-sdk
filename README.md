@@ -35,15 +35,23 @@ The composited gateway is built from a few configurable and replacable component
 
 * A `NetworkAdapter` that accepts a `Request` and sends it out over the network before returning a `Response` or an error. The default NetworkAdapter is `FoundationNetworkAdapter`, which uses NSURLSession. 
 
-If you prefer to use a different communications technique (AFNetworking, Alamofire, background sessions, caching, etc) you can write a simple NetworkAdapter and plug it into CompositedGateway's constructor.
+  If you prefer to use a different communications technique (AFNetworking, Alamofire, background sessions, caching, etc) you can write a simple NetworkAdapter and plug it into CompositedGateway's constructor.
 
 * An optional `RequestPreparer`. A RequestPreparer can modify requests at the gateway level. You might use one to insert a token on certain requests, apply default headers, remap URL's, or serialize body data into a standard format like JSON or form-data.
 
-Two sample `RequestPreparer`s are included in the SDK. `DefaultFieldsRequestPreparer` can apply missing query parameters or header fields to all requests. `RequestPreparerClosureAdapter` allows you to provide a simple closure that does whatever you'd like.
+  Two sample `RequestPreparer`s are included in the SDK. `DefaultFieldsRequestPreparer` can apply missing query parameters or header fields to all requests. `RequestPreparerClosureAdapter` allows you to provide a simple closure that does whatever you'd like.
 
 * An optional `ResponseProcessor`. A `ResponseProcessor` can modify a response at the gateway level, before the original response callback is invoked. This provides an opportunity to do logging, handle errors, or parse common response formats like JSON or XML.
 
-Two sample `ResponseProcessor`s are included in the SDK. `JsonResponseProcessor` deserializes the body of all responses using NSJSONSerialization. `ResponsePreparerClosureAdapter` allows you to provide a simple closure that does whatever you'd like.
+  Two sample `ResponseProcessor`s are included in the SDK. `JsonResponseProcessor` deserializes the body of all responses using NSJSONSerialization. `ResponsePreparerClosureAdapter` allows you to provide a simple closure that does whatever you'd like.
+
+* An `CacheProvider` that can cache responses and return them on later requests without making another network request. The default CacheProvider is an `InMemoryCacheProvider` that stores responses in-memory using Foundation's NSCache.
+
+  If you'd like more persistent or sophisticated caching, you can implement your own CacheProvider and pass it to the CompositeGateway on initialization. 
+  
+* An optional `SSLCertificate` to be used for certificate pinning. If you provide the public key or certificate associated with your server, its identity will be validated before any requests are sent.
+
+* An optional `DefaultRequestPropertySet` that allows you to customize the default options for GET, POST, PUT, and DELETE requests submitted to the Gateway. These defaults are used when using the Gateway's convenience methods to submit a request. If you don't provide your own defaults, the Gateway will use `GatewayDefaultRequestProperties` as found in `Request.swift` 
 
 ### JsonGateway
 
@@ -116,11 +124,41 @@ gateway.get('/foo', params:["id":123], callback:
 
 In this example, you can see us use the `get` conveneince method on our gateway. 
 
-This method prepares and submits a GET request using as few parameters as we likely need. There are a number of these convenience methods available for each of the common HTTP methods (GET, POST, PUT, DELETE). The full list of these convenience methods are available in `CoreTypes.swift`
+This method prepares and submits a GET request using as few parameters as we likely need. There are a number of these convenience methods available for each of the common HTTP methods (GET, POST, PUT, DELETE). The full list of these convenience methods are available in `Gateway.swift`
+
+You may also prepare your own requests from scratch using any object that conforms to the `RequestProperties` protocol. `MutableRequestProperties` is provided for your convenience. Instead of calling one of the convenience methods, simply pass your request properties and the callback to the `submitRequest` method.
+
+### Request Queue
+
+Each instance of Gateway throttles requests so that no more than `maxActiveRequests` run at any time (default=2). If you submit requests faster than they can be processed, the pending requests can be accessed through the `pendingRequests` property.
+
+You may pause and resume the request queue at any time. When paused, the Gateway will not start any new requests that have been queued. You may want to pause the queue when you go offline and resume it when connectivity is restored.
+
+Requests are immutable and **cannot** be modified once they've been submitted to the Gateway. However, you can cancel requests that are still pending by calling `cancelRequest(...)`
+ 
+### Automatic Content-Type Parsing
+
+The CompositedGateway supports automatic parsing based on Content-Type. By calling `setParser(...)`. You may register a `ResponseProcessor` to run whenever a certain Content-Type is encountered on the gateway. The `JsonCompositedGateway` uses this tecnique to automatically parse JSON responses when the Content-Type is `application/json`
+
+You may assign as many Content-Type parsers as you'd like.
+
+You may disable automatic Content-Type parsing for any request by setting the `applyContentTypeParsing` Request property to false.
+
+You may force a response to be interpreted with a certain Content-Type by setting the `contentTypeProperty` Request property to a non-nil value. This Content-Type will be used in place of any returned in the response headers. 
+
+### Response Caching
+
+The CompositedGateway supports caching of responses. You may control cache behavior using Request properties.
+
+You make sure a fresh network request is performed by setting `allowCachedResponse` to false.
+
+You may disable the caching of a response by setting `cacheResponseWithExpiration` to 0. Setting it to a higher value suggests the number of seconds for which a cached response will be preserved.
+
+You may provide a custom cache identifier for a request by setting the `customCacheIdentifier` property. By default, only the method, path, and query parameters are used to distinguish requests from one another. If your headers or body are relevant to cached responses, you'll want to set a customCacheIdentifer that appropriately captures this information.  An example might be if you send search parameters using the BODY of a GET or POST request and want to cache the responses.
 
 ### Receiving JSON Responses
 
-If your JustAPI endpoints provide their responses in JSON, you can use the `JsonGateway` or apply a `JsonResponseProcessor` to the `CompositeGateway`.
+If your JustAPI endpoints provide their responses in JSON, you can use the `JsonGateway` or set a `JsonResponseProcessor` as a `CompositedGateway` content-type parser.
 
 ```swift
 var gateway = JsonGateway(baseUrl: NSURL("http://my-justapi-server.local:5000/"))
@@ -138,15 +176,31 @@ gateway.get('/foo', params:["id":123], callback:
      print("Received no response!")
      return
   }
-  guard let jsonData = response.body else
+  guard let jsonData = response.parsedBody else
   {
-  	  print:("No body data found!")
+  	  print:("No parsed body data found!")
   	  return
   }
   print("Received a response with JSON content: \(jsonBody)")
 })
 
 ```
+
+### Request Preparers
+
+RequestPreparers allow you to modify Requests after they've been submitted to your Gateway instance, but before they're added to the Request Queue.
+
+Common uses would be to add additional headers to the request, build and add an authentication token based on query parameters, or encode body data using a specific format.
+
+### Response Processors
+
+ResponseProcessors are extremely flexible and can modify, observe, or reject a response before it makes its way to the callback. 
+
+All response processors expose an asynchronous `processResponse(...)` method that receives the current (immutable) response and eventually calls a ResponseProcessorCallback with a response and/or error. `processResponse` is always invoked on the main thread.
+
+The `ResponseProcessorClosureAdapter` is a convenience wrapper to use when you have a fast and simple action you want to perform on responses (i.e. signalling an error if an expected header or response field is invalid). It wraps a simple, synchronous closure.
+
+The `CompoundResponseProcessor` lets you easily chain a series of response processors together so that they run sequentially. If any response processor signals an error, the remainder will be skipped.
 
 ##Development
 

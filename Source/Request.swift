@@ -116,9 +116,7 @@ public protocol RequestBuilderMethods
 extension RequestProperties
 {
     func toJsonCompatibleDictionary() -> [String:AnyObject]
-    {
-        // TODO: Must santize values as NSString, NSNumber, NSArray, NSDictionary, or NSNull
-        
+    {        
         var rep = [String:AnyObject]()
         
         rep["method"] = self.method

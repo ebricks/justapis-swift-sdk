@@ -102,9 +102,9 @@ A simple example is shown here:
 
 ```swift
 
-var gateway = CompositedGateway(baseUrl: NSURL("http://my-justapi-server.local:5000/"))
+var gateway = CompositedGateway(baseUrl: NSURL(string:"http://my-justapi-server.local:5000/"))
 
-gateway.get('/foo', params:["id":123], callback:
+gateway.get("/foo", params:["id":123], callback:
 { (result:RequestResult) in
   
   if let error = result.error
@@ -161,9 +161,9 @@ You may provide a custom cache identifier for a request by setting the `customCa
 If your JustAPI endpoints provide their responses in JSON, you can use the `JsonGateway` or set a `JsonResponseProcessor` as a `CompositedGateway` content-type parser.
 
 ```swift
-var gateway = JsonGateway(baseUrl: NSURL("http://my-justapi-server.local:5000/"))
+var gateway = JsonGateway(baseUrl: NSURL(string:"http://my-justapi-server.local:5000/"))
 
-gateway.get('/foo', params:["id":123], callback:
+gateway.get("/foo", params:["id":123], callback:
 { (result:RequestResult) in
   
   if let error = result.error

@@ -136,6 +136,19 @@ You may pause and resume the request queue at any time. When paused, the Gateway
 
 Requests are immutable and **cannot** be modified once they've been submitted to the Gateway. However, you can cancel requests that are still pending by calling `cancelRequest(...)`
  
+### Certificate Pinning
+
+The CompositedGateway supports certificate pinning. This allows you to require that the remote server publishes an expected public key, confirming its identity.
+
+To utilize certificate pinning, simply create an `SSLCertificate` with the expected public key contents and supply it as the `sslCertificate` argument when initializing the CompositedGateway:
+
+```swift
+var certificate = SSLCertificate(path:NSBundle.mainBundle().pathForResource("server-public-key", ofType:"pem")!)!
+
+var gateway = CompositedGateway(baseUrl: NSURL(string:"http://my-justapi-server.local:5000/"), sslCertificate:certificate)
+```
+
+
 ### Automatic Content-Type Parsing
 
 The CompositedGateway supports automatic parsing based on Content-Type. By calling `setParser(...)`. You may register a `ResponseProcessor` to run whenever a certain Content-Type is encountered on the gateway. The `JsonCompositedGateway` uses this tecnique to automatically parse JSON responses when the Content-Type is `application/json`

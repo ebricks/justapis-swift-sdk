@@ -119,7 +119,7 @@ public class FoundationNetworkAdapter : NSObject, NetworkAdapter, NSURLSessionDa
             }
             
             self?.taskToRequestMap.removeValueForKey(taskIdentifier)
-            
+
             // Let the gateway finish processing the response (on main thread)
             dispatch_async(dispatch_get_main_queue(), {
                 gateway.fulfillRequest(request, response:gatewayResponse, error:error);
@@ -241,6 +241,12 @@ internal extension Request
         if let body = self.body
         {
             urlRequest.HTTPBody = body
+
+            // NSURLSession has a known bug where it strips HTTPBody from the request, making testing
+            // more difficult. (5/17/2016) Until this is fixed, we stash the body using NSURLProtocol
+            // so we can expect it there in tests.
+            // https://github.com/AliSoftware/OHHTTPStubs/wiki/Testing-for-the-request-body-in-your-stubs
+            NSURLProtocol.setProperty(body, forKey: "HTTPBody", inRequest: urlRequest)
         }
         
         return urlRequest

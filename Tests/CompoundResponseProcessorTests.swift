@@ -56,7 +56,7 @@ class CompoundResponseProcessorTests: XCTestCase {
     func testNoProcessors() {
         let processor = CompoundResponseProcessor()
         let response = getDefaultMockResponse()
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectationWithDescription(self.name!)
 
         XCTAssertEqual(processor.responseProcessors.count, 0)
 
@@ -73,7 +73,7 @@ class CompoundResponseProcessorTests: XCTestCase {
     func testOneProcessor() {
         let processor = CompoundResponseProcessor()
         let response = getDefaultMockResponse().statusCode(0)
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectationWithDescription(self.name!)
         
         XCTAssertEqual(processor.responseProcessors.count, 0)
         
@@ -98,7 +98,7 @@ class CompoundResponseProcessorTests: XCTestCase {
     func testManySuccessfulProcessors() {
         let processor = CompoundResponseProcessor()
         let response = getDefaultMockResponse().statusCode(0)
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectationWithDescription(self.name!)
         
         XCTAssertEqual(processor.responseProcessors.count, 0)
         
@@ -126,7 +126,7 @@ class CompoundResponseProcessorTests: XCTestCase {
     func testErrorInFirstOfManyProcessors() {
         let processor = CompoundResponseProcessor()
         let response = getDefaultMockResponse().statusCode(0)
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectationWithDescription(self.name!)
         
         XCTAssertEqual(processor.responseProcessors.count, 0)
         

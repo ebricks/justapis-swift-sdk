@@ -29,7 +29,7 @@ class FoundationResponseTests: XCTestCase {
     {
         let baseUrl = "http://localhost"
         let requestPath = "test/request/path"
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectationWithDescription(self.name!)
         
         stub(isHost("localhost"), response: {
             (request:NSURLRequest) in
@@ -55,7 +55,7 @@ class FoundationResponseTests: XCTestCase {
     {
         let baseUrl = "http://localhost"
         let requestPath = "test/request/path"
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectationWithDescription(self.name!)
         
         stub(isHost("localhost"), response: {
             (request:NSURLRequest) in
@@ -81,7 +81,7 @@ class FoundationResponseTests: XCTestCase {
     {
         let baseUrl = "http://localhost"
         let requestPath = "test/request/path"
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectationWithDescription(self.name!)
         
         stub(isHost("localhost"), response: {
             (request:NSURLRequest) in
@@ -107,7 +107,7 @@ class FoundationResponseTests: XCTestCase {
     {
         let baseUrl = "http://localhost"
         let requestPath = "test/request/path"
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectationWithDescription(self.name!)
         let body = "test".dataUsingEncoding(NSUTF8StringEncoding)
         
         stub(isHost("localhost"), response: {
@@ -134,7 +134,7 @@ class FoundationResponseTests: XCTestCase {
     {
         let baseUrl = "http://localhost"
         let requestPath = "test/request/path"
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectationWithDescription(self.name!)
         let body = "test".dataUsingEncoding(NSUTF8StringEncoding)
         
         stub(isHost("localhost"), response: {
@@ -161,7 +161,7 @@ class FoundationResponseTests: XCTestCase {
     {
         let baseUrl = "http://localhost"
         let requestPath = "/test/request/path"
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectationWithDescription(self.name!)
         let redirectedUrl = NSURL(string:"http://localhost/alternate/request/path")!
         
         stub(isHost("localhost"), response: {
@@ -195,7 +195,7 @@ class FoundationResponseTests: XCTestCase {
     {
         let baseUrl = "http://localhost"
         let requestPath = "/test/request/path"
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectationWithDescription(self.name!)
         let redirectedUrl = NSURL(string:"http://localhost/alternate/request/path")!
         
         stub(isHost("localhost"), response: {
@@ -229,7 +229,7 @@ class FoundationResponseTests: XCTestCase {
     {
         let baseUrl = "http://localhost"
         let requestPath = "test/request/path"
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectationWithDescription(self.name!)
         let body = "test".dataUsingEncoding(NSUTF8StringEncoding)
         let alternateBody = "rest".dataUsingEncoding(NSUTF8StringEncoding)
 
@@ -262,7 +262,7 @@ class FoundationResponseTests: XCTestCase {
     {
         let baseUrl = "http://localhost"
         let requestPath = "test/request/path"
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectationWithDescription(self.name!)
         let body = "test".dataUsingEncoding(NSUTF8StringEncoding)
         let alternateBody = "rest".dataUsingEncoding(NSUTF8StringEncoding)
         

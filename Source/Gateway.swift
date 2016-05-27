@@ -75,7 +75,7 @@ public extension Gateway
     /// A convenience method for sending a GET request
     func get(path:String, params:QueryParameters?, headers:Headers?, body:NSData?, callback:RequestCallback?)
     {
-        return self.get(path, params: params, headers: headers, body: nil, followRedirects: true, callback: callback)
+        return self.get(path, params: params, headers: headers, body: body, followRedirects: true, callback: callback)
     }
     
     /// A convenience method for sending a GET request
@@ -118,7 +118,7 @@ public extension Gateway
     /// A convenience method for sending a POST request
     func post(path:String, params:QueryParameters?, headers:Headers?, body:NSData?, callback:RequestCallback?)
     {
-        return self.post(path, params: params, headers: headers, body: nil, followRedirects: true, callback: callback)
+        return self.post(path, params: params, headers: headers, body: body, followRedirects: true, callback: callback)
     }
     
     /// A convenience method for sending a POST request
@@ -161,7 +161,7 @@ public extension Gateway
     /// A convenience method for sending a PUT request
     func put(path:String, params:QueryParameters?, headers:Headers?, body:NSData?, callback:RequestCallback?)
     {
-        return self.put(path, params: params, headers: headers, body: nil, followRedirects: true, callback: callback)
+        return self.put(path, params: params, headers: headers, body: body, followRedirects: true, callback: callback)
     }
     
     /// A convenience method for sending a PUT request
@@ -204,7 +204,7 @@ public extension Gateway
     /// A convenience method for sending a DELETE request
     func delete(path:String, params:QueryParameters?, headers:Headers?, body:NSData?, callback:RequestCallback?)
     {
-        return self.delete(path, params: params, headers: headers, body: nil, followRedirects: true, callback: callback)
+        return self.delete(path, params: params, headers: headers, body: body, followRedirects: true, callback: callback)
     }
     
     /// A convenience method for sending a DELETE request

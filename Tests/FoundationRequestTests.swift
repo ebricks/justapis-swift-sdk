@@ -35,7 +35,7 @@ class FoundationRequestTests: XCTestCase {
         let baseUrl = "http://localhost"
         let requestPath = "test/request/path"
         let expectedURL = NSURL(string:"http://localhost/test/request/path")!
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectationWithDescription(self.name!)
         
         stub(isHost("localhost"), response: {
             (request:NSURLRequest) in
@@ -61,7 +61,7 @@ class FoundationRequestTests: XCTestCase {
         let baseUrl = "http://localhost/api/v1/"
         let requestPath = "test/request/path"
         let expectedURL = NSURL(string:"http://localhost/api/v1/test/request/path")!
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectationWithDescription(self.name!)
         
         stub(isHost("localhost"), response: {
             (request:NSURLRequest) in
@@ -89,7 +89,7 @@ class FoundationRequestTests: XCTestCase {
         let queryParams:QueryParameters = ["a":"test", "b":2]
         let expectedURL = NSURL(string:"http://localhost/test/request/path?a=test&b=2")!
         let alternateExpectedURL = NSURL(string:"http://localhost/test/request/path?b=2&a=test")!
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectationWithDescription(self.name!)
         
         
         stub(isHost("localhost"), response: {
@@ -119,7 +119,7 @@ class FoundationRequestTests: XCTestCase {
         let requestPath = "test/request/path"
         let queryParams:QueryParameters = ["a":[1,2]]
         let expectedURL = NSURL(string:"http://localhost/test/request/path?a%5B%5D=1&a%5B%5D=2")!
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectationWithDescription(self.name!)
         
         
         stub(isHost("localhost"), response: {
@@ -147,7 +147,7 @@ class FoundationRequestTests: XCTestCase {
         let requestPath = "test/request/path"
         let queryParams:QueryParameters = ["":"test"]
         let expectedURL = NSURL(string:"http://localhost/test/request/path?=test")!
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectationWithDescription(self.name!)
         
         
         stub(isHost("localhost"), response: {
@@ -175,7 +175,7 @@ class FoundationRequestTests: XCTestCase {
         let requestPath = "test/request/path"
         let queryParams:QueryParameters = ["a":""]
         let expectedURL = NSURL(string:"http://localhost/test/request/path?a=")!
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectationWithDescription(self.name!)
         
         
         stub(isHost("localhost"), response: {
@@ -203,7 +203,7 @@ class FoundationRequestTests: XCTestCase {
         let requestPath = "test/request/path"
         let queryParams:QueryParameters = ["a":NSNull()]
         let expectedURL = NSURL(string:"http://localhost/test/request/path?a")!
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectationWithDescription(self.name!)
         
         
         stub(isHost("localhost"), response: {
@@ -231,7 +231,7 @@ class FoundationRequestTests: XCTestCase {
         let requestPath = "test/request/path"
         let expectedURL = NSURL(string:"http://localhost/test/request/path")!
         let headers:Headers = ["X-Test-Header":"TestValue", "X-Another-Test-Header":"AnotherTestValue"]
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectationWithDescription(self.name!)
         
         stub(isHost("localhost"), response: {
             (request:NSURLRequest) in
@@ -259,7 +259,7 @@ class FoundationRequestTests: XCTestCase {
         let baseUrl = "http://localhost"
         let requestPath = "test/request/path"
         let expectedURL = NSURL(string:"http://localhost/test/request/path")!
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectationWithDescription(self.name!)
         
         stub(isHost("localhost"), response: {
             (request:NSURLRequest) in
@@ -291,7 +291,7 @@ class FoundationRequestTests: XCTestCase {
         let requestPath = "test/request/path"
         let expectedURL = NSURL(string:"http://localhost/test/request/path?a=test&b=2")!
         let alternateExpectedURL = NSURL(string:"http://localhost/test/request/path?b=2&a=test")!
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectationWithDescription(self.name!)
         
         stub(isHost("localhost"), response: {
             (request:NSURLRequest) in
@@ -323,7 +323,7 @@ class FoundationRequestTests: XCTestCase {
         let baseUrl = "http://localhost"
         let requestPath = "test/request/path"
         let expectedURL = NSURL(string:"http://localhost/alternate/request/path")!
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectationWithDescription(self.name!)
         
         stub(isHost("localhost"), response: {
             (request:NSURLRequest) in

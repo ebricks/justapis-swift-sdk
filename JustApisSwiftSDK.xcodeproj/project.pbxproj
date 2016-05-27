@@ -55,6 +55,11 @@
 		53122FE11C20993E0052E8A5 /* OHHTTPStubs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53122FE01C20993E0052E8A5 /* OHHTTPStubs.framework */; };
 		5334A0F51C3EFDEE00429E6F /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5334A0F41C3EFDEE00429E6F /* Helpers.swift */; };
 		5334A0F71C44551000429E6F /* RequestQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5334A0F61C44551000429E6F /* RequestQueueTests.swift */; };
+		5349152A1CE642090085F481 /* PushNotifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 534915291CE642090085F481 /* PushNotifications.swift */; };
+		5349152B1CE642090085F481 /* PushNotifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 534915291CE642090085F481 /* PushNotifications.swift */; };
+		5349152C1CE642090085F481 /* PushNotifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 534915291CE642090085F481 /* PushNotifications.swift */; };
+		5349152D1CE642090085F481 /* PushNotifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 534915291CE642090085F481 /* PushNotifications.swift */; };
+		5349152F1CEB81100085F481 /* PushNotificationMethodTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5349152E1CEB81100085F481 /* PushNotificationMethodTests.swift */; };
 		5386B1AA1C18B503001D8D31 /* JustApisSwiftSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 5386B1A91C18B503001D8D31 /* JustApisSwiftSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5386B1B11C18B503001D8D31 /* JustApisSwiftSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5386B1A61C18B503001D8D31 /* JustApisSwiftSDK.framework */; };
 		5386B1C11C18B903001D8D31 /* CoreTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5386B1C01C18B903001D8D31 /* CoreTypes.swift */; };
@@ -113,6 +118,8 @@
 		53122FE01C20993E0052E8A5 /* OHHTTPStubs.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OHHTTPStubs.framework; path = "Submodules/OHHTTPStubs/OHHTTPStubs/build/Debug-iphoneos/OHHTTPStubs.framework"; sourceTree = "<group>"; };
 		5334A0F41C3EFDEE00429E6F /* Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		5334A0F61C44551000429E6F /* RequestQueueTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestQueueTests.swift; sourceTree = "<group>"; };
+		534915291CE642090085F481 /* PushNotifications.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushNotifications.swift; sourceTree = "<group>"; };
+		5349152E1CEB81100085F481 /* PushNotificationMethodTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushNotificationMethodTests.swift; sourceTree = "<group>"; };
 		5386B1A61C18B503001D8D31 /* JustApisSwiftSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = JustApisSwiftSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5386B1A91C18B503001D8D31 /* JustApisSwiftSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JustApisSwiftSDK.h; sourceTree = "<group>"; };
 		5386B1AB1C18B503001D8D31 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -228,6 +235,7 @@
 				5303C3F91C331BFA00E5A7AF /* Response.swift */,
 				5303C3FE1C331C0400E5A7AF /* Gateway.swift */,
 				5303C4031C331C5700E5A7AF /* Errors.swift */,
+				534915291CE642090085F481 /* PushNotifications.swift */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -247,6 +255,7 @@
 				53C4DCCF1C3C69DB0067B671 /* CompoundResponseProcessorTests.swift */,
 				53C4DCD81C3D9B990067B671 /* SSLCertificatePinningTests.swift */,
 				5334A0F61C44551000429E6F /* RequestQueueTests.swift */,
+				5349152E1CEB81100085F481 /* PushNotificationMethodTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -493,6 +502,7 @@
 				53C4DCC21C3AFB5D0067B671 /* InMemoryCacheProvider.swift in Sources */,
 				5303C3AE1C234E5E00E5A7AF /* FoundationNetworkAdapter.swift in Sources */,
 				5303C3B01C234E5E00E5A7AF /* ResponseProcessors.swift in Sources */,
+				5349152B1CE642090085F481 /* PushNotifications.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -514,6 +524,7 @@
 				53C4DCC31C3AFB5D0067B671 /* InMemoryCacheProvider.swift in Sources */,
 				5303C3D41C23529500E5A7AF /* FoundationNetworkAdapter.swift in Sources */,
 				5303C3D61C23529500E5A7AF /* ResponseProcessors.swift in Sources */,
+				5349152C1CE642090085F481 /* PushNotifications.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -535,6 +546,7 @@
 				53C4DCC41C3AFB5D0067B671 /* InMemoryCacheProvider.swift in Sources */,
 				5303C3E61C2353CC00E5A7AF /* FoundationNetworkAdapter.swift in Sources */,
 				5303C3E81C2353CC00E5A7AF /* ResponseProcessors.swift in Sources */,
+				5349152D1CE642090085F481 /* PushNotifications.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -554,6 +566,7 @@
 				5303C40E1C348E5400E5A7AF /* InternalResponse.swift in Sources */,
 				5303C4041C331C5700E5A7AF /* Errors.swift in Sources */,
 				5334A0F51C3EFDEE00429E6F /* Helpers.swift in Sources */,
+				5349152A1CE642090085F481 /* PushNotifications.swift in Sources */,
 				53C4DCC11C3AFB5D0067B671 /* InMemoryCacheProvider.swift in Sources */,
 				5386B1CA1C18D728001D8D31 /* FoundationNetworkAdapter.swift in Sources */,
 				5386B1CC1C18D750001D8D31 /* ResponseProcessors.swift in Sources */,
@@ -569,6 +582,7 @@
 				53C4DCCA1C3C67EF0067B671 /* InternalResponseTests.swift in Sources */,
 				53C4DCD01C3C69DB0067B671 /* CompoundResponseProcessorTests.swift in Sources */,
 				53C4DCD91C3D9B990067B671 /* SSLCertificatePinningTests.swift in Sources */,
+				5349152F1CEB81100085F481 /* PushNotificationMethodTests.swift in Sources */,
 				5334A0F71C44551000429E6F /* RequestQueueTests.swift in Sources */,
 				53122FDF1C2088D90052E8A5 /* FoundationResponseTests.swift in Sources */,
 				53C4DCCC1C3C687A0067B671 /* CachingTests.swift in Sources */,

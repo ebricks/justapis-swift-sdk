@@ -24,7 +24,7 @@ class ContentTypeParsingTests: XCTestCase {
     func testMatchedContentType() {
         let baseUrl = "http://localhost"
         let requestPath = "test/request/path"
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectationWithDescription(self.name!)
         
         stub(isHost("localhost"), response: {
             (request:NSURLRequest) in
@@ -48,7 +48,7 @@ class ContentTypeParsingTests: XCTestCase {
     
     func testMatchedContentTypeWithDisabledAutoparse() {
         let baseUrl = "http://localhost"
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectationWithDescription(self.name!)
         
         stub(isHost("localhost"), response: {
             (request:NSURLRequest) in
@@ -76,7 +76,7 @@ class ContentTypeParsingTests: XCTestCase {
     func testUnmatchedContentType() {
         let baseUrl = "http://localhost"
         let requestPath = "test/request/path"
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectationWithDescription(self.name!)
         
         stub(isHost("localhost"), response: {
             (request:NSURLRequest) in
@@ -100,7 +100,7 @@ class ContentTypeParsingTests: XCTestCase {
     
     func testMatchedContentTypeOverride() {
         let baseUrl = "http://localhost"
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectationWithDescription(self.name!)
         
         stub(isHost("localhost"), response: {
             (request:NSURLRequest) in
@@ -127,7 +127,7 @@ class ContentTypeParsingTests: XCTestCase {
     
     func testUnmatchedContentTypeOverride() {
         let baseUrl = "http://localhost"
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectationWithDescription(self.name!)
         
         stub(isHost("localhost"), response: {
             (request:NSURLRequest) in
@@ -159,7 +159,7 @@ class ContentTypeParsingTests: XCTestCase {
     {
         let baseUrl = "http://localhost"
         let requestPath = "test/request/path"
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectationWithDescription(self.name!)
         
         stub(isHost("localhost"), response: {
             (request:NSURLRequest) in
@@ -188,7 +188,7 @@ class ContentTypeParsingTests: XCTestCase {
     {
         let baseUrl = "http://localhost"
         let requestPath = "test/request/path"
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectationWithDescription(self.name!)
         
         stub(isHost("localhost"), response: {
             (request:NSURLRequest) in
@@ -218,7 +218,7 @@ class ContentTypeParsingTests: XCTestCase {
     {
         let baseUrl = "http://localhost"
         let requestPath = "test/request/path"
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectationWithDescription(self.name!)
         
         stub(isHost("localhost"), response: {
             (request:NSURLRequest) in

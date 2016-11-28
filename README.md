@@ -169,6 +169,13 @@ You may disable the caching of a response by setting `cacheResponseWithExpiratio
 
 You may provide a custom cache identifier for a request by setting the `customCacheIdentifier` property. By default, only the method, path, and query parameters are used to distinguish requests from one another. If your headers or body are relevant to cached responses, you'll want to set a customCacheIdentifer that appropriately captures this information.  An example might be if you send search parameters using the BODY of a GET or POST request and want to cache the responses.
 
+### Push Notification Endpoints
+
+The CompositedGateway exposes a method group named `pushNotifications` that allows you to register (`subscribe`) your device for push notifications, unsubscribe it (`unsubcribe`), as well as publish messages (`publish`) to specific channels.
+
+For each method, you'll need the `endpointCodename` expected by the Gateway. 
+
+
 ### Receiving JSON Responses
 
 If your JustAPI endpoints provide their responses in JSON, you can use the `JsonGateway` or set a `JsonResponseProcessor` as a `CompositedGateway` content-type parser.

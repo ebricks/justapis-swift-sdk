@@ -57,7 +57,7 @@ class RequestQueueTests: XCTestCase {
     
     func testDefaultQueueProcessing()
     {
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectationWithDescription(self.name!)
         let gateway:CompositedGateway = CompositedGateway(baseUrl: NSURL(string:"http://localhost")!)
         gateway.pause()
 
@@ -93,7 +93,7 @@ class RequestQueueTests: XCTestCase {
     
     func testCancelFirstQueuedRequest()
     {
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectationWithDescription(self.name!)
         let gateway:CompositedGateway = CompositedGateway(baseUrl: NSURL(string:"http://localhost")!)
         gateway.pause()
         
@@ -132,7 +132,7 @@ class RequestQueueTests: XCTestCase {
 
     func testCancelMiddleQueuedRequest()
     {
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectationWithDescription(self.name!)
         let gateway:CompositedGateway = CompositedGateway(baseUrl: NSURL(string:"http://localhost")!)
         gateway.pause()
         
@@ -174,7 +174,7 @@ class RequestQueueTests: XCTestCase {
 
     func testCancelLastQueuedRequest()
     {
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectationWithDescription(self.name!)
         let gateway:CompositedGateway = CompositedGateway(baseUrl: NSURL(string:"http://localhost")!)
         gateway.pause()
         

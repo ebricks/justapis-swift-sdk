@@ -90,6 +90,7 @@ public struct CompositedGatewayConfiguration
     var cacheProvider:CacheProvider? = nil
     var requestPreparer:RequestPreparer? = nil
     var responseProcessor:ResponseProcessor? = nil
+    var pushNotificationsProvider:PushNotificationsProvider? = nil
     
     public init(baseUrl:NSURL,
         sslCertificate:SSLCertificate? = nil,
@@ -97,7 +98,8 @@ public struct CompositedGatewayConfiguration
         requestPreparer:RequestPreparer? = nil,
         responseProcessor:ResponseProcessor? = nil,
         cacheProvider:CacheProvider? = nil,
-        networkAdapter:NetworkAdapter? = nil)
+        networkAdapter:NetworkAdapter? = nil,
+        pushNotificationsProvider:PushNotificationsProvider? = nil)
     {
         self.baseUrl = baseUrl
         self.sslCertificate = sslCertificate
@@ -106,6 +108,7 @@ public struct CompositedGatewayConfiguration
         self.responseProcessor = responseProcessor
         self.cacheProvider = cacheProvider
         self.networkAdapter = networkAdapter
+        self.pushNotificationsProvider = pushNotificationsProvider
     }
 }
 
@@ -113,19 +116,25 @@ public struct CompositedGatewayConfiguration
 /// Implementation of Gateway protocol that dispatches most details to
 /// helper classes.
 ///
-public class CompositedGateway : Gateway
+public class CompositedGateway : Gateway, PushNotificationSupportingGateway
 {
+    // Public properties
     public let baseUrl:NSURL
     public let sslCertificate:SSLCertificate?
     public let defaultRequestProperties:DefaultRequestPropertySet
     
-    
+    // Public method groups
+    public var pushNotifications:PushNotificationMethods { return self.pushNotificationsDispatcher }
+
+    // Internal Providers, Adapters, and Dispatches
     private let networkAdapter:NetworkAdapter
     private let cacheProvider:CacheProvider
     private let requestPreparer:RequestPreparer?
     private let responseProcessor:ResponseProcessor?
     private let contentTypeParser:ContentTypeParser
-    
+    private var pushNotificationsDispatcher:PushNotificationMethodDispatcher!
+
+    // Internal state
     private var requests:InternalRequestQueue = InternalRequestQueue()
     public var pendingRequests:[Request] { return self.requests.pendingRequests }
     public var isPaused:Bool { return _isPaused }
@@ -144,7 +153,8 @@ public class CompositedGateway : Gateway
         requestPreparer:RequestPreparer? = nil,
         responseProcessor:ResponseProcessor? = nil,
         cacheProvider:CacheProvider? = nil,
-        networkAdapter:NetworkAdapter? = nil
+        networkAdapter:NetworkAdapter? = nil,
+        pushNotificationsProvider:PushNotificationsProvider? = nil
         )
     {
         self.baseUrl = baseUrl
@@ -162,6 +172,9 @@ public class CompositedGateway : Gateway
         // Use the Foundation Network Adapter if none was provided
         self.networkAdapter = networkAdapter ?? FoundationNetworkAdapter(sslCertificate: sslCertificate)
         
+        // Use the Default Push Notifications Provider if none was provided
+        self.pushNotificationsDispatcher = PushNotificationMethodDispatcher(gateway: self, pushNotificationsProvider: pushNotificationsProvider ?? DefaultPushNotificationsProvider())
+
         self.resume()
     }
     
@@ -177,7 +190,8 @@ public class CompositedGateway : Gateway
             requestPreparer:configuration.requestPreparer,
             responseProcessor:configuration.responseProcessor,
             cacheProvider:configuration.cacheProvider,
-            networkAdapter:configuration.networkAdapter
+            networkAdapter:configuration.networkAdapter,
+            pushNotificationsProvider: configuration.pushNotificationsProvider
                   )
     }
     
@@ -187,7 +201,6 @@ public class CompositedGateway : Gateway
     public func pause()
     {
         self._isPaused = true
-        // Now that the
     }
     
     ///
@@ -429,7 +442,7 @@ public class CompositedGateway : Gateway
 ///
 public class JsonGateway : CompositedGateway
 {
-    public override init(baseUrl: NSURL, sslCertificate:SSLCertificate? = nil, defaultRequestProperties:DefaultRequestPropertySet? = nil, requestPreparer: RequestPreparer? = nil, responseProcessor:ResponseProcessor? = nil, cacheProvider:CacheProvider? = nil, networkAdapter: NetworkAdapter? = nil)
+    public override init(baseUrl: NSURL, sslCertificate:SSLCertificate? = nil, defaultRequestProperties:DefaultRequestPropertySet? = nil, requestPreparer: RequestPreparer? = nil, responseProcessor:ResponseProcessor? = nil, cacheProvider:CacheProvider? = nil, networkAdapter: NetworkAdapter? = nil, pushNotificationsProvider:PushNotificationsProvider? = nil)
     {
         super.init(baseUrl: baseUrl, defaultRequestProperties: defaultRequestProperties, requestPreparer:requestPreparer, responseProcessor:responseProcessor, networkAdapter:networkAdapter)
         super.setParser(JsonResponseProcessor(), contentType: "application/json")

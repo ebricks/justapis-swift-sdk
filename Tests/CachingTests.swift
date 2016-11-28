@@ -66,7 +66,7 @@ class CachingTests: XCTestCase {
     }
     
     func testInMemoryCacheProviderDirectAccess() {
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectationWithDescription(self.name!)
         let cache = InMemoryCacheProvider()
         
         let response = self.getDefaultMockResponse()
@@ -83,7 +83,7 @@ class CachingTests: XCTestCase {
     
     func testInMemoryCachingDisabled() {
         let gateway:CompositedGateway = CompositedGateway(baseUrl: NSURL(string:"http://localhost")!)
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectationWithDescription(self.name!)
 
         var numberOfRequestsReceivedByStub = 0
         stub(isHost("localhost"), response: {
@@ -113,7 +113,7 @@ class CachingTests: XCTestCase {
     
     func testInMemoryCachingEnabled() {
         let gateway:CompositedGateway = CompositedGateway(baseUrl: NSURL(string:"http://localhost")!)
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectationWithDescription(self.name!)
         
         var request1 = mockRequestDefaults
         request1.allowCachedResponse = true
@@ -147,7 +147,7 @@ class CachingTests: XCTestCase {
     
     func testInMemoryCachingExpiration() {
         let gateway:CompositedGateway = CompositedGateway(baseUrl: NSURL(string:"http://localhost")!)
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectationWithDescription(self.name!)
         
         var request1 = mockRequestDefaults
         request1.allowCachedResponse = true
@@ -182,7 +182,7 @@ class CachingTests: XCTestCase {
     
     func testInMemoryCachingDoNotStore() {
         let gateway:CompositedGateway = CompositedGateway(baseUrl: NSURL(string:"http://localhost")!)
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectationWithDescription(self.name!)
         
         var request1 = mockRequestDefaults
         request1.allowCachedResponse = true
@@ -217,7 +217,7 @@ class CachingTests: XCTestCase {
     
     func testCustomCacheIdentifier() {
         let gateway:CompositedGateway = CompositedGateway(baseUrl: NSURL(string:"http://localhost")!)
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectationWithDescription(self.name!)
         
         var request1 = mockRequestDefaults
         request1.path = "/some/unique/path"
@@ -259,7 +259,7 @@ class CachingTests: XCTestCase {
     
     func testNullCacheProvider() {
         let gateway:CompositedGateway = CompositedGateway(baseUrl: NSURL(string:"http://localhost")!, defaultRequestProperties:nil, cacheProvider:NullCacheProvider())
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectationWithDescription(self.name!)
         
         var request1 = mockRequestDefaults
         request1.allowCachedResponse = true

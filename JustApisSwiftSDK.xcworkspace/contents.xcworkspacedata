@@ -4,7 +4,4 @@
    <FileRef
       location = "container:JustApisSwiftSDK.xcodeproj">
    </FileRef>
-   <FileRef
-      location = "group:Tests/Submodules/OHHTTPStubs/OHHTTPStubs/OHHTTPStubs.xcodeproj">
-   </FileRef>
 </Workspace>

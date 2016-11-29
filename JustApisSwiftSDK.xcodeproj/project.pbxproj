@@ -52,7 +52,6 @@
 		5303C4111C348E5400E5A7AF /* InternalResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5303C40D1C348E5400E5A7AF /* InternalResponse.swift */; };
 		53122FDD1C20828E0052E8A5 /* FoundationRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53122FDC1C20828E0052E8A5 /* FoundationRequestTests.swift */; };
 		53122FDF1C2088D90052E8A5 /* FoundationResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53122FDE1C2088D90052E8A5 /* FoundationResponseTests.swift */; };
-		53122FE11C20993E0052E8A5 /* OHHTTPStubs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53122FE01C20993E0052E8A5 /* OHHTTPStubs.framework */; };
 		5334A0F51C3EFDEE00429E6F /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5334A0F41C3EFDEE00429E6F /* Helpers.swift */; };
 		5334A0F71C44551000429E6F /* RequestQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5334A0F61C44551000429E6F /* RequestQueueTests.swift */; };
 		5386B1AA1C18B503001D8D31 /* JustApisSwiftSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 5386B1A91C18B503001D8D31 /* JustApisSwiftSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -167,7 +166,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				53122FE11C20993E0052E8A5 /* OHHTTPStubs.framework in Frameworks */,
 				5386B1B11C18B503001D8D31 /* JustApisSwiftSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

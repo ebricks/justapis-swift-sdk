@@ -10,6 +10,8 @@ target 'JustApisSwiftSDK' do
   target 'JustApisSwiftSDKTests' do
     inherit! :search_paths
     # Pods for testing
+    pod 'OHHTTPStubs' # Default subspecs, including support for NSURLSession & JSON etc
+    pod 'OHHTTPStubs/Swift' # Adds the Swiftier API wrapper too
   end
 
 end

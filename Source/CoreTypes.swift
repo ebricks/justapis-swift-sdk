@@ -15,7 +15,7 @@ import Foundation
 //
 
 /// The tuple that represents a response or error associated with an attempted request
-public typealias RequestResult = (request:Request, response:Response?, error:ErrorType?)
+public typealias RequestResult = (request:Request, response:Response?, error:Error?)
 
 /// A callback which is invoked when a request completes
 public typealias RequestCallback = ((RequestResult) -> Void)

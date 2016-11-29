@@ -24,10 +24,10 @@ class ContentTypeParsingTests: XCTestCase {
     func testMatchedContentType() {
         let baseUrl = "http://localhost"
         let requestPath = "test/request/path"
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectation(description: self.name!)
         
         stub(isHost("localhost"), response: {
-            (request:NSURLRequest) in
+            (request:URLRequest) in
             
             return OHHTTPStubsResponse(JSONObject: ["a":123], statusCode: 200, headers: ["Content-Type":"test/data"])
         })
@@ -36,22 +36,22 @@ class ContentTypeParsingTests: XCTestCase {
             return (request:response.request, response:response.parsedBody("test"), error:nil)
         })
         
-        let gateway:CompositedGateway = CompositedGateway(baseUrl: NSURL(string:baseUrl)!)
+        let gateway:CompositedGateway = CompositedGateway(baseUrl: URL(string:baseUrl)!)
         gateway.setParser(parser, contentType: "test/data")
         
         gateway.get(requestPath, callback: { (result) in
             XCTAssertEqual(result.response?.parsedBody as? String, "test")
             expectation.fulfill()
         })
-        self.waitForExpectationsWithTimeout(5, handler: nil)
+        self.waitForExpectations(timeout: 5, handler: nil)
     }
     
     func testMatchedContentTypeWithDisabledAutoparse() {
         let baseUrl = "http://localhost"
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectation(description: self.name!)
         
         stub(isHost("localhost"), response: {
-            (request:NSURLRequest) in
+            (request:URLRequest) in
             
             return OHHTTPStubsResponse(JSONObject: ["a":123], statusCode: 200, headers: ["Content-Type":"test/data"])
         })
@@ -60,7 +60,7 @@ class ContentTypeParsingTests: XCTestCase {
             return (request:response.request, response:response.parsedBody("test"), error:nil)
         })
         
-        let gateway:CompositedGateway = CompositedGateway(baseUrl: NSURL(string:baseUrl)!)
+        let gateway:CompositedGateway = CompositedGateway(baseUrl: URL(string:baseUrl)!)
         gateway.setParser(parser, contentType: "test/data")
         
         var request = gateway.defaultRequestProperties.get
@@ -70,16 +70,16 @@ class ContentTypeParsingTests: XCTestCase {
             XCTAssertTrue(result.response?.parsedBody == nil)
             expectation.fulfill()
         })
-        self.waitForExpectationsWithTimeout(5, handler: nil)
+        self.waitForExpectations(timeout: 5, handler: nil)
     }
     
     func testUnmatchedContentType() {
         let baseUrl = "http://localhost"
         let requestPath = "test/request/path"
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectation(description: self.name!)
         
         stub(isHost("localhost"), response: {
-            (request:NSURLRequest) in
+            (request:URLRequest) in
             
             return OHHTTPStubsResponse(JSONObject: ["a":123], statusCode: 200, headers: ["Content-Type":"nothing/familiar"])
         })
@@ -88,22 +88,22 @@ class ContentTypeParsingTests: XCTestCase {
             return (request:response.request, response:response.parsedBody("test"), error:nil)
         })
         
-        let gateway:CompositedGateway = CompositedGateway(baseUrl: NSURL(string:baseUrl)!)
+        let gateway:CompositedGateway = CompositedGateway(baseUrl: URL(string:baseUrl)!)
         gateway.setParser(parser, contentType: "test/data")
         
         gateway.get(requestPath, callback: { (result) in
             XCTAssertTrue(result.response?.parsedBody == nil)
             expectation.fulfill()
         })
-        self.waitForExpectationsWithTimeout(5, handler: nil)
+        self.waitForExpectations(timeout: 5, handler: nil)
     }
     
     func testMatchedContentTypeOverride() {
         let baseUrl = "http://localhost"
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectation(description: self.name!)
         
         stub(isHost("localhost"), response: {
-            (request:NSURLRequest) in
+            (request:URLRequest) in
             
             return OHHTTPStubsResponse(JSONObject: ["a":123], statusCode: 200, headers: ["Content-Type":"nothing/familiar"])
         })
@@ -112,7 +112,7 @@ class ContentTypeParsingTests: XCTestCase {
             return (request:response.request, response:response.parsedBody("test"), error:nil)
         })
         
-        let gateway:CompositedGateway = CompositedGateway(baseUrl: NSURL(string:baseUrl)!)
+        let gateway:CompositedGateway = CompositedGateway(baseUrl: URL(string:baseUrl)!)
         gateway.setParser(parser, contentType: "test/data")
         
         var request = gateway.defaultRequestProperties.get
@@ -122,15 +122,15 @@ class ContentTypeParsingTests: XCTestCase {
             XCTAssertEqual(result.response?.parsedBody as? String, "test")
             expectation.fulfill()
         })
-        self.waitForExpectationsWithTimeout(5, handler: nil)
+        self.waitForExpectations(timeout: 5, handler: nil)
     }
     
     func testUnmatchedContentTypeOverride() {
         let baseUrl = "http://localhost"
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectation(description: self.name!)
         
         stub(isHost("localhost"), response: {
-            (request:NSURLRequest) in
+            (request:URLRequest) in
             
             return OHHTTPStubsResponse(JSONObject: ["a":123], statusCode: 200, headers: ["Content-Type":"test/data"])
         })
@@ -139,7 +139,7 @@ class ContentTypeParsingTests: XCTestCase {
             return (request:response.request, response:response.parsedBody("test"), error:nil)
         })
         
-        let gateway:CompositedGateway = CompositedGateway(baseUrl: NSURL(string:baseUrl)!)
+        let gateway:CompositedGateway = CompositedGateway(baseUrl: URL(string:baseUrl)!)
         gateway.setParser(parser, contentType: "test/data")
         
         var request = gateway.defaultRequestProperties.get
@@ -149,7 +149,7 @@ class ContentTypeParsingTests: XCTestCase {
             XCTAssertTrue(result.response?.parsedBody == nil)
             expectation.fulfill()
         })
-        self.waitForExpectationsWithTimeout(5, handler: nil)
+        self.waitForExpectations(timeout: 5, handler: nil)
     }
     
     ///
@@ -159,15 +159,15 @@ class ContentTypeParsingTests: XCTestCase {
     {
         let baseUrl = "http://localhost"
         let requestPath = "test/request/path"
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectation(description: self.name!)
         
         stub(isHost("localhost"), response: {
-            (request:NSURLRequest) in
+            (request:URLRequest) in
             
             return OHHTTPStubsResponse(JSONObject: ["a":123], statusCode: 200, headers: ["Content-Type":"application/json"])
         })
         
-        let gateway:Gateway = JsonGateway(baseUrl: NSURL(string: baseUrl)!)
+        let gateway:Gateway = JsonGateway(baseUrl: URL(string: baseUrl)!)
         gateway.get(requestPath, callback: { (result) in
             XCTAssertNil(result.error)
             XCTAssert(result.response != nil)
@@ -178,7 +178,7 @@ class ContentTypeParsingTests: XCTestCase {
             expectation.fulfill()
         })
         
-        self.waitForExpectationsWithTimeout(5, handler: nil)
+        self.waitForExpectations(timeout: 5, handler: nil)
     }
     
     ///
@@ -188,15 +188,15 @@ class ContentTypeParsingTests: XCTestCase {
     {
         let baseUrl = "http://localhost"
         let requestPath = "test/request/path"
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectation(description: self.name!)
         
         stub(isHost("localhost"), response: {
-            (request:NSURLRequest) in
+            (request:URLRequest) in
             
             return OHHTTPStubsResponse(JSONObject: [123, 456], statusCode: 200, headers: ["Content-Type":"application/json"])
         })
         
-        let gateway:Gateway = JsonGateway(baseUrl: NSURL(string: baseUrl)!)
+        let gateway:Gateway = JsonGateway(baseUrl: URL(string: baseUrl)!)
         gateway.get(requestPath, callback: { (result) in
             XCTAssertNil(result.error)
             XCTAssert(result.response != nil)
@@ -208,7 +208,7 @@ class ContentTypeParsingTests: XCTestCase {
             expectation.fulfill()
         })
         
-        self.waitForExpectationsWithTimeout(5, handler: nil)
+        self.waitForExpectations(timeout: 5, handler: nil)
     }
     
     ///
@@ -218,20 +218,20 @@ class ContentTypeParsingTests: XCTestCase {
     {
         let baseUrl = "http://localhost"
         let requestPath = "test/request/path"
-        let expectation = self.expectationWithDescription(self.name)
+        let expectation = self.expectation(description: self.name!)
         
         stub(isHost("localhost"), response: {
-            (request:NSURLRequest) in
+            (request:URLRequest) in
             
-            return OHHTTPStubsResponse(data: "2".dataUsingEncoding(NSUTF8StringEncoding)! , statusCode: 200, headers: ["Content-Type":"application/json"])
+            return OHHTTPStubsResponse(data: "2".dataUsingEncoding(String.Encoding.utf8)! , statusCode: 200, headers: ["Content-Type":"application/json"])
         })
         
-        let gateway:Gateway = JsonGateway(baseUrl: NSURL(string: baseUrl)!)
+        let gateway:Gateway = JsonGateway(baseUrl: URL(string: baseUrl)!)
         gateway.get(requestPath, callback: { (result) in
             XCTAssertNotNil(result.error)
             expectation.fulfill()
         })
         
-        self.waitForExpectationsWithTimeout(5, handler: nil)
+        self.waitForExpectations(timeout: 5, handler: nil)
     }
 }

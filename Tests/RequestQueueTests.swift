@@ -37,7 +37,7 @@ class RequestQueueTests: XCTestCase {
     func testQueueOperations()
     {
         let queue = InternalRequestQueue()
-        let gateway:CompositedGateway = CompositedGateway(baseUrl: NSURL(string:"http://localhost")!)
+        let gateway:CompositedGateway = CompositedGateway(baseUrl: URL(string:"http://localhost")!)
         
         let request1 = gateway.internalizeRequest(self.mockRequestDefaults).path("/1")
         let request2 = gateway.internalizeRequest(self.mockRequestDefaults).path("/2")
@@ -57,12 +57,12 @@ class RequestQueueTests: XCTestCase {
     
     func testDefaultQueueProcessing()
     {
-        let expectation = self.expectationWithDescription(self.name)
-        let gateway:CompositedGateway = CompositedGateway(baseUrl: NSURL(string:"http://localhost")!)
+        let expectation = self.expectation(description: self.name!)
+        let gateway:CompositedGateway = CompositedGateway(baseUrl: URL(string:"http://localhost")!)
         gateway.pause()
 
         stub(isHost("localhost"), response: {
-            (request:NSURLRequest) in
+            (request:URLRequest) in
             
             return OHHTTPStubsResponse()
         })
@@ -71,7 +71,7 @@ class RequestQueueTests: XCTestCase {
         let callback:RequestCallback = { (result:RequestResult) in
             numberProcessedRequests += 1
 
-            XCTAssert(NSThread.isMainThread(), "Request Callback should always run on main thread")
+            XCTAssert(Thread.isMainThread, "Request Callback should always run on main thread")
             
             if (numberProcessedRequests == 4)
             {
@@ -88,17 +88,17 @@ class RequestQueueTests: XCTestCase {
 
         gateway.resume()
         
-        self.waitForExpectationsWithTimeout(5, handler: nil)
+        self.waitForExpectations(timeout: 5, handler: nil)
     }
     
     func testCancelFirstQueuedRequest()
     {
-        let expectation = self.expectationWithDescription(self.name)
-        let gateway:CompositedGateway = CompositedGateway(baseUrl: NSURL(string:"http://localhost")!)
+        let expectation = self.expectation(description: self.name!)
+        let gateway:CompositedGateway = CompositedGateway(baseUrl: URL(string:"http://localhost")!)
         gateway.pause()
         
         stub(isHost("localhost"), response: {
-            (request:NSURLRequest) in
+            (request:URLRequest) in
             
             return OHHTTPStubsResponse()
         })
@@ -108,7 +108,7 @@ class RequestQueueTests: XCTestCase {
             numberProcessedRequests += 1
             
             XCTAssertNotEqual(result.request.path, "/1", "A cancelled request should never execute")
-            XCTAssert(NSThread.isMainThread(), "Request Callback should always run on main thread")
+            XCTAssert(Thread.isMainThread, "Request Callback should always run on main thread")
             
             if (numberProcessedRequests == 3)
             {
@@ -127,17 +127,17 @@ class RequestQueueTests: XCTestCase {
         
         gateway.resume()
         
-        self.waitForExpectationsWithTimeout(5, handler: nil)
+        self.waitForExpectations(timeout: 5, handler: nil)
     }
 
     func testCancelMiddleQueuedRequest()
     {
-        let expectation = self.expectationWithDescription(self.name)
-        let gateway:CompositedGateway = CompositedGateway(baseUrl: NSURL(string:"http://localhost")!)
+        let expectation = self.expectation(description: self.name!)
+        let gateway:CompositedGateway = CompositedGateway(baseUrl: URL(string:"http://localhost")!)
         gateway.pause()
         
         stub(isHost("localhost"), response: {
-            (request:NSURLRequest) in
+            (request:URLRequest) in
             
             return OHHTTPStubsResponse()
         })
@@ -148,7 +148,7 @@ class RequestQueueTests: XCTestCase {
             
             XCTAssertNotEqual(result.request.path, "/2", "A cancelled request should never execute")
             XCTAssertNotEqual(result.request.path, "/3", "A cancelled request should never execute")
-            XCTAssert(NSThread.isMainThread(), "Request Callback should always run on main thread")
+            XCTAssert(Thread.isMainThread, "Request Callback should always run on main thread")
             
             if (numberProcessedRequests == 2)
             {
@@ -169,17 +169,17 @@ class RequestQueueTests: XCTestCase {
         
         gateway.resume()
         
-        self.waitForExpectationsWithTimeout(5, handler: nil)
+        self.waitForExpectations(timeout: 5, handler: nil)
     }
 
     func testCancelLastQueuedRequest()
     {
-        let expectation = self.expectationWithDescription(self.name)
-        let gateway:CompositedGateway = CompositedGateway(baseUrl: NSURL(string:"http://localhost")!)
+        let expectation = self.expectation(description: self.name!)
+        let gateway:CompositedGateway = CompositedGateway(baseUrl: URL(string:"http://localhost")!)
         gateway.pause()
         
         stub(isHost("localhost"), response: {
-            (request:NSURLRequest) in
+            (request:URLRequest) in
             
             return OHHTTPStubsResponse()
         })
@@ -189,7 +189,7 @@ class RequestQueueTests: XCTestCase {
             numberProcessedRequests += 1
             
             XCTAssertNotEqual(result.request.path, "/4", "A cancelled request should never execute")
-            XCTAssert(NSThread.isMainThread(), "Request Callback should always run on main thread")
+            XCTAssert(Thread.isMainThread, "Request Callback should always run on main thread")
             
             if (numberProcessedRequests == 2)
             {
@@ -209,7 +209,7 @@ class RequestQueueTests: XCTestCase {
         
         gateway.resume()
         
-        self.waitForExpectationsWithTimeout(5, handler: nil)
+        self.waitForExpectations(timeout: 5, handler: nil)
     }
     
     func testJsonCompatibleDictionarySerialization()

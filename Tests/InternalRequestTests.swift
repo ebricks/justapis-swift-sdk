@@ -37,7 +37,7 @@ class InternalRequestTests: XCTestCase {
 
     func testHashableProtocolSupport()
     {
-        let gateway:CompositedGateway = CompositedGateway(baseUrl: NSURL(string:"http://localhost")!)
+        let gateway:CompositedGateway = CompositedGateway(baseUrl: URL(string:"http://localhost")!)
 
         let request = gateway.internalizeRequest(self.mockRequestDefaults)
             .path("/abc")
@@ -49,7 +49,7 @@ class InternalRequestTests: XCTestCase {
         let requestWithBarelyDifferentParams = request.params(["a":1,"b":3])
         let requestWithOtherReorderedParams = request.params(["b":2,"a":1])
         let requestWithVeryDifferentParams = request.params(["sessionID":"adakjlasdlkjsadljkaffa="])
-        let requestWithDifferentBody = request.body("test".dataUsingEncoding(NSUTF8StringEncoding))
+        let requestWithDifferentBody = request.body("test".data(using: String.Encoding.utf8))
         
         // These requests should be equal!
         XCTAssertEqual(request, request)
@@ -66,7 +66,7 @@ class InternalRequestTests: XCTestCase {
     
     func testBuilderMethods()
     {
-        let gateway:CompositedGateway = CompositedGateway(baseUrl: NSURL(string:"http://localhost")!)
+        let gateway:CompositedGateway = CompositedGateway(baseUrl: URL(string:"http://localhost")!)
         
         let request = gateway.internalizeRequest(self.mockRequestDefaults)
 
@@ -74,8 +74,8 @@ class InternalRequestTests: XCTestCase {
         XCTAssertEqual(request.path("/abc").path, "/abc")
         XCTAssertEqual(request.params(["a":"test"]).params?["a"] as? String, "test")
         XCTAssertEqual(request.headers(["b":"test"]).headers?["b"], "test")
-        XCTAssertEqual(request.body("test".dataUsingEncoding(NSUTF8StringEncoding)).body, "test".dataUsingEncoding(NSUTF8StringEncoding))
-        XCTAssertEqual(request.body("test".dataUsingEncoding(NSUTF8StringEncoding)).body, "test".dataUsingEncoding(NSUTF8StringEncoding))
+        XCTAssertEqual(request.body("test".data(using: String.Encoding.utf8)).body, "test".data(using: String.Encoding.utf8))
+        XCTAssertEqual(request.body("test".data(using: String.Encoding.utf8)).body, "test".data(using: String.Encoding.utf8))
         XCTAssertEqual(request.followRedirects(false).followRedirects, false)
         XCTAssertEqual(request.followRedirects(true).followRedirects, true)
 
@@ -94,11 +94,11 @@ class InternalRequestTests: XCTestCase {
     
     func testInitFromMutableRequestProperties()
     {
-        func XCTAssertEqualDictionaries<S, T: Equatable>(first: [S:T], _ second: [S:T]) {
+        func XCTAssertEqualDictionaries<S, T: Equatable>(_ first: [S:T], _ second: [S:T]) {
             XCTAssert(first == second)
         }
         
-        let gateway:CompositedGateway = CompositedGateway(baseUrl: NSURL(string:"http://localhost")!)
+        let gateway:CompositedGateway = CompositedGateway(baseUrl: URL(string:"http://localhost")!)
         let props = self.mockRequestDefaults
         let request = gateway.internalizeRequest(self.mockRequestDefaults)
 

@@ -31,7 +31,7 @@ public protocol RequestProperties
     var headers:Headers? { get }
     
     /// Any body data to send along with the request
-    var body:NSData? { get }
+    var body:Data? { get }
     
     /// Whether HTTP redirects should be followed before a response is handled
     var followRedirects:Bool { get }
@@ -74,43 +74,43 @@ extension RequestProperties
 public protocol RequestBuilderMethods
 {    
     /// Returns a new Request with the method set to the provided value
-    func method(value:String) -> Self
+    func method(_ value:String) -> Self
     
     /// Returns a new Request with the path set to the provided value
-    func path(value:String) -> Self
+    func path(_ value:String) -> Self
     
     /// Returns a new Request with all query params set to the provided value
-    func params(value:QueryParameters?) -> Self
+    func params(_ value:QueryParameters?) -> Self
     
     /// Returns a new Request with a query parameter of the provided key set to the provided value
-    func param(key:String, _ value:AnyObject?) -> Self
+    func param(_ key:String, _ value:AnyObject?) -> Self
     
     /// Returns a new Request with all headers set to the provided value
-    func headers(value:Headers?) -> Self
+    func headers(_ value:Headers?) -> Self
     
     /// Returns a new Request with a header of the provided key set to the provided value
-    func header(key:String, _ value:String?) -> Self
+    func header(_ key:String, _ value:String?) -> Self
     
     /// Returns a new Request with a body set to the provided value
-    func body(value:NSData?) -> Self
+    func body(_ value:Data?) -> Self
     
     /// Returns a new Request with the HTTP redirect support flag set to the provided value
-    func followRedirects(value:Bool) -> Self
+    func followRedirects(_ value:Bool) -> Self
     
     /// Returns a new Request with applyContentTypeParsing set to the provided value
-    func applyContentTypeParsing(value:Bool) -> Self
+    func applyContentTypeParsing(_ value:Bool) -> Self
     
     /// Returns a new Request with contentTypeOverride set to the provided value
-    func contentTypeOverride(value:String?) -> Self
+    func contentTypeOverride(_ value:String?) -> Self
     
     /// Returns a new Request with allowCachedResponse set to the provided value
-    func allowCachedResponse(value:Bool) -> Self
+    func allowCachedResponse(_ value:Bool) -> Self
     
     /// Returns a new Request with cacheResponseWithExpiration set to the provided value
-    func cacheResponseWithExpiration(value:UInt) -> Self
+    func cacheResponseWithExpiration(_ value:UInt) -> Self
     
     /// Returns a new Request with customCacheIdentifier set to the provided value
-    func customCacheIdentifier(value:String?) -> Self
+    func customCacheIdentifier(_ value:String?) -> Self
 }
 
 extension RequestProperties
@@ -119,27 +119,27 @@ extension RequestProperties
     {        
         var rep = [String:AnyObject]()
         
-        rep["method"] = self.method
-        rep["path"] = self.path
+        rep["method"] = self.method as AnyObject?
+        rep["path"] = self.path as AnyObject?
         if let params = self.params
         {
-            rep["params"] = params
+            rep["params"] = params as AnyObject?
         }
         else
         {
             rep["params"] = NSNull()
         }
-        rep["headers"] = (self.headers != nil) ? self.headers! : NSNull()
+        rep["headers"] = (self.headers != nil) ? self.headers! as AnyObject : NSNull() as AnyObject
         
-        rep["body"] = self.body != nil ? self.body?.base64EncodedStringWithOptions(NSDataBase64EncodingOptions(rawValue:0)) : NSNull()
-        rep["followRedirects"] = self.followRedirects
+        rep["body"] = self.body != nil ? self.body?.base64EncodedString(options: NSData.Base64EncodingOptions(rawValue:0)) as AnyObject : NSNull() as AnyObject
+        rep["followRedirects"] = self.followRedirects as AnyObject?
         
-        rep["applyContentTypeParsing"] = self.applyContentTypeParsing
-        rep["contentTypeOverride"] = self.contentTypeOverride ?? NSNull()
+        rep["applyContentTypeParsing"] = self.applyContentTypeParsing as AnyObject?
+        rep["contentTypeOverride"] = self.contentTypeOverride as AnyObject?? ?? NSNull()
         
-        rep["allowCachedResponse"] = self.allowCachedResponse
-        rep["cacheResponseWithExpiration"] = self.cacheResponseWithExpiration
-        rep["customCacheIdentifier"] = self.customCacheIdentifier ?? NSNull()
+        rep["allowCachedResponse"] = self.allowCachedResponse as AnyObject?
+        rep["cacheResponseWithExpiration"] = self.cacheResponseWithExpiration as AnyObject?
+        rep["customCacheIdentifier"] = self.customCacheIdentifier as AnyObject?? ?? NSNull()
         return rep
     }
 }
@@ -161,7 +161,7 @@ public struct MutableRequestProperties : RequestProperties
     public var path:String
     public var params:QueryParameters?
     public var headers:Headers?
-    public var body:NSData?
+    public var body:Data?
     public var followRedirects:Bool
 
     public var applyContentTypeParsing:Bool = true
@@ -214,7 +214,7 @@ extension MutableRequestProperties
         }
         if let bodyString = d["body"] as? String
         {
-            self.body = NSData(base64EncodedString: bodyString, options: NSDataBase64DecodingOptions.IgnoreUnknownCharacters)
+            self.body = Data(base64Encoded: bodyString, options: NSData.Base64DecodingOptions.ignoreUnknownCharacters)
         }
         if let contentTypeOverride = d["contentTypeOverride"] as? String
         {

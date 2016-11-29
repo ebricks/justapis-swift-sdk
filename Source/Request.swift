@@ -80,7 +80,7 @@ public protocol RequestBuilderMethods
     func path(_ value:String) -> Self
     
     /// Returns a new Request with all query params set to the provided value
-    func params(_ value:QueryParameters?) -> Self
+    func withParams(_ value:QueryParameters?) -> Self
     
     /// Returns a new Request with a query parameter of the provided key set to the provided value
     func param(_ key:String, _ value:AnyObject?) -> Self

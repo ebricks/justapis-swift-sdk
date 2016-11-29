@@ -105,7 +105,7 @@ open class FoundationNetworkAdapter : NSObject, NetworkAdapter, URLSessionDataDe
         
         var taskIdentifier:Int!
         let taskCompletionHandler = { [weak self]
-            (data:Data?, response:URLResponse?, error:NSError?) -> Void in
+            (data:Data?, response:URLResponse?, error:Error?) -> Void in
             
             var gatewayResponse:MutableResponseProperties? = nil
             
@@ -115,7 +115,7 @@ open class FoundationNetworkAdapter : NSObject, NetworkAdapter, URLSessionDataDe
                 gatewayResponse = MutableResponseProperties(foundationResponse, data:data, requestedURL:urlRequest.url!, gateway: gateway, request: request)
             }
             
-            self?.taskToRequestMap.removeValue(forKey: taskIdentifier)
+            let _ = self?.taskToRequestMap.removeValue(forKey: taskIdentifier)
             
             // Let the gateway finish processing the response (on main thread)
             DispatchQueue.main.async(execute: {
@@ -124,7 +124,7 @@ open class FoundationNetworkAdapter : NSObject, NetworkAdapter, URLSessionDataDe
         }
         
         // Submit the request on the session
-        let task = self.session.dataTask(with: urlRequest, completionHandler: taskCompletionHandler as! (Data?, URLResponse?, Error?) -> Void)
+        let task = self.session.dataTask(with: urlRequest, completionHandler: taskCompletionHandler)
         
         taskIdentifier = task.taskIdentifier
         self.taskToRequestMap[taskIdentifier] = (request, taskCompletionHandler)

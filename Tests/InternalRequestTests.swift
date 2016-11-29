@@ -14,7 +14,7 @@ class InternalRequestTests: XCTestCase {
     private let mockRequestDefaults:MutableRequestProperties = MutableRequestProperties(
         method: "GET",
         path: "/",
-        params: ["foo":"bar"],
+        params: ["foo":"bar" as AnyObject],
         headers: ["foo-header":"bar-value"],
         body: nil,
         followRedirects: true,
@@ -41,14 +41,14 @@ class InternalRequestTests: XCTestCase {
 
         let request = gateway.internalizeRequest(self.mockRequestDefaults)
             .path("/abc")
-            .params(["a":1,"b":2])
+            .withParams(["a":1 as AnyObject,"b":2 as AnyObject])
         
         let requestWithDifferentMethod = request.method("POST")
         let requestWithBarelyDifferentPath = request.path("/abc/")
         let requestWithVeryDifferentPath = request.path("/foo/bar/test")
-        let requestWithBarelyDifferentParams = request.params(["a":1,"b":3])
-        let requestWithOtherReorderedParams = request.params(["b":2,"a":1])
-        let requestWithVeryDifferentParams = request.params(["sessionID":"adakjlasdlkjsadljkaffa="])
+        let requestWithBarelyDifferentParams = request.withParams(["a":1 as AnyObject,"b":3 as AnyObject])
+        let requestWithOtherReorderedParams = request.withParams(["b":2 as AnyObject,"a":1 as AnyObject])
+        let requestWithVeryDifferentParams = request.withParams(["sessionID":"adakjlasdlkjsadljkaffa=" as AnyObject])
         let requestWithDifferentBody = request.body("test".data(using: String.Encoding.utf8))
         
         // These requests should be equal!
@@ -72,7 +72,7 @@ class InternalRequestTests: XCTestCase {
 
         XCTAssertEqual(request.method("TEST").method, "TEST")
         XCTAssertEqual(request.path("/abc").path, "/abc")
-        XCTAssertEqual(request.params(["a":"test"]).params?["a"] as? String, "test")
+        XCTAssertEqual(request.withParams(["a":"test" as AnyObject]).params?["a"] as? String, "test")
         XCTAssertEqual(request.headers(["b":"test"]).headers?["b"], "test")
         XCTAssertEqual(request.body("test".data(using: String.Encoding.utf8)).body, "test".data(using: String.Encoding.utf8))
         XCTAssertEqual(request.body("test".data(using: String.Encoding.utf8)).body, "test".data(using: String.Encoding.utf8))

@@ -27,7 +27,7 @@ class InternalResponseTests: XCTestCase {
         let mockRequestDefaults:MutableRequestProperties = MutableRequestProperties(
             method: "GET",
             path: "/",
-            params: ["foo":"bar"],
+            params: ["foo":"bar" as AnyObject],
             headers: ["foo-header":"bar-value"],
             body: nil,
             followRedirects: true,
@@ -46,7 +46,7 @@ class InternalResponseTests: XCTestCase {
             statusCode: 400,
             headers: ["test-response-header":"foo bar"],
             body: "test".data(using: String.Encoding.utf8),
-            parsedBody: "test",
+            parsedBody: "test" as AnyObject?,
             retreivedFromCache: false)
 
         return gateway.internalizeResponse(mockResponseDefaults)
@@ -56,16 +56,16 @@ class InternalResponseTests: XCTestCase {
         let response = self.getDefaultMockResponse()
         let altGateway:CompositedGateway = CompositedGateway(baseUrl: URL(string:"http://foo")!)
 
-        XCTAssertEqual(response.gateway(altGateway).gateway.baseUrl.absoluteString, "http://foo")
-        XCTAssertEqual(response.request(response.request.method("POST")).request.method, "POST")
-        XCTAssertEqual(response.requestedURL(URL(string:"http://test/")!).requestedURL.absoluteString, "http://test/")
-        XCTAssertEqual(response.resolvedURL(URL(string:"http://test/alt")!).resolvedURL?.absoluteString, "http://test/alt")
-        XCTAssertEqual(response.statusCode(200).statusCode, 200)
-        XCTAssertEqual(response.headers(["foo":"value"]).headers["foo"], "value")
-        XCTAssertEqual(response.body("foobar".data(using: String.Encoding.utf8)).body, "foobar".data(using: String.Encoding.utf8))
-        XCTAssertEqual(response.parsedBody("foo").parsedBody as? String, "foo")
-        XCTAssertEqual(response.retreivedFromCache(false).retreivedFromCache, false)
-        XCTAssertEqual(response.retreivedFromCache(true).retreivedFromCache, true)
+        XCTAssertEqual(response.withGateway(altGateway).gateway.baseUrl.absoluteString, "http://foo")
+        XCTAssertEqual(response.withRequest(response.request.method("POST")).request.method, "POST")
+        XCTAssertEqual(response.withRequestedURL(URL(string:"http://test/")!).requestedURL.absoluteString, "http://test/")
+        XCTAssertEqual(response.withResolvedURL(URL(string:"http://test/alt")!).resolvedURL?.absoluteString, "http://test/alt")
+        XCTAssertEqual(response.withStatusCode(200).statusCode, 200)
+        XCTAssertEqual(response.withHeaders(["foo":"value"]).headers["foo"], "value")
+        XCTAssertEqual(response.withBody("foobar".data(using: String.Encoding.utf8)).body, "foobar".data(using: String.Encoding.utf8))
+        XCTAssertEqual(response.withParsedBody("foo" as AnyObject?).parsedBody as? String, "foo")
+        XCTAssertEqual(response.withRetreivedFromCache(false).retreivedFromCache, false)
+        XCTAssertEqual(response.withRetreivedFromCache(true).retreivedFromCache, true)
     }
     
     func testInitFromMutableResponseProperties() {

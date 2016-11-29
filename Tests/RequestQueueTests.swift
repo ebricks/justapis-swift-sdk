@@ -14,7 +14,7 @@ class RequestQueueTests: XCTestCase {
     private let mockRequestDefaults:MutableRequestProperties = MutableRequestProperties(
         method: "GET",
         path: "/",
-        params: ["foo":"bar"],
+        params: ["foo":"bar" as AnyObject],
         headers: ["foo-header":"bar-value"],
         body: nil,
         followRedirects: true,
@@ -61,7 +61,7 @@ class RequestQueueTests: XCTestCase {
         let gateway:CompositedGateway = CompositedGateway(baseUrl: URL(string:"http://localhost")!)
         gateway.pause()
 
-        stub(isHost("localhost"), response: {
+        stub(condition: isHost("localhost"), response: {
             (request:URLRequest) in
             
             return OHHTTPStubsResponse()
@@ -97,7 +97,7 @@ class RequestQueueTests: XCTestCase {
         let gateway:CompositedGateway = CompositedGateway(baseUrl: URL(string:"http://localhost")!)
         gateway.pause()
         
-        stub(isHost("localhost"), response: {
+        stub(condition: isHost("localhost"), response: {
             (request:URLRequest) in
             
             return OHHTTPStubsResponse()
@@ -136,7 +136,7 @@ class RequestQueueTests: XCTestCase {
         let gateway:CompositedGateway = CompositedGateway(baseUrl: URL(string:"http://localhost")!)
         gateway.pause()
         
-        stub(isHost("localhost"), response: {
+        stub(condition: isHost("localhost"), response: {
             (request:URLRequest) in
             
             return OHHTTPStubsResponse()
@@ -178,7 +178,7 @@ class RequestQueueTests: XCTestCase {
         let gateway:CompositedGateway = CompositedGateway(baseUrl: URL(string:"http://localhost")!)
         gateway.pause()
         
-        stub(isHost("localhost"), response: {
+        stub(condition: isHost("localhost"), response: {
             (request:URLRequest) in
             
             return OHHTTPStubsResponse()

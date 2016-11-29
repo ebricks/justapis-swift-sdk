@@ -37,10 +37,10 @@ class FoundationRequestTests: XCTestCase {
         let expectedURL = URL(string:"http://localhost/test/request/path")!
         let expectation = self.expectation(description: self.name!)
         
-        stub(isHost("localhost"), response: {
+        stub(condition: isHost("localhost"), response: {
             (request:URLRequest) in
             
-            XCTAssertEqual(request.URL, expectedURL)
+            XCTAssertEqual(request.url, expectedURL)
             expectation.fulfill()
             return OHHTTPStubsResponse()
         })
@@ -63,10 +63,10 @@ class FoundationRequestTests: XCTestCase {
         let expectedURL = URL(string:"http://localhost/api/v1/test/request/path")!
         let expectation = self.expectation(description: self.name!)
         
-        stub(isHost("localhost"), response: {
+        stub(condition: isHost("localhost"), response: {
             (request:URLRequest) in
             
-            XCTAssertEqual(request.URL, expectedURL)
+            XCTAssertEqual(request.url, expectedURL)
             expectation.fulfill()
             return OHHTTPStubsResponse()
         })
@@ -86,18 +86,18 @@ class FoundationRequestTests: XCTestCase {
     {
         let baseUrl = "http://localhost/"
         let requestPath = "test/request/path"
-        let queryParams:QueryParameters = ["a":"test", "b":2]
+        let queryParams:QueryParameters = ["a":"test" as AnyObject, "b":2 as AnyObject]
         let expectedURL = URL(string:"http://localhost/test/request/path?a=test&b=2")!
         let alternateExpectedURL = URL(string:"http://localhost/test/request/path?b=2&a=test")!
         let expectation = self.expectation(description: self.name!)
         
         
-        stub(isHost("localhost"), response: {
+        stub(condition: isHost("localhost"), response: {
             (request:URLRequest) in
             
             // QueryParamters is a Dictionary and the order of members is not guaranteed.
             // We'll allow that the URL is valid if either order is given here.
-            XCTAssert((request.URL == expectedURL) || (request.URL == alternateExpectedURL))
+            XCTAssert((request.url == expectedURL) || (request.url == alternateExpectedURL))
             expectation.fulfill()
             return OHHTTPStubsResponse()
         })
@@ -117,15 +117,15 @@ class FoundationRequestTests: XCTestCase {
     {
         let baseUrl = "http://localhost/"
         let requestPath = "test/request/path"
-        let queryParams:QueryParameters = ["a":[1,2]]
+        let queryParams:QueryParameters = ["a":[1,2] as AnyObject]
         let expectedURL = URL(string:"http://localhost/test/request/path?a%5B%5D=1&a%5B%5D=2")!
         let expectation = self.expectation(description: self.name!)
         
         
-        stub(isHost("localhost"), response: {
+        stub(condition: isHost("localhost"), response: {
             (request:URLRequest) in
             
-            XCTAssertEqual(request.URL, expectedURL)
+            XCTAssertEqual(request.url, expectedURL)
             expectation.fulfill()
             return OHHTTPStubsResponse()
         })
@@ -145,15 +145,15 @@ class FoundationRequestTests: XCTestCase {
     {
         let baseUrl = "http://localhost/"
         let requestPath = "test/request/path"
-        let queryParams:QueryParameters = ["":"test"]
+        let queryParams:QueryParameters = ["":"test" as AnyObject]
         let expectedURL = URL(string:"http://localhost/test/request/path?=test")!
         let expectation = self.expectation(description: self.name!)
         
         
-        stub(isHost("localhost"), response: {
+        stub(condition: isHost("localhost"), response: {
             (request:URLRequest) in
             
-            XCTAssertEqual(request.URL, expectedURL)
+            XCTAssertEqual(request.url, expectedURL)
             expectation.fulfill()
             return OHHTTPStubsResponse()
         })
@@ -173,15 +173,15 @@ class FoundationRequestTests: XCTestCase {
     {
         let baseUrl = "http://localhost/"
         let requestPath = "test/request/path"
-        let queryParams:QueryParameters = ["a":""]
+        let queryParams:QueryParameters = ["a":"" as AnyObject]
         let expectedURL = URL(string:"http://localhost/test/request/path?a=")!
         let expectation = self.expectation(description: self.name!)
         
         
-        stub(isHost("localhost"), response: {
+        stub(condition: isHost("localhost"), response: {
             (request:URLRequest) in
             
-            XCTAssertEqual(request.URL, expectedURL)
+            XCTAssertEqual(request.url, expectedURL)
             expectation.fulfill()
             return OHHTTPStubsResponse()
         })
@@ -206,10 +206,10 @@ class FoundationRequestTests: XCTestCase {
         let expectation = self.expectation(description: self.name!)
         
         
-        stub(isHost("localhost"), response: {
+        stub(condition: isHost("localhost"), response: {
             (request:URLRequest) in
             
-            XCTAssertEqual(request.URL, expectedURL)
+            XCTAssertEqual(request.url, expectedURL)
             expectation.fulfill()
             return OHHTTPStubsResponse()
         })
@@ -233,12 +233,12 @@ class FoundationRequestTests: XCTestCase {
         let headers:Headers = ["X-Test-Header":"TestValue", "X-Another-Test-Header":"AnotherTestValue"]
         let expectation = self.expectation(description: self.name!)
         
-        stub(isHost("localhost"), response: {
+        stub(condition: isHost("localhost"), response: {
             (request:URLRequest) in
             
-            XCTAssertEqual(request.URL, expectedURL)
-            XCTAssertEqual(request.valueForHTTPHeaderField("X-Test-Header"), "TestValue")
-            XCTAssertEqual(request.valueForHTTPHeaderField("X-Another-Test-Header"), "AnotherTestValue")
+            XCTAssertEqual(request.url, expectedURL)
+            XCTAssertEqual(request.value(forHTTPHeaderField: "X-Test-Header"), "TestValue")
+            XCTAssertEqual(request.value(forHTTPHeaderField: "X-Another-Test-Header"), "AnotherTestValue")
             expectation.fulfill()
             return OHHTTPStubsResponse()
         })
@@ -261,12 +261,12 @@ class FoundationRequestTests: XCTestCase {
         let expectedURL = URL(string:"http://localhost/test/request/path")!
         let expectation = self.expectation(description: self.name!)
         
-        stub(isHost("localhost"), response: {
+        stub(condition: isHost("localhost"), response: {
             (request:URLRequest) in
             
-            XCTAssertEqual(request.URL, expectedURL)
-            XCTAssertEqual(request.valueForHTTPHeaderField("X-Test-Header"), "TestValue")
-            XCTAssertEqual(request.valueForHTTPHeaderField("X-Another-Test-Header"), "AnotherTestValue")
+            XCTAssertEqual(request.url, expectedURL)
+            XCTAssertEqual(request.value(forHTTPHeaderField: "X-Test-Header"), "TestValue")
+            XCTAssertEqual(request.value(forHTTPHeaderField: "X-Another-Test-Header"), "AnotherTestValue")
             expectation.fulfill()
             return OHHTTPStubsResponse()
         })
@@ -293,19 +293,19 @@ class FoundationRequestTests: XCTestCase {
         let alternateExpectedURL = URL(string:"http://localhost/test/request/path?b=2&a=test")!
         let expectation = self.expectation(description: self.name!)
         
-        stub(isHost("localhost"), response: {
+        stub(condition: isHost("localhost"), response: {
             (request:URLRequest) in
             
             // QueryParamters is a Dictionary and the order of members is not guaranteed.
             // We'll allow that the URL is valid if either order is given here.
-            XCTAssert((request.URL == expectedURL) || (request.URL == alternateExpectedURL))
+            XCTAssert((request.url == expectedURL) || (request.url == alternateExpectedURL))
             expectation.fulfill()
             return OHHTTPStubsResponse()
         })
         
         let requestPreparer = DefaultFieldsRequestPreparer()
-        requestPreparer.defaultQueryParameters["a"] = "test"
-        requestPreparer.defaultQueryParameters["b"] = 2
+        requestPreparer.defaultQueryParameters["a"] = "test" as AnyObject?
+        requestPreparer.defaultQueryParameters["b"] = 2 as AnyObject?
         
         let gateway:Gateway = CompositedGateway(baseUrl: URL(string: baseUrl)!, requestPreparer: requestPreparer)
         gateway.get(requestPath, callback: { _ in
@@ -325,10 +325,10 @@ class FoundationRequestTests: XCTestCase {
         let expectedURL = URL(string:"http://localhost/alternate/request/path")!
         let expectation = self.expectation(description: self.name!)
         
-        stub(isHost("localhost"), response: {
+        stub(condition: isHost("localhost"), response: {
             (request:URLRequest) in
             
-            XCTAssertEqual(request.URL, expectedURL)
+            XCTAssertEqual(request.url, expectedURL)
             expectation.fulfill()
             return OHHTTPStubsResponse()
         })

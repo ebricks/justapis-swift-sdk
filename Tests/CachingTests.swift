@@ -14,7 +14,7 @@ class CachingTests: XCTestCase {
     private let mockRequestDefaults:MutableRequestProperties = MutableRequestProperties(
         method: "GET",
         path: "/",
-        params: ["foo":"bar"],
+        params: ["foo":"bar" as AnyObject],
         headers: ["foo-header":"bar-value"],
         body: nil,
         followRedirects: true,
@@ -40,7 +40,7 @@ class CachingTests: XCTestCase {
         let mockRequestDefaults:MutableRequestProperties = MutableRequestProperties(
             method: "GET",
             path: "/",
-            params: ["foo":"bar"],
+            params: ["foo":"bar" as AnyObject],
             headers: ["foo-header":"bar-value"],
             body: nil,
             followRedirects: true,
@@ -59,7 +59,7 @@ class CachingTests: XCTestCase {
             statusCode: 400,
             headers: ["test-response-header":"foo bar"],
             body: "test".data(using: String.Encoding.utf8),
-            parsedBody: "test",
+            parsedBody: "test" as AnyObject?,
             retreivedFromCache: false)
         
         return gateway.internalizeResponse(mockResponseDefaults)
@@ -86,11 +86,11 @@ class CachingTests: XCTestCase {
         let expectation = self.expectation(description: self.name!)
 
         var numberOfRequestsReceivedByStub = 0
-        stub(isHost("localhost"), response: {
+        stub(condition: isHost("localhost"), response: {
             (request:URLRequest) in
             
             numberOfRequestsReceivedByStub += 1
-            return OHHTTPStubsResponse(data: NSData(), statusCode: 200, headers: nil)
+            return OHHTTPStubsResponse(data: Data(), statusCode: 200, headers: nil)
         })
 
         var request1 = mockRequestDefaults
@@ -124,11 +124,11 @@ class CachingTests: XCTestCase {
         XCTAssertEqual(request1.cacheIdentifier, request2.cacheIdentifier)
 
         var numberOfRequestsReceivedByStub = 0
-        stub(isHost("localhost"), response: {
+        stub(condition: isHost("localhost"), response: {
             (request:URLRequest) in
             
             numberOfRequestsReceivedByStub += 1
-            return OHHTTPStubsResponse(data: NSData(), statusCode: 200, headers: nil)
+            return OHHTTPStubsResponse(data: Data(), statusCode: 200, headers: nil)
         })
         
         gateway.submitRequest(request1, callback: { (result:RequestResult) in
@@ -158,11 +158,11 @@ class CachingTests: XCTestCase {
         XCTAssertEqual(request1.cacheIdentifier, request2.cacheIdentifier)
         
         var numberOfRequestsReceivedByStub = 0
-        stub(isHost("localhost"), response: {
+        stub(condition: isHost("localhost"), response: {
             (request:URLRequest) in
             
             numberOfRequestsReceivedByStub += 1
-            return OHHTTPStubsResponse(data: NSData(), statusCode: 200, headers: nil)
+            return OHHTTPStubsResponse(data: Data(), statusCode: 200, headers: nil)
         })
         
         gateway.submitRequest(request1, callback: { (result:RequestResult) in
@@ -193,11 +193,11 @@ class CachingTests: XCTestCase {
         XCTAssertEqual(request1.cacheIdentifier, request2.cacheIdentifier)
         
         var numberOfRequestsReceivedByStub = 0
-        stub(isHost("localhost"), response: {
+        stub(condition: isHost("localhost"), response: {
             (request:URLRequest) in
             
             numberOfRequestsReceivedByStub += 1
-            return OHHTTPStubsResponse(data: NSData(), statusCode: 200, headers: nil)
+            return OHHTTPStubsResponse(data: Data(), statusCode: 200, headers: nil)
         })
         
         gateway.submitRequest(request1, callback: { (result:RequestResult) in
@@ -236,11 +236,11 @@ class CachingTests: XCTestCase {
         XCTAssertEqual(request1.cacheIdentifier, request2.cacheIdentifier)
         
         var numberOfRequestsReceivedByStub = 0
-        stub(isHost("localhost"), response: {
+        stub(condition: isHost("localhost"), response: {
             (request:URLRequest) in
             
             numberOfRequestsReceivedByStub += 1
-            return OHHTTPStubsResponse(data: NSData(), statusCode: 200, headers: nil)
+            return OHHTTPStubsResponse(data: Data(), statusCode: 200, headers: nil)
         })
         
         gateway.submitRequest(request1, callback: { (result:RequestResult) in
@@ -270,11 +270,11 @@ class CachingTests: XCTestCase {
         XCTAssertEqual(request1.cacheIdentifier, request2.cacheIdentifier)
         
         var numberOfRequestsReceivedByStub = 0
-        stub(isHost("localhost"), response: {
+        stub(condition: isHost("localhost"), response: {
             (request:URLRequest) in
             
             numberOfRequestsReceivedByStub += 1
-            return OHHTTPStubsResponse(data: NSData(), statusCode: 200, headers: nil)
+            return OHHTTPStubsResponse(data: Data(), statusCode: 200, headers: nil)
         })
         
         gateway.submitRequest(request1, callback: { (result:RequestResult) in

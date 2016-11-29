@@ -31,7 +31,7 @@ class FoundationResponseTests: XCTestCase {
         let requestPath = "test/request/path"
         let expectation = self.expectation(description: self.name!)
         
-        stub(isHost("localhost"), response: {
+        stub(condition: isHost("localhost"), response: {
             (request:URLRequest) in
             
             return OHHTTPStubsResponse(data: Data(), statusCode: 200, headers: nil)
@@ -57,7 +57,7 @@ class FoundationResponseTests: XCTestCase {
         let requestPath = "test/request/path"
         let expectation = self.expectation(description: self.name!)
         
-        stub(isHost("localhost"), response: {
+        stub(condition: isHost("localhost"), response: {
             (request:URLRequest) in
             
             return OHHTTPStubsResponse(data: Data(), statusCode: 404, headers: nil)
@@ -83,10 +83,10 @@ class FoundationResponseTests: XCTestCase {
         let requestPath = "test/request/path"
         let expectation = self.expectation(description: self.name!)
         
-        stub(isHost("localhost"), response: {
+        stub(condition: isHost("localhost"), response: {
             (request:URLRequest) in
 
-            let notConnectedError = NSError(domain:NSURLErrorDomain, code:Int(CFNetworkErrors.CFURLErrorNotConnectedToInternet.rawValue), userInfo:nil)
+            let notConnectedError = NSError(domain:NSURLErrorDomain, code:Int(CFNetworkErrors.cfurlErrorNotConnectedToInternet.rawValue), userInfo:nil)
             return OHHTTPStubsResponse(error:notConnectedError)
         })
         
@@ -110,7 +110,7 @@ class FoundationResponseTests: XCTestCase {
         let expectation = self.expectation(description: self.name!)
         let body = "test".data(using: String.Encoding.utf8)
         
-        stub(isHost("localhost"), response: {
+        stub(condition: isHost("localhost"), response: {
             (request:URLRequest) in
             
             return OHHTTPStubsResponse(data: body!, statusCode: 200, headers: nil)
@@ -137,7 +137,7 @@ class FoundationResponseTests: XCTestCase {
         let expectation = self.expectation(description: self.name!)
         let body = "test".data(using: String.Encoding.utf8)
         
-        stub(isHost("localhost"), response: {
+        stub(condition: isHost("localhost"), response: {
             (request:URLRequest) in
             
             return OHHTTPStubsResponse(data: body!, statusCode: 200, headers: nil)
@@ -164,16 +164,16 @@ class FoundationResponseTests: XCTestCase {
         let expectation = self.expectation(description: self.name!)
         let redirectedUrl = URL(string:"http://localhost/alternate/request/path")!
         
-        stub(isHost("localhost"), response: {
+        stub(condition: isHost("localhost"), response: {
             (request:URLRequest) in
             
-            if request.URL?.path == requestPath
+            if request.url?.path == requestPath
             {
-                return OHHTTPStubsResponse(data: NSData(), statusCode: 301, headers: ["Location": redirectedUrl.absoluteString])
+                return OHHTTPStubsResponse(data: Data(), statusCode: 301, headers: ["Location": redirectedUrl.absoluteString])
             }
             else
             {
-                return OHHTTPStubsResponse(data: NSData(), statusCode: 200, headers: nil)
+                return OHHTTPStubsResponse(data: Data(), statusCode: 200, headers: nil)
             }
         })
 
@@ -198,16 +198,16 @@ class FoundationResponseTests: XCTestCase {
         let expectation = self.expectation(description: self.name!)
         let redirectedUrl = URL(string:"http://localhost/alternate/request/path")!
         
-        stub(isHost("localhost"), response: {
+        stub(condition: isHost("localhost"), response: {
             (request:URLRequest) in
             
-            if request.URL?.path == requestPath
+            if request.url?.path == requestPath
             {
-                return OHHTTPStubsResponse(data: NSData(), statusCode: 301, headers: ["Location": redirectedUrl.absoluteString])
+                return OHHTTPStubsResponse(data: Data(), statusCode: 301, headers: ["Location": redirectedUrl.absoluteString])
             }
             else
             {
-                return OHHTTPStubsResponse(data: NSData(), statusCode: 200, headers: nil)
+                return OHHTTPStubsResponse(data: Data(), statusCode: 200, headers: nil)
             }
         })
         
@@ -233,7 +233,7 @@ class FoundationResponseTests: XCTestCase {
         let body = "test".data(using: String.Encoding.utf8)
         let alternateBody = "rest".data(using: String.Encoding.utf8)
 
-        stub(isHost("localhost"), response: {
+        stub(condition: isHost("localhost"), response: {
             (request:URLRequest) in
             
             return OHHTTPStubsResponse(data: body!, statusCode: 200, headers: nil)
@@ -241,7 +241,7 @@ class FoundationResponseTests: XCTestCase {
         
         let responseProcessor = ResponseProcessorClosureAdapter(closure: {
             (response) in
-            return (request:response.request, response: response.body(alternateBody), error:nil)
+            return (request:response.request, response: response.withBody(alternateBody), error:nil)
         })
         
         let gateway:Gateway = CompositedGateway(baseUrl: URL(string: baseUrl)!, requestPreparer: nil, responseProcessor: responseProcessor)
@@ -266,7 +266,7 @@ class FoundationResponseTests: XCTestCase {
         let body = "test".data(using: String.Encoding.utf8)
         let alternateBody = "rest".data(using: String.Encoding.utf8)
         
-        stub(isHost("localhost"), response: {
+        stub(condition: isHost("localhost"), response: {
             (request:URLRequest) in
             
             return OHHTTPStubsResponse(data: body!, statusCode: 200, headers: nil)
@@ -275,7 +275,7 @@ class FoundationResponseTests: XCTestCase {
         let responseProcessor = ResponseProcessorClosureAdapter(closure: {
             (response) in
             let error = NSError(domain: "JustApisSwiftSDK.ResponseProcessorClosureAdapter", code: -1, userInfo: nil)
-            let response = response.body(alternateBody)
+            let response = response.withBody(alternateBody)
             return (request:response.request, response: response, error:error)
         })
         

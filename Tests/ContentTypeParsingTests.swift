@@ -26,14 +26,14 @@ class ContentTypeParsingTests: XCTestCase {
         let requestPath = "test/request/path"
         let expectation = self.expectation(description: self.name!)
         
-        stub(isHost("localhost"), response: {
+        stub(condition: isHost("localhost"), response: {
             (request:URLRequest) in
             
-            return OHHTTPStubsResponse(JSONObject: ["a":123], statusCode: 200, headers: ["Content-Type":"test/data"])
+            return OHHTTPStubsResponse(jsonObject: ["a":123], statusCode: 200, headers: ["Content-Type":"test/data"])
         })
 
         let parser = ResponseProcessorClosureAdapter(closure: { (response:Response) in
-            return (request:response.request, response:response.parsedBody("test"), error:nil)
+            return (request:response.request, response:response.withParsedBody("test" as AnyObject?), error:nil)
         })
         
         let gateway:CompositedGateway = CompositedGateway(baseUrl: URL(string:baseUrl)!)
@@ -50,14 +50,14 @@ class ContentTypeParsingTests: XCTestCase {
         let baseUrl = "http://localhost"
         let expectation = self.expectation(description: self.name!)
         
-        stub(isHost("localhost"), response: {
+        stub(condition: isHost("localhost"), response: {
             (request:URLRequest) in
             
-            return OHHTTPStubsResponse(JSONObject: ["a":123], statusCode: 200, headers: ["Content-Type":"test/data"])
+            return OHHTTPStubsResponse(jsonObject: ["a":123], statusCode: 200, headers: ["Content-Type":"test/data"])
         })
         
         let parser = ResponseProcessorClosureAdapter(closure: { (response:Response) in
-            return (request:response.request, response:response.parsedBody("test"), error:nil)
+            return (request:response.request, response:response.withParsedBody("test" as AnyObject?), error:nil)
         })
         
         let gateway:CompositedGateway = CompositedGateway(baseUrl: URL(string:baseUrl)!)
@@ -78,14 +78,14 @@ class ContentTypeParsingTests: XCTestCase {
         let requestPath = "test/request/path"
         let expectation = self.expectation(description: self.name!)
         
-        stub(isHost("localhost"), response: {
+        stub(condition: isHost("localhost"), response: {
             (request:URLRequest) in
             
-            return OHHTTPStubsResponse(JSONObject: ["a":123], statusCode: 200, headers: ["Content-Type":"nothing/familiar"])
+            return OHHTTPStubsResponse(jsonObject: ["a":123], statusCode: 200, headers: ["Content-Type":"nothing/familiar"])
         })
         
         let parser = ResponseProcessorClosureAdapter(closure: { (response:Response) in
-            return (request:response.request, response:response.parsedBody("test"), error:nil)
+            return (request:response.request, response:response.withParsedBody("test" as AnyObject?), error:nil)
         })
         
         let gateway:CompositedGateway = CompositedGateway(baseUrl: URL(string:baseUrl)!)
@@ -102,14 +102,14 @@ class ContentTypeParsingTests: XCTestCase {
         let baseUrl = "http://localhost"
         let expectation = self.expectation(description: self.name!)
         
-        stub(isHost("localhost"), response: {
+        stub(condition: isHost("localhost"), response: {
             (request:URLRequest) in
             
-            return OHHTTPStubsResponse(JSONObject: ["a":123], statusCode: 200, headers: ["Content-Type":"nothing/familiar"])
+            return OHHTTPStubsResponse(jsonObject: ["a":123], statusCode: 200, headers: ["Content-Type":"nothing/familiar"])
         })
         
         let parser = ResponseProcessorClosureAdapter(closure: { (response:Response) in
-            return (request:response.request, response:response.parsedBody("test"), error:nil)
+            return (request:response.request, response:response.withParsedBody("test" as AnyObject?), error:nil)
         })
         
         let gateway:CompositedGateway = CompositedGateway(baseUrl: URL(string:baseUrl)!)
@@ -129,14 +129,14 @@ class ContentTypeParsingTests: XCTestCase {
         let baseUrl = "http://localhost"
         let expectation = self.expectation(description: self.name!)
         
-        stub(isHost("localhost"), response: {
+        stub(condition: isHost("localhost"), response: {
             (request:URLRequest) in
             
-            return OHHTTPStubsResponse(JSONObject: ["a":123], statusCode: 200, headers: ["Content-Type":"test/data"])
+            return OHHTTPStubsResponse(jsonObject: ["a":123], statusCode: 200, headers: ["Content-Type":"test/data"])
         })
         
         let parser = ResponseProcessorClosureAdapter(closure: { (response:Response) in
-            return (request:response.request, response:response.parsedBody("test"), error:nil)
+            return (request:response.request, response:response.withParsedBody("test" as AnyObject?), error:nil)
         })
         
         let gateway:CompositedGateway = CompositedGateway(baseUrl: URL(string:baseUrl)!)
@@ -161,10 +161,10 @@ class ContentTypeParsingTests: XCTestCase {
         let requestPath = "test/request/path"
         let expectation = self.expectation(description: self.name!)
         
-        stub(isHost("localhost"), response: {
+        stub(condition: isHost("localhost"), response: {
             (request:URLRequest) in
             
-            return OHHTTPStubsResponse(JSONObject: ["a":123], statusCode: 200, headers: ["Content-Type":"application/json"])
+            return OHHTTPStubsResponse(jsonObject: ["a":123], statusCode: 200, headers: ["Content-Type":"application/json"])
         })
         
         let gateway:Gateway = JsonGateway(baseUrl: URL(string: baseUrl)!)
@@ -190,10 +190,10 @@ class ContentTypeParsingTests: XCTestCase {
         let requestPath = "test/request/path"
         let expectation = self.expectation(description: self.name!)
         
-        stub(isHost("localhost"), response: {
+        stub(condition: isHost("localhost"), response: {
             (request:URLRequest) in
             
-            return OHHTTPStubsResponse(JSONObject: [123, 456], statusCode: 200, headers: ["Content-Type":"application/json"])
+            return OHHTTPStubsResponse(jsonObject: [123, 456], statusCode: 200, headers: ["Content-Type":"application/json"])
         })
         
         let gateway:Gateway = JsonGateway(baseUrl: URL(string: baseUrl)!)
@@ -220,10 +220,10 @@ class ContentTypeParsingTests: XCTestCase {
         let requestPath = "test/request/path"
         let expectation = self.expectation(description: self.name!)
         
-        stub(isHost("localhost"), response: {
+        stub(condition: isHost("localhost"), response: {
             (request:URLRequest) in
             
-            return OHHTTPStubsResponse(data: "2".dataUsingEncoding(String.Encoding.utf8)! , statusCode: 200, headers: ["Content-Type":"application/json"])
+            return OHHTTPStubsResponse(data: "2".data(using: String.Encoding.utf8)! , statusCode: 200, headers: ["Content-Type":"application/json"])
         })
         
         let gateway:Gateway = JsonGateway(baseUrl: URL(string: baseUrl)!)

@@ -139,7 +139,7 @@ extension InternalRequest : RequestBuilderMethods
         return InternalRequest(properties);
     }
     
-    func params(_ value: QueryParameters?) -> InternalRequest {
+    func withParams(_ value: QueryParameters?) -> InternalRequest {
         var properties = self.getMutableProperties()
         properties.params = value
         return InternalRequest(properties);

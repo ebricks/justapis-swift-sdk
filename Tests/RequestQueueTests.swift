@@ -39,10 +39,10 @@ class RequestQueueTests: XCTestCase {
         let queue = InternalRequestQueue()
         let gateway:CompositedGateway = CompositedGateway(baseUrl: URL(string:"http://localhost")!)
         
-        let request1 = gateway.internalizeRequest(self.mockRequestDefaults).path("/1")
-        let request2 = gateway.internalizeRequest(self.mockRequestDefaults).path("/2")
-        let request3 = gateway.internalizeRequest(self.mockRequestDefaults).path("/3")
-        let request4 = gateway.internalizeRequest(self.mockRequestDefaults).path("/4")
+        let request1 = gateway.internalizeRequest(self.mockRequestDefaults).copyWith(path: "/1")
+        let request2 = gateway.internalizeRequest(self.mockRequestDefaults).copyWith(path: "/2")
+        let request3 = gateway.internalizeRequest(self.mockRequestDefaults).copyWith(path: "/3")
+        let request4 = gateway.internalizeRequest(self.mockRequestDefaults).copyWith(path: "/4")
 
         queue.appendRequest(request1, callback: nil)
         queue.appendRequest(request2, callback: nil)
@@ -121,7 +121,7 @@ class RequestQueueTests: XCTestCase {
         gateway.get("/3", callback: callback)
         gateway.get("/4", callback: callback)
         
-        gateway.cancelRequest(gateway.pendingRequests[0])
+        let _ = gateway.cancelRequest(gateway.pendingRequests[0])
 
         XCTAssertEqual(gateway.pendingRequests.count, 3)
         
@@ -162,8 +162,8 @@ class RequestQueueTests: XCTestCase {
         gateway.get("/4", callback: callback)
         
         let pendingRequests = gateway.pendingRequests
-        gateway.cancelRequest(pendingRequests[1])
-        gateway.cancelRequest(pendingRequests[2])
+        let _ = gateway.cancelRequest(pendingRequests[1])
+        let _ = gateway.cancelRequest(pendingRequests[2])
         
         XCTAssertEqual(gateway.pendingRequests.count, 2)
         
@@ -203,7 +203,7 @@ class RequestQueueTests: XCTestCase {
         gateway.get("/4", callback: callback)
         
         let pendingRequests = gateway.pendingRequests
-        gateway.cancelRequest(pendingRequests[3])
+        let _ = gateway.cancelRequest(pendingRequests[3])
         
         XCTAssertEqual(gateway.pendingRequests.count, 3)
         

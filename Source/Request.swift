@@ -74,43 +74,43 @@ extension RequestProperties
 public protocol RequestBuilderMethods
 {    
     /// Returns a new Request with the method set to the provided value
-    func method(_ value:String) -> Self
+    func copyWith(method value:String) -> Self
     
     /// Returns a new Request with the path set to the provided value
-    func path(_ value:String) -> Self
+    func copyWith(path value:String) -> Self
     
     /// Returns a new Request with all query params set to the provided value
-    func withParams(_ value:QueryParameters?) -> Self
+    func copyWith(params value:QueryParameters?) -> Self
     
     /// Returns a new Request with a query parameter of the provided key set to the provided value
-    func param(_ key:String, _ value:AnyObject?) -> Self
+    func copyWith(paramKey key:String, paramValue value:AnyObject?) -> Self
     
     /// Returns a new Request with all headers set to the provided value
-    func headers(_ value:Headers?) -> Self
+    func copyWith(headers value:Headers?) -> Self
     
     /// Returns a new Request with a header of the provided key set to the provided value
-    func header(_ key:String, _ value:String?) -> Self
+    func copyWith(headerKey key:String, headerValue value:String?) -> Self
     
     /// Returns a new Request with a body set to the provided value
-    func body(_ value:Data?) -> Self
+    func copyWith(body value:Data?) -> Self
     
     /// Returns a new Request with the HTTP redirect support flag set to the provided value
-    func followRedirects(_ value:Bool) -> Self
+    func copyWith(followRedirects value:Bool) -> Self
     
     /// Returns a new Request with applyContentTypeParsing set to the provided value
-    func applyContentTypeParsing(_ value:Bool) -> Self
+    func copyWith(applyContentTypeParsing value:Bool) -> Self
     
     /// Returns a new Request with contentTypeOverride set to the provided value
-    func contentTypeOverride(_ value:String?) -> Self
+    func copyWith(contentTypeOverride value:String?) -> Self
     
     /// Returns a new Request with allowCachedResponse set to the provided value
-    func allowCachedResponse(_ value:Bool) -> Self
+    func copyWith(allowCachedResponse value:Bool) -> Self
     
     /// Returns a new Request with cacheResponseWithExpiration set to the provided value
-    func cacheResponseWithExpiration(_ value:UInt) -> Self
+    func copyWith(cacheResponseWithExpiration value:UInt) -> Self
     
     /// Returns a new Request with customCacheIdentifier set to the provided value
-    func customCacheIdentifier(_ value:String?) -> Self
+    func copyWith(customCacheIdentifier value:String?) -> Self
 }
 
 extension RequestProperties

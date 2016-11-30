@@ -93,43 +93,43 @@ internal struct InternalResponse: Response, InternalResponseProperties
 
 extension InternalResponse : ResponseBuilderMethods
 {
-    func withGateway(_ value: Gateway) -> InternalResponse {
+    func copyWith(gateway value: Gateway) -> InternalResponse {
         var properties = self.getMutableProperties()
         properties.gateway = value
         return InternalResponse(properties)
     }
     
-    func withRequest(_ value: Request) -> InternalResponse {
+    func copyWith(request value: Request) -> InternalResponse {
         var properties = self.getMutableProperties()
         properties.request = value
         return InternalResponse(properties)
     }
         
-    func withRequestedURL(_ value: URL) -> InternalResponse {
+    func copyWith(requestedURL value: URL) -> InternalResponse {
         var properties = self.getMutableProperties()
         properties.requestedURL = value
         return InternalResponse(properties)
     }
     
-    func withResolvedURL(_ value: URL) -> InternalResponse {
+    func copyWith(resolvedURL value: URL) -> InternalResponse {
         var properties = self.getMutableProperties()
         properties.resolvedURL = value
         return InternalResponse(properties)
     }
     
-    func withStatusCode(_ value: Int) -> InternalResponse {
+    func copyWith(statusCode value: Int) -> InternalResponse {
         var properties = self.getMutableProperties()
         properties.statusCode = value
         return InternalResponse(properties)
     }
     
-    func withHeaders(_ value: Headers) -> InternalResponse {
+    func copyWith(headers value: Headers) -> InternalResponse {
         var properties = self.getMutableProperties()
         properties.headers = value
         return InternalResponse(properties)
     }
     
-    func withHeader(_ key: String, value: String?) -> InternalResponse {
+    func copyWith(headerKey key: String, headerValue value: String?) -> InternalResponse {
         var properties = self.getMutableProperties()
         
         if let value = value
@@ -143,19 +143,19 @@ extension InternalResponse : ResponseBuilderMethods
         return InternalResponse(properties)
     }
     
-    func withBody(_ value: Data?) -> InternalResponse {
+    func copyWith(body value: Data?) -> InternalResponse {
         var properties = self.getMutableProperties()
         properties.body = value
         return InternalResponse(properties)
     }
     
-    func withParsedBody(_ value: AnyObject?) -> InternalResponse {
+    func copyWith(parsedBody value: AnyObject?) -> InternalResponse {
         var properties = self.getMutableProperties()
         properties.parsedBody = value
         return InternalResponse(properties)
     }
     
-    func withRetreivedFromCache(_ value: Bool) -> InternalResponse {
+    func copyWith(retreivedFromCache value: Bool) -> InternalResponse {
         var properties = self.getMutableProperties()
         properties.retreivedFromCache = value
         return InternalResponse(properties)

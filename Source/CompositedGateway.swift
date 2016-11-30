@@ -260,7 +260,7 @@ open class CompositedGateway : Gateway
         // Build the result object
         let response:InternalResponse? = (response != nil) ? self.internalizeResponse(response!) : nil
         var result:RequestResult = (request:request,
-                                    response:response?.withRetreivedFromCache(fromCache),
+                                    response:response?.copyWith(retreivedFromCache: fromCache),
                                     error:error)
 
         // Check if there was an error
@@ -339,7 +339,7 @@ open class CompositedGateway : Gateway
         if (internalResponse.gateway !== self)
         {
             // response was prepared for another gateway. Associate it with this one!
-            internalResponse = internalResponse.withGateway(self)
+            internalResponse = internalResponse.copyWith(gateway: self)
         }
         
         return internalResponse
@@ -356,7 +356,7 @@ open class CompositedGateway : Gateway
         if (internalRequest.gateway !== self)
         {
             // request was prepared for another gateway. Associate it with this one!
-            internalRequest = internalRequest.gateway(self)
+            internalRequest = internalRequest.copyWith(gateway: self)
         }
         
         return internalRequest

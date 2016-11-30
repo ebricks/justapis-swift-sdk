@@ -41,7 +41,7 @@ open class DefaultFieldsRequestPreparer : RequestPreparer
         {
             if (request.headers?[key] == nil)
             {
-                request = request.header(key, value)
+                request = request.copyWith(headerKey: key, headerValue: value)
             }
         }
         
@@ -50,7 +50,7 @@ open class DefaultFieldsRequestPreparer : RequestPreparer
         {
             if (request.params?[key] == nil)
             {
-                request = request.param(key, value)
+                request = request.copyWith(paramKey: key, paramValue: value)
             }
         }
         return request

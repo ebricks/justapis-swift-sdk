@@ -335,7 +335,7 @@ class FoundationRequestTests: XCTestCase {
         
         let requestPreparer = RequestPreparerClosureAdapter(closure: {
             (request) in
-            return request.path("alternate/request/path")
+            return request.copyWith(path: "alternate/request/path")
         })
         let gateway:Gateway = CompositedGateway(baseUrl: URL(string: baseUrl)!, requestPreparer: requestPreparer)
         gateway.get(requestPath, callback: { _ in

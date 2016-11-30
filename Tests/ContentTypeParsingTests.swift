@@ -33,7 +33,7 @@ class ContentTypeParsingTests: XCTestCase {
         })
 
         let parser = ResponseProcessorClosureAdapter(closure: { (response:Response) in
-            return (request:response.request, response:response.withParsedBody("test" as AnyObject?), error:nil)
+            return (request:response.request, response:response.copyWith(parsedBody: "test" as AnyObject?), error:nil)
         })
         
         let gateway:CompositedGateway = CompositedGateway(baseUrl: URL(string:baseUrl)!)
@@ -57,7 +57,7 @@ class ContentTypeParsingTests: XCTestCase {
         })
         
         let parser = ResponseProcessorClosureAdapter(closure: { (response:Response) in
-            return (request:response.request, response:response.withParsedBody("test" as AnyObject?), error:nil)
+            return (request:response.request, response:response.copyWith(parsedBody: "test" as AnyObject?), error:nil)
         })
         
         let gateway:CompositedGateway = CompositedGateway(baseUrl: URL(string:baseUrl)!)
@@ -85,7 +85,7 @@ class ContentTypeParsingTests: XCTestCase {
         })
         
         let parser = ResponseProcessorClosureAdapter(closure: { (response:Response) in
-            return (request:response.request, response:response.withParsedBody("test" as AnyObject?), error:nil)
+            return (request:response.request, response:response.copyWith(parsedBody: "test" as AnyObject?), error:nil)
         })
         
         let gateway:CompositedGateway = CompositedGateway(baseUrl: URL(string:baseUrl)!)
@@ -109,7 +109,7 @@ class ContentTypeParsingTests: XCTestCase {
         })
         
         let parser = ResponseProcessorClosureAdapter(closure: { (response:Response) in
-            return (request:response.request, response:response.withParsedBody("test" as AnyObject?), error:nil)
+            return (request:response.request, response:response.copyWith(parsedBody: "test" as AnyObject?), error:nil)
         })
         
         let gateway:CompositedGateway = CompositedGateway(baseUrl: URL(string:baseUrl)!)
@@ -136,7 +136,7 @@ class ContentTypeParsingTests: XCTestCase {
         })
         
         let parser = ResponseProcessorClosureAdapter(closure: { (response:Response) in
-            return (request:response.request, response:response.withParsedBody("test" as AnyObject?), error:nil)
+            return (request:response.request, response:response.copyWith(parsedBody: "test" as AnyObject?), error:nil)
         })
         
         let gateway:CompositedGateway = CompositedGateway(baseUrl: URL(string:baseUrl)!)

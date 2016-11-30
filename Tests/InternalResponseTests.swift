@@ -56,16 +56,16 @@ class InternalResponseTests: XCTestCase {
         let response = self.getDefaultMockResponse()
         let altGateway:CompositedGateway = CompositedGateway(baseUrl: URL(string:"http://foo")!)
 
-        XCTAssertEqual(response.withGateway(altGateway).gateway.baseUrl.absoluteString, "http://foo")
-        XCTAssertEqual(response.withRequest(response.request.method("POST")).request.method, "POST")
-        XCTAssertEqual(response.withRequestedURL(URL(string:"http://test/")!).requestedURL.absoluteString, "http://test/")
-        XCTAssertEqual(response.withResolvedURL(URL(string:"http://test/alt")!).resolvedURL?.absoluteString, "http://test/alt")
-        XCTAssertEqual(response.withStatusCode(200).statusCode, 200)
-        XCTAssertEqual(response.withHeaders(["foo":"value"]).headers["foo"], "value")
-        XCTAssertEqual(response.withBody("foobar".data(using: String.Encoding.utf8)).body, "foobar".data(using: String.Encoding.utf8))
-        XCTAssertEqual(response.withParsedBody("foo" as AnyObject?).parsedBody as? String, "foo")
-        XCTAssertEqual(response.withRetreivedFromCache(false).retreivedFromCache, false)
-        XCTAssertEqual(response.withRetreivedFromCache(true).retreivedFromCache, true)
+        XCTAssertEqual(response.copyWith(gateway: altGateway).gateway.baseUrl.absoluteString, "http://foo")
+        XCTAssertEqual(response.copyWith(request: response.request.copyWith(method: "POST")).request.method, "POST")
+        XCTAssertEqual(response.copyWith(requestedURL: URL(string:"http://test/")!).requestedURL.absoluteString, "http://test/")
+        XCTAssertEqual(response.copyWith(resolvedURL: URL(string:"http://test/alt")!).resolvedURL?.absoluteString, "http://test/alt")
+        XCTAssertEqual(response.copyWith(statusCode: 200).statusCode, 200)
+        XCTAssertEqual(response.copyWith(headers: ["foo":"value"]).headers["foo"], "value")
+        XCTAssertEqual(response.copyWith(body: "foobar".data(using: String.Encoding.utf8)).body, "foobar".data(using: String.Encoding.utf8))
+        XCTAssertEqual(response.copyWith(parsedBody: "foo" as AnyObject?).parsedBody as? String, "foo")
+        XCTAssertEqual(response.copyWith(retreivedFromCache: false).retreivedFromCache, false)
+        XCTAssertEqual(response.copyWith(retreivedFromCache: true).retreivedFromCache, true)
     }
     
     func testInitFromMutableResponseProperties() {

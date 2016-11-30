@@ -241,7 +241,7 @@ class FoundationResponseTests: XCTestCase {
         
         let responseProcessor = ResponseProcessorClosureAdapter(closure: {
             (response) in
-            return (request:response.request, response: response.withBody(alternateBody), error:nil)
+            return (request:response.request, response: response.copyWith(body: alternateBody), error:nil)
         })
         
         let gateway:Gateway = CompositedGateway(baseUrl: URL(string: baseUrl)!, requestPreparer: nil, responseProcessor: responseProcessor)
@@ -275,7 +275,7 @@ class FoundationResponseTests: XCTestCase {
         let responseProcessor = ResponseProcessorClosureAdapter(closure: {
             (response) in
             let error = NSError(domain: "JustApisSwiftSDK.ResponseProcessorClosureAdapter", code: -1, userInfo: nil)
-            let response = response.withBody(alternateBody)
+            let response = response.copyWith(body: alternateBody)
             return (request:response.request, response: response, error:error)
         })
         

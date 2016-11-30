@@ -40,16 +40,16 @@ class InternalRequestTests: XCTestCase {
         let gateway:CompositedGateway = CompositedGateway(baseUrl: URL(string:"http://localhost")!)
 
         let request = gateway.internalizeRequest(self.mockRequestDefaults)
-            .path("/abc")
-            .withParams(["a":1 as AnyObject,"b":2 as AnyObject])
+            .copyWith(path: "/abc")
+            .copyWith(params: ["a":1 as AnyObject,"b":2 as AnyObject])
         
-        let requestWithDifferentMethod = request.method("POST")
-        let requestWithBarelyDifferentPath = request.path("/abc/")
-        let requestWithVeryDifferentPath = request.path("/foo/bar/test")
-        let requestWithBarelyDifferentParams = request.withParams(["a":1 as AnyObject,"b":3 as AnyObject])
-        let requestWithOtherReorderedParams = request.withParams(["b":2 as AnyObject,"a":1 as AnyObject])
-        let requestWithVeryDifferentParams = request.withParams(["sessionID":"adakjlasdlkjsadljkaffa=" as AnyObject])
-        let requestWithDifferentBody = request.body("test".data(using: String.Encoding.utf8))
+        let requestWithDifferentMethod = request.copyWith(method: "POST")
+        let requestWithBarelyDifferentPath = request.copyWith(path: "/abc/")
+        let requestWithVeryDifferentPath = request.copyWith(path: "/foo/bar/test")
+        let requestWithBarelyDifferentParams = request.copyWith(params: ["a":1 as AnyObject,"b":3 as AnyObject])
+        let requestWithOtherReorderedParams = request.copyWith(params: ["b":2 as AnyObject,"a":1 as AnyObject])
+        let requestWithVeryDifferentParams = request.copyWith(params: ["sessionID":"adakjlasdlkjsadljkaffa=" as AnyObject])
+        let requestWithDifferentBody = request.copyWith(body: "test".data(using: String.Encoding.utf8))
         
         // These requests should be equal!
         XCTAssertEqual(request, request)
@@ -70,26 +70,26 @@ class InternalRequestTests: XCTestCase {
         
         let request = gateway.internalizeRequest(self.mockRequestDefaults)
 
-        XCTAssertEqual(request.method("TEST").method, "TEST")
-        XCTAssertEqual(request.path("/abc").path, "/abc")
-        XCTAssertEqual(request.withParams(["a":"test" as AnyObject]).params?["a"] as? String, "test")
-        XCTAssertEqual(request.headers(["b":"test"]).headers?["b"], "test")
-        XCTAssertEqual(request.body("test".data(using: String.Encoding.utf8)).body, "test".data(using: String.Encoding.utf8))
-        XCTAssertEqual(request.body("test".data(using: String.Encoding.utf8)).body, "test".data(using: String.Encoding.utf8))
-        XCTAssertEqual(request.followRedirects(false).followRedirects, false)
-        XCTAssertEqual(request.followRedirects(true).followRedirects, true)
+        XCTAssertEqual(request.copyWith(method: "TEST").method, "TEST")
+        XCTAssertEqual(request.copyWith(path: "/abc").path, "/abc")
+        XCTAssertEqual(request.copyWith(params: ["a":"test" as AnyObject]).params?["a"] as? String, "test")
+        XCTAssertEqual(request.copyWith(headers: ["b":"test"]).headers?["b"], "test")
+        XCTAssertEqual(request.copyWith(body: "test".data(using: String.Encoding.utf8)).body, "test".data(using: String.Encoding.utf8))
+        XCTAssertEqual(request.copyWith(body: "test".data(using: String.Encoding.utf8)).body, "test".data(using: String.Encoding.utf8))
+        XCTAssertEqual(request.copyWith(followRedirects: false).followRedirects, false)
+        XCTAssertEqual(request.copyWith(followRedirects: true).followRedirects, true)
 
-        XCTAssertEqual(request.applyContentTypeParsing(false).applyContentTypeParsing, false)
-        XCTAssertEqual(request.applyContentTypeParsing(true).applyContentTypeParsing, true)
-        XCTAssertEqual(request.contentTypeOverride("test/test").contentTypeOverride, "test/test")
+        XCTAssertEqual(request.copyWith(applyContentTypeParsing: false).applyContentTypeParsing, false)
+        XCTAssertEqual(request.copyWith(applyContentTypeParsing: true).applyContentTypeParsing, true)
+        XCTAssertEqual(request.copyWith(contentTypeOverride: "test/test").contentTypeOverride, "test/test")
 
-        XCTAssertEqual(request.allowCachedResponse(false).allowCachedResponse, false)
-        XCTAssertEqual(request.allowCachedResponse(true).allowCachedResponse, true)
+        XCTAssertEqual(request.copyWith(allowCachedResponse: false).allowCachedResponse, false)
+        XCTAssertEqual(request.copyWith(allowCachedResponse: true).allowCachedResponse, true)
 
-        XCTAssertEqual(request.cacheResponseWithExpiration(10).cacheResponseWithExpiration, 10)
-        XCTAssertEqual(request.cacheResponseWithExpiration(100).cacheResponseWithExpiration, 100)
+        XCTAssertEqual(request.copyWith(cacheResponseWithExpiration: 10).cacheResponseWithExpiration, 10)
+        XCTAssertEqual(request.copyWith(cacheResponseWithExpiration: 100).cacheResponseWithExpiration, 100)
         
-        XCTAssertEqual(request.customCacheIdentifier("testCacheIdentifier").customCacheIdentifier, "testCacheIdentifier")
+        XCTAssertEqual(request.copyWith(customCacheIdentifier: "testCacheIdentifier").customCacheIdentifier, "testCacheIdentifier")
     }
     
     func testInitFromMutableRequestProperties()

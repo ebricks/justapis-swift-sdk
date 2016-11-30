@@ -138,7 +138,7 @@ open class JsonResponseProcessor : ResponseProcessor
 
             // TODO: Parsing should use different properties! Not overwrite body!
             // Build a new Response with the parsed data replacing the original NSData
-            response = response.withParsedBody(jsonData)
+            response = response.copyWith(parsedBody: jsonData)
         }
         catch let jsonError
         {

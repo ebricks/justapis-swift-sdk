@@ -44,34 +44,34 @@ public protocol ResponseProperties
 public protocol ResponseBuilderMethods
 {
     /// Returns a new Response with gateway set to the provided value
-    func withGateway(_ value:Gateway) -> Self
+    func copyWith(gateway value:Gateway) -> Self
     
     /// Returns a new Response with request set to the provided value
-    func withRequest(_ value:Request) -> Self
+    func copyWith(request value:Request) -> Self
     
     /// Returns a new Response with requestedURL set to the provided value
-    func withRequestedURL(_ value:URL) -> Self
+    func copyWith(requestedURL value:URL) -> Self
     
     /// Returns a new Response with resolvedURL set to the provided value
-    func withResolvedURL(_ value:URL) -> Self
+    func copyWith(resolvedURL value:URL) -> Self
     
     /// Returns a new Response with statusCode set to the provided value
-    func withStatusCode(_ value:Int) -> Self
+    func copyWith(statusCode value:Int) -> Self
     
     /// Returns a new Response with all headers set to the provided value
-    func withHeaders(_ value:Headers) -> Self
+    func copyWith(headers value:Headers) -> Self
     
     /// Returns a new Response with a header with the provided key set to the provided value
-    func withHeader(_ key:String, value:String?) -> Self
+    func copyWith(headerKey key:String, headerValue value:String?) -> Self
     
     /// Returns a new Response with body set to the provided value
-    func withBody(_ value:Data?) -> Self
+    func copyWith(body value:Data?) -> Self
     
     /// Returns a new Response with parsedBody set to the provided value
-    func withParsedBody(_ value:AnyObject?) -> Self
+    func copyWith(parsedBody value:AnyObject?) -> Self
     
     // Returns a new Response with retreivedFromCache set to the provided value
-    func withRetreivedFromCache(_ value:Bool) -> Self
+    func copyWith(retreivedFromCache value:Bool) -> Self
 }
 
 public protocol Response : ResponseProperties, ResponseBuilderMethods

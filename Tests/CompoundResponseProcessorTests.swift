@@ -72,14 +72,14 @@ class CompoundResponseProcessorTests: XCTestCase {
     
     func testOneProcessor() {
         let processor = CompoundResponseProcessor()
-        let response = getDefaultMockResponse().withStatusCode(0)
+        let response = getDefaultMockResponse().copyWith(statusCode: 0)
         let expectation = self.expectation(description: self.name!)
         
         XCTAssertEqual(processor.responseProcessors.count, 0)
         
         let statusIncrementingProcessor = ResponseProcessorClosureAdapter(closure: {
             (response:Response) in
-            return (request:response.request, response:response.withStatusCode(response.statusCode + 1), error:nil)
+            return (request:response.request, response:response.copyWith(statusCode: response.statusCode + 1), error:nil)
         })
         
         processor.responseProcessors.append(statusIncrementingProcessor)
@@ -97,14 +97,14 @@ class CompoundResponseProcessorTests: XCTestCase {
     
     func testManySuccessfulProcessors() {
         let processor = CompoundResponseProcessor()
-        let response = getDefaultMockResponse().withStatusCode(0)
+        let response = getDefaultMockResponse().copyWith(statusCode: 0)
         let expectation = self.expectation(description: self.name!)
         
         XCTAssertEqual(processor.responseProcessors.count, 0)
         
         let statusIncrementingProcessor = ResponseProcessorClosureAdapter(closure: {
             (response:Response) in
-            return (request:response.request, response:response.withStatusCode(response.statusCode + 1), error:nil)
+            return (request:response.request, response:response.copyWith(statusCode: response.statusCode + 1), error:nil)
         })
         processor.responseProcessors.append(statusIncrementingProcessor)
         processor.responseProcessors.append(statusIncrementingProcessor)
@@ -125,7 +125,7 @@ class CompoundResponseProcessorTests: XCTestCase {
 
     func testErrorInFirstOfManyProcessors() {
         let processor = CompoundResponseProcessor()
-        let response = getDefaultMockResponse().withStatusCode(0)
+        let response = getDefaultMockResponse().copyWith(statusCode: 0)
         let expectation = self.expectation(description: self.name!)
         
         XCTAssertEqual(processor.responseProcessors.count, 0)
@@ -137,7 +137,7 @@ class CompoundResponseProcessorTests: XCTestCase {
 
         let statusIncrementingProcessor = ResponseProcessorClosureAdapter(closure: {
             (response:Response) in
-            return (request:response.request, response:response.withStatusCode(response.statusCode + 1), error:nil)
+            return (request:response.request, response:response.copyWith(statusCode: response.statusCode + 1), error:nil)
         })
         processor.responseProcessors.append(failingProcessor)
         processor.responseProcessors.append(statusIncrementingProcessor)

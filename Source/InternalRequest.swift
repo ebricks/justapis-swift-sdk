@@ -121,31 +121,31 @@ internal struct InternalRequest : Request, InternalRequestProperties, Hashable
 ///
 extension InternalRequest : RequestBuilderMethods
 {
-    func gateway(_ value:CompositedGateway) -> InternalRequest {
+    func copyWith(gateway value:CompositedGateway) -> InternalRequest {
         var properties = self.getMutableProperties()
         properties.gateway = value
         return InternalRequest(properties);
     }
     
-    func method(_ value: String) -> InternalRequest {
+    func copyWith(method value: String) -> InternalRequest {
         var properties = self.getMutableProperties()
         properties.method = value
         return InternalRequest(properties);
     }
     
-    func path(_ value: String) -> InternalRequest {
+    func copyWith(path value: String) -> InternalRequest {
         var properties = self.getMutableProperties()
         properties.path = value
         return InternalRequest(properties);
     }
     
-    func withParams(_ value: QueryParameters?) -> InternalRequest {
+    func copyWith(params value: QueryParameters?) -> InternalRequest {
         var properties = self.getMutableProperties()
         properties.params = value
         return InternalRequest(properties);
     }
     
-    func param(_ key: String, _ value: AnyObject?) -> InternalRequest {
+    func copyWith(paramKey key: String, paramValue value: AnyObject?) -> InternalRequest {
         var properties = self.getMutableProperties()
         if nil == properties.params && value != nil
         {
@@ -163,13 +163,13 @@ extension InternalRequest : RequestBuilderMethods
         return InternalRequest(properties);
     }
     
-    func headers(_ value: Headers?) -> InternalRequest {
+    func copyWith(headers value: Headers?) -> InternalRequest {
         var properties = self.getMutableProperties()
         properties.headers = value
         return InternalRequest(properties);
     }
     
-    func header(_ key: String, _ value: String?) -> InternalRequest {
+    func copyWith(headerKey key: String, headerValue value: String?) -> InternalRequest {
         var properties = self.getMutableProperties()
         if nil == properties.headers && value != nil
         {
@@ -187,43 +187,43 @@ extension InternalRequest : RequestBuilderMethods
         return InternalRequest(properties);
     }
     
-    func body(_ value: Data?) -> InternalRequest {
+    func copyWith(body value: Data?) -> InternalRequest {
         var properties = self.getMutableProperties()
         properties.body = value
         return InternalRequest(properties);
     }
     
-    func followRedirects(_ value: Bool) -> InternalRequest {
+    func copyWith(followRedirects value: Bool) -> InternalRequest {
         var properties = self.getMutableProperties()
         properties.followRedirects = value
         return InternalRequest(properties);
     }
     
-    func applyContentTypeParsing(_ value: Bool) -> InternalRequest {
+    func copyWith(applyContentTypeParsing value: Bool) -> InternalRequest {
         var properties = self.getMutableProperties()
         properties.applyContentTypeParsing = value
         return InternalRequest(properties)
     }
     
-    func contentTypeOverride(_ value: String?) -> InternalRequest {
+    func copyWith(contentTypeOverride value: String?) -> InternalRequest {
         var properties = self.getMutableProperties()
         properties.contentTypeOverride = value
         return InternalRequest(properties)
     }
     
-    func allowCachedResponse(_ value: Bool) -> InternalRequest {
+    func copyWith(allowCachedResponse value: Bool) -> InternalRequest {
         var properties = self.getMutableProperties()
         properties.allowCachedResponse = value
         return InternalRequest(properties)
     }
     
-    func cacheResponseWithExpiration(_ value: UInt) -> InternalRequest {
+    func copyWith(cacheResponseWithExpiration value: UInt) -> InternalRequest {
         var properties = self.getMutableProperties()
         properties.cacheResponseWithExpiration = value
         return InternalRequest(properties)
     }
     
-    func customCacheIdentifier(_ value: String?) -> InternalRequest {
+    func copyWith(customCacheIdentifier value: String?) -> InternalRequest {
         var properties = self.getMutableProperties()
         properties.customCacheIdentifier = value
         return InternalRequest(properties)

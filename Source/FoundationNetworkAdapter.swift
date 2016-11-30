@@ -97,7 +97,7 @@ open class FoundationNetworkAdapter : NSObject, NetworkAdapter, URLSessionDataDe
     open func submitRequest(_ request: Request, gateway:CompositedGateway)
     {
         // Build the request
-        guard let urlRequest:URLRequest = request.toNSURLRequest(gateway) else
+        guard let urlRequest:URLRequest = request.toURLRequest(gateway) else
         {
             // TODO: construct error indicating invalid request and invoke callback
             return
@@ -161,7 +161,7 @@ internal extension MutableResponseProperties
 internal extension Request
 {
     /// Internal method to convert any type of Request to a NSURLRequest for Foundation networking
-    internal func toNSURLRequest(_ gateway:Gateway) -> URLRequest?
+    internal func toURLRequest(_ gateway:Gateway) -> URLRequest?
     {
         // Identify the absolute URL endpoint
         let endpointUrl:URL = gateway.baseUrl.appendingPathComponent(self.path)
@@ -184,7 +184,7 @@ internal extension Request
             var queryItems = Array<URLQueryItem>()
             for (key,value) in params
             {
-                if let arrayValue = value as? Array<AnyObject>
+                if let arrayValue = value as? Array<Any>
                 {
                     for (innerValue) in arrayValue
                     {

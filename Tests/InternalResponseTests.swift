@@ -27,7 +27,7 @@ class InternalResponseTests: XCTestCase {
         let mockRequestDefaults:MutableRequestProperties = MutableRequestProperties(
             method: "GET",
             path: "/",
-            params: ["foo":"bar" as AnyObject],
+            params: ["foo":"bar"],
             headers: ["foo-header":"bar-value"],
             body: nil,
             followRedirects: true,
@@ -46,7 +46,7 @@ class InternalResponseTests: XCTestCase {
             statusCode: 400,
             headers: ["test-response-header":"foo bar"],
             body: "test".data(using: String.Encoding.utf8),
-            parsedBody: "test" as AnyObject?,
+            parsedBody: "test",
             retreivedFromCache: false)
 
         return gateway.internalizeResponse(mockResponseDefaults)
@@ -63,7 +63,7 @@ class InternalResponseTests: XCTestCase {
         XCTAssertEqual(response.copyWith(statusCode: 200).statusCode, 200)
         XCTAssertEqual(response.copyWith(headers: ["foo":"value"]).headers["foo"], "value")
         XCTAssertEqual(response.copyWith(body: "foobar".data(using: String.Encoding.utf8)).body, "foobar".data(using: String.Encoding.utf8))
-        XCTAssertEqual(response.copyWith(parsedBody: "foo" as AnyObject?).parsedBody as? String, "foo")
+        XCTAssertEqual(response.copyWith(parsedBody: "foo").parsedBody as? String, "foo")
         XCTAssertEqual(response.copyWith(retreivedFromCache: false).retreivedFromCache, false)
         XCTAssertEqual(response.copyWith(retreivedFromCache: true).retreivedFromCache, true)
     }

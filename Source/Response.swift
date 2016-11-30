@@ -35,7 +35,7 @@ public protocol ResponseProperties
     var body:Data? { get }
 
     /// Any parsed body data
-    var parsedBody:AnyObject? { get }
+    var parsedBody:Any? { get }
     
     /// Indicates that this response was retrieved from a local cache
     var retreivedFromCache:Bool { get }
@@ -68,7 +68,7 @@ public protocol ResponseBuilderMethods
     func copyWith(body value:Data?) -> Self
     
     /// Returns a new Response with parsedBody set to the provided value
-    func copyWith(parsedBody value:AnyObject?) -> Self
+    func copyWith(parsedBody value:Any?) -> Self
     
     // Returns a new Response with retreivedFromCache set to the provided value
     func copyWith(retreivedFromCache value:Bool) -> Self
@@ -91,10 +91,10 @@ public struct MutableResponseProperties : ResponseProperties
     public var statusCode:Int
     public var headers:Headers
     public var body:Data?
-    public var parsedBody:AnyObject?
+    public var parsedBody:Any?
     public var retreivedFromCache:Bool
 
-    public init(gateway:Gateway, request:Request, requestedURL:URL, resolvedURL:URL, statusCode:Int, headers:Headers, body:Data?, parsedBody:AnyObject?, retreivedFromCache:Bool) {
+    public init(gateway:Gateway, request:Request, requestedURL:URL, resolvedURL:URL, statusCode:Int, headers:Headers, body:Data?, parsedBody:Any?, retreivedFromCache:Bool) {
         self.gateway = gateway
         self.request = request
         self.requestedURL = requestedURL

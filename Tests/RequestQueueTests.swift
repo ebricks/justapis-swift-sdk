@@ -14,7 +14,7 @@ class RequestQueueTests: XCTestCase {
     private let mockRequestDefaults:MutableRequestProperties = MutableRequestProperties(
         method: "GET",
         path: "/",
-        params: ["foo":"bar" as AnyObject],
+        params: ["foo":"bar"],
         headers: ["foo-header":"bar-value"],
         body: nil,
         followRedirects: true,
@@ -219,8 +219,8 @@ class RequestQueueTests: XCTestCase {
         let json = request.toJsonCompatibleDictionary()
         XCTAssertEqual(json["method"] as? String, request.method)
         XCTAssertEqual(json["path"] as? String, request.path)
-        XCTAssertEqual((json["params"] as? [String:AnyObject])!["foo"] as? String, request.params!["foo"] as? String)
-        XCTAssertEqual((json["headers"] as? [String:String])!["foo-header"]!, request.headers!["foo-header"]!)
+        XCTAssertEqual((json["params"] as? QueryParameters)?["foo"] as? String, (request.params!["foo"] as! String))
+        XCTAssertEqual((json["headers"] as? Headers)?["foo-header"], request.headers!["foo-header"]!)
         XCTAssertEqual(json["followRedirects"] as? Bool, request.followRedirects)
         XCTAssertEqual(json["applyContentTypeParsing"] as? Bool, request.applyContentTypeParsing)
         XCTAssertEqual(json["contentTypeOverride"] as? String, request.contentTypeOverride)

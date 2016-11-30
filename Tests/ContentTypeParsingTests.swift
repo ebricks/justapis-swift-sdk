@@ -33,7 +33,7 @@ class ContentTypeParsingTests: XCTestCase {
         })
 
         let parser = ResponseProcessorClosureAdapter(closure: { (response:Response) in
-            return (request:response.request, response:response.copyWith(parsedBody: "test" as AnyObject?), error:nil)
+            return (request:response.request, response:response.copyWith(parsedBody: "test"), error:nil)
         })
         
         let gateway:CompositedGateway = CompositedGateway(baseUrl: URL(string:baseUrl)!)
@@ -57,7 +57,7 @@ class ContentTypeParsingTests: XCTestCase {
         })
         
         let parser = ResponseProcessorClosureAdapter(closure: { (response:Response) in
-            return (request:response.request, response:response.copyWith(parsedBody: "test" as AnyObject?), error:nil)
+            return (request:response.request, response:response.copyWith(parsedBody: "test"), error:nil)
         })
         
         let gateway:CompositedGateway = CompositedGateway(baseUrl: URL(string:baseUrl)!)
@@ -85,7 +85,7 @@ class ContentTypeParsingTests: XCTestCase {
         })
         
         let parser = ResponseProcessorClosureAdapter(closure: { (response:Response) in
-            return (request:response.request, response:response.copyWith(parsedBody: "test" as AnyObject?), error:nil)
+            return (request:response.request, response:response.copyWith(parsedBody: "test"), error:nil)
         })
         
         let gateway:CompositedGateway = CompositedGateway(baseUrl: URL(string:baseUrl)!)
@@ -109,7 +109,7 @@ class ContentTypeParsingTests: XCTestCase {
         })
         
         let parser = ResponseProcessorClosureAdapter(closure: { (response:Response) in
-            return (request:response.request, response:response.copyWith(parsedBody: "test" as AnyObject?), error:nil)
+            return (request:response.request, response:response.copyWith(parsedBody: "test"), error:nil)
         })
         
         let gateway:CompositedGateway = CompositedGateway(baseUrl: URL(string:baseUrl)!)
@@ -136,7 +136,7 @@ class ContentTypeParsingTests: XCTestCase {
         })
         
         let parser = ResponseProcessorClosureAdapter(closure: { (response:Response) in
-            return (request:response.request, response:response.copyWith(parsedBody: "test" as AnyObject?), error:nil)
+            return (request:response.request, response:response.copyWith(parsedBody: "test"), error:nil)
         })
         
         let gateway:CompositedGateway = CompositedGateway(baseUrl: URL(string:baseUrl)!)
@@ -172,8 +172,8 @@ class ContentTypeParsingTests: XCTestCase {
             XCTAssertNil(result.error)
             XCTAssert(result.response != nil)
             XCTAssertEqual(result.response!.statusCode, 200)
-            XCTAssertNotNil(result.response!.parsedBody as? [String: AnyObject])
-            let content = (result.response!.parsedBody as! [String: AnyObject])
+            XCTAssertNotNil(result.response!.parsedBody as? [String: Any])
+            let content = (result.response!.parsedBody as! [String: Any])
             XCTAssertEqual(content["a"] as? Int, 123)
             expectation.fulfill()
         })
@@ -201,8 +201,8 @@ class ContentTypeParsingTests: XCTestCase {
             XCTAssertNil(result.error)
             XCTAssert(result.response != nil)
             XCTAssertEqual(result.response!.statusCode, 200)
-            XCTAssertNotNil(result.response!.parsedBody as? [AnyObject])
-            let content = (result.response!.parsedBody as! [AnyObject])
+            XCTAssertNotNil(result.response!.parsedBody as? [Any])
+            let content = (result.response!.parsedBody as! [Any])
             XCTAssertEqual(content[0] as? Int, 123)
             XCTAssertEqual(content[1] as? Int, 456)
             expectation.fulfill()

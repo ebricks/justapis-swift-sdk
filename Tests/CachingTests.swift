@@ -14,7 +14,7 @@ class CachingTests: XCTestCase {
     private let mockRequestDefaults:MutableRequestProperties = MutableRequestProperties(
         method: "GET",
         path: "/",
-        params: ["foo":"bar" as AnyObject],
+        params: ["foo":"bar"],
         headers: ["foo-header":"bar-value"],
         body: nil,
         followRedirects: true,
@@ -40,7 +40,7 @@ class CachingTests: XCTestCase {
         let mockRequestDefaults:MutableRequestProperties = MutableRequestProperties(
             method: "GET",
             path: "/",
-            params: ["foo":"bar" as AnyObject],
+            params: ["foo":"bar"],
             headers: ["foo-header":"bar-value"],
             body: nil,
             followRedirects: true,
@@ -59,7 +59,7 @@ class CachingTests: XCTestCase {
             statusCode: 400,
             headers: ["test-response-header":"foo bar"],
             body: "test".data(using: String.Encoding.utf8),
-            parsedBody: "test" as AnyObject?,
+            parsedBody: "test",
             retreivedFromCache: false)
         
         return gateway.internalizeResponse(mockResponseDefaults)

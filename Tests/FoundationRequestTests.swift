@@ -86,7 +86,7 @@ class FoundationRequestTests: XCTestCase {
     {
         let baseUrl = "http://localhost/"
         let requestPath = "test/request/path"
-        let queryParams:QueryParameters = ["a":"test" as AnyObject, "b":2 as AnyObject]
+        let queryParams:QueryParameters = ["a":"test", "b":2]
         let expectedURL = URL(string:"http://localhost/test/request/path?a=test&b=2")!
         let alternateExpectedURL = URL(string:"http://localhost/test/request/path?b=2&a=test")!
         let expectation = self.expectation(description: self.name!)
@@ -117,7 +117,7 @@ class FoundationRequestTests: XCTestCase {
     {
         let baseUrl = "http://localhost/"
         let requestPath = "test/request/path"
-        let queryParams:QueryParameters = ["a":[1,2] as AnyObject]
+        let queryParams:QueryParameters = ["a":[1,2]]
         let expectedURL = URL(string:"http://localhost/test/request/path?a%5B%5D=1&a%5B%5D=2")!
         let expectation = self.expectation(description: self.name!)
         
@@ -145,7 +145,7 @@ class FoundationRequestTests: XCTestCase {
     {
         let baseUrl = "http://localhost/"
         let requestPath = "test/request/path"
-        let queryParams:QueryParameters = ["":"test" as AnyObject]
+        let queryParams:QueryParameters = ["":"test"]
         let expectedURL = URL(string:"http://localhost/test/request/path?=test")!
         let expectation = self.expectation(description: self.name!)
         
@@ -173,7 +173,7 @@ class FoundationRequestTests: XCTestCase {
     {
         let baseUrl = "http://localhost/"
         let requestPath = "test/request/path"
-        let queryParams:QueryParameters = ["a":"" as AnyObject]
+        let queryParams:QueryParameters = ["a":""]
         let expectedURL = URL(string:"http://localhost/test/request/path?a=")!
         let expectation = self.expectation(description: self.name!)
         
@@ -304,8 +304,8 @@ class FoundationRequestTests: XCTestCase {
         })
         
         let requestPreparer = DefaultFieldsRequestPreparer()
-        requestPreparer.defaultQueryParameters["a"] = "test" as AnyObject?
-        requestPreparer.defaultQueryParameters["b"] = 2 as AnyObject?
+        requestPreparer.defaultQueryParameters["a"] = "test"
+        requestPreparer.defaultQueryParameters["b"] = 2
         
         let gateway:Gateway = CompositedGateway(baseUrl: URL(string: baseUrl)!, requestPreparer: requestPreparer)
         gateway.get(requestPath, callback: { _ in

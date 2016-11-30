@@ -134,7 +134,7 @@ open class JsonResponseProcessor : ResponseProcessor
         // Unpack the body data as a JSON object
         do
         {
-            let jsonData = try JSONSerialization.jsonObject(with: body as Data, options: []) as AnyObject
+            let jsonData = try JSONSerialization.jsonObject(with: body as Data, options: [])
 
             // TODO: Parsing should use different properties! Not overwrite body!
             // Build a new Response with the parsed data replacing the original NSData

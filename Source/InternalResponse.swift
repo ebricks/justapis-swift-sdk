@@ -22,7 +22,7 @@ internal struct MutableInternalResponseProperties : InternalResponseProperties
     var statusCode:Int
     var headers:Headers
     var body:Data?
-    var parsedBody:AnyObject?
+    var parsedBody:Any?
     var retreivedFromCache:Bool
     var internalRequest:InternalRequest? { get { return request as? InternalRequest } }
 
@@ -55,7 +55,7 @@ internal struct InternalResponse: Response, InternalResponseProperties
     let statusCode:Int
     let headers:Headers
     let body:Data?
-    let parsedBody:AnyObject?
+    let parsedBody:Any?
     let retreivedFromCache:Bool
     var internalRequest:InternalRequest? { get { return request as? InternalRequest } }
     
@@ -149,7 +149,7 @@ extension InternalResponse : ResponseBuilderMethods
         return InternalResponse(properties)
     }
     
-    func copyWith(parsedBody value: AnyObject?) -> InternalResponse {
+    func copyWith(parsedBody value: Any?) -> InternalResponse {
         var properties = self.getMutableProperties()
         properties.parsedBody = value
         return InternalResponse(properties)

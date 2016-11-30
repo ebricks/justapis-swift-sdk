@@ -14,7 +14,7 @@ class InternalRequestTests: XCTestCase {
     private let mockRequestDefaults:MutableRequestProperties = MutableRequestProperties(
         method: "GET",
         path: "/",
-        params: ["foo":"bar" as AnyObject],
+        params: ["foo":"bar"],
         headers: ["foo-header":"bar-value"],
         body: nil,
         followRedirects: true,
@@ -41,14 +41,14 @@ class InternalRequestTests: XCTestCase {
 
         let request = gateway.internalizeRequest(self.mockRequestDefaults)
             .copyWith(path: "/abc")
-            .copyWith(params: ["a":1 as AnyObject,"b":2 as AnyObject])
+            .copyWith(params: ["a":1,"b":2])
         
         let requestWithDifferentMethod = request.copyWith(method: "POST")
         let requestWithBarelyDifferentPath = request.copyWith(path: "/abc/")
         let requestWithVeryDifferentPath = request.copyWith(path: "/foo/bar/test")
-        let requestWithBarelyDifferentParams = request.copyWith(params: ["a":1 as AnyObject,"b":3 as AnyObject])
-        let requestWithOtherReorderedParams = request.copyWith(params: ["b":2 as AnyObject,"a":1 as AnyObject])
-        let requestWithVeryDifferentParams = request.copyWith(params: ["sessionID":"adakjlasdlkjsadljkaffa=" as AnyObject])
+        let requestWithBarelyDifferentParams = request.copyWith(params: ["a":1,"b":3])
+        let requestWithOtherReorderedParams = request.copyWith(params: ["b":2,"a":1])
+        let requestWithVeryDifferentParams = request.copyWith(params: ["sessionID":"adakjlasdlkjsadljkaffa="])
         let requestWithDifferentBody = request.copyWith(body: "test".data(using: String.Encoding.utf8))
         
         // These requests should be equal!
@@ -72,7 +72,7 @@ class InternalRequestTests: XCTestCase {
 
         XCTAssertEqual(request.copyWith(method: "TEST").method, "TEST")
         XCTAssertEqual(request.copyWith(path: "/abc").path, "/abc")
-        XCTAssertEqual(request.copyWith(params: ["a":"test" as AnyObject]).params?["a"] as? String, "test")
+        XCTAssertEqual(request.copyWith(params: ["a":"test"]).params?["a"] as? String, "test")
         XCTAssertEqual(request.copyWith(headers: ["b":"test"]).headers?["b"], "test")
         XCTAssertEqual(request.copyWith(body: "test".data(using: String.Encoding.utf8)).body, "test".data(using: String.Encoding.utf8))
         XCTAssertEqual(request.copyWith(body: "test".data(using: String.Encoding.utf8)).body, "test".data(using: String.Encoding.utf8))

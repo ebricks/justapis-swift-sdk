@@ -145,7 +145,7 @@ extension InternalRequest : RequestBuilderMethods
         return InternalRequest(properties);
     }
     
-    func copyWith(paramKey key: String, paramValue value: AnyObject?) -> InternalRequest {
+    func copyWith(paramKey key: String, paramValue value: Any?) -> InternalRequest {
         var properties = self.getMutableProperties()
         if nil == properties.params && value != nil
         {

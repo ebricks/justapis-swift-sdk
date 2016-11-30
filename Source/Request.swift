@@ -83,7 +83,7 @@ public protocol RequestBuilderMethods
     func copyWith(params value:QueryParameters?) -> Self
     
     /// Returns a new Request with a query parameter of the provided key set to the provided value
-    func copyWith(paramKey key:String, paramValue value:AnyObject?) -> Self
+    func copyWith(paramKey key:String, paramValue value:Any?) -> Self
     
     /// Returns a new Request with all headers set to the provided value
     func copyWith(headers value:Headers?) -> Self
@@ -115,31 +115,31 @@ public protocol RequestBuilderMethods
 
 extension RequestProperties
 {
-    func toJsonCompatibleDictionary() -> [String:AnyObject]
+    func toJsonCompatibleDictionary() -> [String:Any]
     {        
-        var rep = [String:AnyObject]()
+        var rep = [String:Any]()
         
-        rep["method"] = self.method as AnyObject?
-        rep["path"] = self.path as AnyObject?
+        rep["method"] = self.method
+        rep["path"] = self.path
         if let params = self.params
         {
-            rep["params"] = params as AnyObject?
+            rep["params"] = params
         }
         else
         {
             rep["params"] = NSNull()
         }
-        rep["headers"] = (self.headers != nil) ? self.headers! as AnyObject : NSNull() as AnyObject
+        rep["headers"] = (self.headers != nil) ? self.headers! : NSNull()
         
-        rep["body"] = self.body != nil ? self.body?.base64EncodedString(options: NSData.Base64EncodingOptions(rawValue:0)) as AnyObject : NSNull() as AnyObject
-        rep["followRedirects"] = self.followRedirects as AnyObject?
+        rep["body"] = self.body != nil ? self.body!.base64EncodedString(options: NSData.Base64EncodingOptions(rawValue:0)) : NSNull()
+        rep["followRedirects"] = self.followRedirects
         
-        rep["applyContentTypeParsing"] = self.applyContentTypeParsing as AnyObject?
-        rep["contentTypeOverride"] = self.contentTypeOverride as AnyObject?? ?? NSNull()
+        rep["applyContentTypeParsing"] = self.applyContentTypeParsing
+        rep["contentTypeOverride"] = self.contentTypeOverride ?? NSNull()
         
-        rep["allowCachedResponse"] = self.allowCachedResponse as AnyObject?
-        rep["cacheResponseWithExpiration"] = self.cacheResponseWithExpiration as AnyObject?
-        rep["customCacheIdentifier"] = self.customCacheIdentifier as AnyObject?? ?? NSNull()
+        rep["allowCachedResponse"] = self.allowCachedResponse
+        rep["cacheResponseWithExpiration"] = self.cacheResponseWithExpiration
+        rep["customCacheIdentifier"] = self.customCacheIdentifier ?? NSNull()
         return rep
     }
 }
@@ -174,7 +174,7 @@ public struct MutableRequestProperties : RequestProperties
 
 extension MutableRequestProperties
 {
-    init?(jsonCompatibleDictionary d:[String:AnyObject])
+    init?(jsonCompatibleDictionary d:[String:Any])
     {
         guard
             let method = d["method"] as? String,
@@ -204,11 +204,11 @@ extension MutableRequestProperties
         self.allowCachedResponse = allowCachedResponse
         self.cacheResponseWithExpiration = cacheResponseWithExpiration
         
-        if let params = d["params"] as? [String:AnyObject]
+        if let params = d["params"] as? QueryParameters
         {
             self.params = params
         }
-        if let headers = d["headers"] as? [String:String]
+        if let headers = d["headers"] as? Headers
         {
             self.headers = headers
         }

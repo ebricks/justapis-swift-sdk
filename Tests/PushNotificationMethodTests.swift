@@ -36,36 +36,36 @@ class PushNotificationMethodTests: XCTestCase {
         let name = "test_name"
         let token = "B9CE9E973D135E429338D733A4142E1E8DCCA829475565025214823AB12CCD3C"
         
-        let expectedURL = NSURL(string:"http://localhost/push/\(endpointCodename)/subscribe")!
+        let expectedURL = URL(string:"http://localhost/push/\(endpointCodename)/subscribe")!
         
-        let expectation = self.expectationWithDescription(self.name!)
+        let expectation = self.expectation(description: self.name!)
         
-        stub(isHost("localhost"), response: {
-            (request:NSURLRequest) in
+        stub(condition: isHost("localhost"), response: {
+            (request:URLRequest) in
             
             // NSURLSession has a known bug where it strips HTTPBody from the request, making testing
             // more difficult. (5/17/2016) Until this is fixed, we stash the body using NSURLProtocol
             // so we can expect it there in tests.
             // https://github.com/AliSoftware/OHHTTPStubs/wiki/Testing-for-the-request-body-in-your-stubs
-            let bodyData = NSURLProtocol.propertyForKey("HTTPBody", inRequest: request) as? NSData
+            let bodyData = URLProtocol.property(forKey: "HTTPBody", in: request) as? Data
 
-            let body:AnyObject? = bodyData != nil ? try? NSJSONSerialization.JSONObjectWithData(bodyData!, options: NSJSONReadingOptions(rawValue:0)) : nil
+            let body = bodyData != nil ? (try? JSONSerialization.jsonObject(with: bodyData!, options: JSONSerialization.ReadingOptions(rawValue:0))) as? [String : Any] : nil
 
-            XCTAssertEqual(body?["platform"], platform)
-            XCTAssertEqual(body?["channel"], channel)
-            XCTAssertEqual(body?["period"], period)
-            XCTAssertEqual(body?["name"], name)
-            XCTAssertEqual(body?["token"], token)
+            XCTAssertEqual(body?["platform"] as? String, platform)
+            XCTAssertEqual(body?["channel"] as? String, channel)
+            XCTAssertEqual(body?["period"] as? Int, period)
+            XCTAssertEqual(body?["name"] as? String, name)
+            XCTAssertEqual(body?["token"] as? String, token)
             
-            XCTAssertEqual(request.URL, expectedURL)
+            XCTAssertEqual(request.url, expectedURL)
             expectation.fulfill()
             return OHHTTPStubsResponse()
         })
         
-        let gateway:PushNotificationSupportingGateway = CompositedGateway(baseUrl: NSURL(string: baseUrl)!)
-        gateway.pushNotifications.subscribe(endpointCodename, platform: platform, channel: channel, period: period, name: name, token: token, callback: nil)
+        let gateway:PushNotificationSupportingGateway = CompositedGateway(baseUrl: URL(string: baseUrl)!)
+        gateway.pushNotifications.subscribe(endpointCodename: endpointCodename, platform: platform, channel: channel, period: period, name: name, token: token, callback: nil)
         
-        self.waitForExpectationsWithTimeout(5, handler: nil)
+        self.waitForExpectations(timeout: 5, handler: nil)
     }
 
     ///
@@ -80,34 +80,34 @@ class PushNotificationMethodTests: XCTestCase {
         let channel = "test_channel"
         let name = "test_name"
         
-        let expectedURL = NSURL(string:"http://localhost/push/\(endpointCodename)/unsubscribe")!
+        let expectedURL = URL(string:"http://localhost/push/\(endpointCodename)/unsubscribe")!
         
-        let expectation = self.expectationWithDescription(self.name!)
+        let expectation = self.expectation(description: self.name!)
         
-        stub(isHost("localhost"), response: {
-            (request:NSURLRequest) in
+        stub(condition: isHost("localhost"), response: {
+            (request:URLRequest) in
             
             // NSURLSession has a known bug where it strips HTTPBody from the request, making testing
             // more difficult. (5/17/2016) Until this is fixed, we stash the body using NSURLProtocol
             // so we can expect it there in tests.
             // https://github.com/AliSoftware/OHHTTPStubs/wiki/Testing-for-the-request-body-in-your-stubs
-            let bodyData = NSURLProtocol.propertyForKey("HTTPBody", inRequest: request) as? NSData
+            let bodyData = URLProtocol.property(forKey: "HTTPBody", in: request) as? Data
             
-            let body:AnyObject? = bodyData != nil ? try? NSJSONSerialization.JSONObjectWithData(bodyData!, options: NSJSONReadingOptions(rawValue:0)) : nil
+            let body = bodyData != nil ? (try? JSONSerialization.jsonObject(with: bodyData!, options: JSONSerialization.ReadingOptions(rawValue:0))) as? [String : Any] : nil
             
-            XCTAssertEqual(body?["platform"], platform)
-            XCTAssertEqual(body?["channel"], channel)
-            XCTAssertEqual(body?["name"], name)
+            XCTAssertEqual(body?["platform"] as? String, platform)
+            XCTAssertEqual(body?["channel"] as? String, channel)
+            XCTAssertEqual(body?["name"] as? String, name)
             
-            XCTAssertEqual(request.URL, expectedURL)
+            XCTAssertEqual(request.url, expectedURL)
             expectation.fulfill()
             return OHHTTPStubsResponse()
         })
         
-        let gateway:PushNotificationSupportingGateway = CompositedGateway(baseUrl: NSURL(string: baseUrl)!)
-        gateway.pushNotifications.unsubscribe(endpointCodename, platform: platform, channel: channel, name: name, callback: nil)
+        let gateway:PushNotificationSupportingGateway = CompositedGateway(baseUrl: URL(string: baseUrl)!)
+        gateway.pushNotifications.unsubscribe(endpointCodename: endpointCodename, platform: platform, channel: channel, name: name, callback: nil)
         
-        self.waitForExpectationsWithTimeout(5, handler: nil)
+        self.waitForExpectations(timeout: 5, handler: nil)
     }
 
     ///
@@ -122,34 +122,34 @@ class PushNotificationMethodTests: XCTestCase {
         let channel = "test_channel"
         let token = "B9CE9E973D135E429338D733A4142E1E8DCCA829475565025214823AB12CCD3C"
         
-        let expectedURL = NSURL(string:"http://localhost/push/\(endpointCodename)/unsubscribe")!
+        let expectedURL = URL(string:"http://localhost/push/\(endpointCodename)/unsubscribe")!
         
-        let expectation = self.expectationWithDescription(self.name!)
+        let expectation = self.expectation(description: self.name!)
         
-        stub(isHost("localhost"), response: {
-            (request:NSURLRequest) in
+        stub(condition: isHost("localhost"), response: {
+            (request:URLRequest) in
             
             // NSURLSession has a known bug where it strips HTTPBody from the request, making testing
             // more difficult. (5/17/2016) Until this is fixed, we stash the body using NSURLProtocol
             // so we can expect it there in tests.
             // https://github.com/AliSoftware/OHHTTPStubs/wiki/Testing-for-the-request-body-in-your-stubs
-            let bodyData = NSURLProtocol.propertyForKey("HTTPBody", inRequest: request) as? NSData
+            let bodyData = URLProtocol.property(forKey: "HTTPBody", in: request) as? Data
             
-            let body:AnyObject? = bodyData != nil ? try? NSJSONSerialization.JSONObjectWithData(bodyData!, options: NSJSONReadingOptions(rawValue:0)) : nil
+            let body = bodyData != nil ? (try? JSONSerialization.jsonObject(with: bodyData!, options: JSONSerialization.ReadingOptions(rawValue:0))) as? [String : Any]: nil
             
-            XCTAssertEqual(body?["platform"], platform)
-            XCTAssertEqual(body?["channel"], channel)
-            XCTAssertEqual(body?["token"], token)
+            XCTAssertEqual(body?["platform"] as? String, platform)
+            XCTAssertEqual(body?["channel"] as? String, channel)
+            XCTAssertEqual(body?["token"] as? String, token)
             
-            XCTAssertEqual(request.URL, expectedURL)
+            XCTAssertEqual(request.url, expectedURL)
             expectation.fulfill()
             return OHHTTPStubsResponse()
         })
         
-        let gateway:PushNotificationSupportingGateway = CompositedGateway(baseUrl: NSURL(string: baseUrl)!)
-        gateway.pushNotifications.unsubscribe(endpointCodename, platform: platform, channel: channel, token: token, callback: nil)
+        let gateway:PushNotificationSupportingGateway = CompositedGateway(baseUrl: URL(string: baseUrl)!)
+        gateway.pushNotifications.unsubscribe(endpointCodename: endpointCodename, platform: platform, channel: channel, token: token, callback: nil)
         
-        self.waitForExpectationsWithTimeout(5, handler: nil)
+        self.waitForExpectations(timeout: 5, handler: nil)
     }
 
     ///
@@ -162,7 +162,7 @@ class PushNotificationMethodTests: XCTestCase {
         let endpointCodename = "--endpoint_codename--"
         let channel = "test"
         let environment = "development"
-        let payload = [
+        let payload: NSDictionary = [
             "apple": [
                 "aps":[
                     "alert":[
@@ -176,32 +176,32 @@ class PushNotificationMethodTests: XCTestCase {
             ]
         ]
         
-        let expectedURL = NSURL(string:"http://localhost/push/\(endpointCodename)/publish")!
+        let expectedURL = URL(string:"http://localhost/push/\(endpointCodename)/publish")!
         
-        let expectation = self.expectationWithDescription(self.name!)
+        let expectation = self.expectation(description: self.name!)
         
-        stub(isHost("localhost"), response: {
-            (request:NSURLRequest) in
+        stub(condition: isHost("localhost"), response: {
+            (request:URLRequest) in
             
             // NSURLSession has a known bug where it strips HTTPBody from the request, making testing
             // more difficult. (5/17/2016) Until this is fixed, we stash the body using NSURLProtocol
             // so we can expect it there in tests.
             // https://github.com/AliSoftware/OHHTTPStubs/wiki/Testing-for-the-request-body-in-your-stubs
-            let bodyData = NSURLProtocol.propertyForKey("HTTPBody", inRequest: request) as? NSData
+            let bodyData = URLProtocol.property(forKey: "HTTPBody", in: request) as? Data
             
-            let body:AnyObject? = bodyData != nil ? try? NSJSONSerialization.JSONObjectWithData(bodyData!, options: NSJSONReadingOptions(rawValue:0)) : nil
+            let body = bodyData != nil ? (try? JSONSerialization.jsonObject(with: bodyData!, options: JSONSerialization.ReadingOptions(rawValue:0))) as? NSDictionary : nil
             
-            XCTAssertEqual(body?["channel"], channel)
-            XCTAssertEqual(body?["environment"], environment)
-            if let body = body as? NSDictionary,
-                bodyPayload = body["payload"] as? NSDictionary,
-                bodyDefault = bodyPayload["default"] as? NSDictionary,
-                bodyDefaultMessage = bodyDefault["message"] as? String,
-                bodyApple = bodyPayload["apple"] as? NSDictionary,
-                bodyAps = bodyApple["aps"] as? NSDictionary,
-                bodyAlert = bodyAps["alert"] as? NSDictionary,
-                bodyAlertMessageBody = bodyAlert["body"] as? String,
-                bodyAlertUrlArgs = bodyAps["url-args"] as? NSArray
+            XCTAssertEqual(body?["channel"] as? String, channel)
+            XCTAssertEqual(body?["environment"] as? String, environment)
+            if  let body = body,
+                let bodyPayload = body["payload"] as? NSDictionary,
+                let bodyDefault = bodyPayload["default"] as? NSDictionary,
+                let bodyDefaultMessage = bodyDefault["message"] as? String,
+                let bodyApple = bodyPayload["apple"] as? NSDictionary,
+                let bodyAps = bodyApple["aps"] as? NSDictionary,
+                let bodyAlert = bodyAps["alert"] as? NSDictionary,
+                let bodyAlertMessageBody = bodyAlert["body"] as? String,
+                let bodyAlertUrlArgs = bodyAps["url-args"] as? NSArray
             {
                 XCTAssertEqual(bodyAlertMessageBody, "A test message")
                 XCTAssertEqual(bodyDefaultMessage, "A test message")
@@ -212,15 +212,15 @@ class PushNotificationMethodTests: XCTestCase {
                 XCTAssert(false, "JSON Body payload was incorrect")
             }
             
-            XCTAssertEqual(request.URL, expectedURL)
+            XCTAssertEqual(request.url, expectedURL)
             expectation.fulfill()
             return OHHTTPStubsResponse()
         })
         
-        let gateway:PushNotificationSupportingGateway = CompositedGateway(baseUrl: NSURL(string: baseUrl)!)
-        try! gateway.pushNotifications.publish(endpointCodename, channel: channel, environment: environment, payload: payload as NSDictionary, callback: nil)
+        let gateway:PushNotificationSupportingGateway = CompositedGateway(baseUrl: URL(string: baseUrl)!)
+        try! gateway.pushNotifications.publish(endpointCodename: endpointCodename, channel: channel, environment: environment, payload: payload, callback: nil)
         
-        self.waitForExpectationsWithTimeout(5, handler: nil)
+        self.waitForExpectations(timeout: 5, handler: nil)
     }
 
 }

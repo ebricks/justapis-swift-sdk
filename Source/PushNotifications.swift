@@ -59,22 +59,22 @@ internal class PushNotificationMethodDispatcher : PushNotificationMethods {
 
     func subscribe(endpointCodename:String, platform:String, channel:String, period:Int, name:String, token:String, callback:RequestCallback?)
     {
-        self.pushNotifcationsProvider.subscribe(self.gateway, endpointCodename: endpointCodename, platform: platform, channel: channel, period: period, name: name, token: token, callback: callback)
+        self.pushNotifcationsProvider.subscribe(gateway: self.gateway, endpointCodename: endpointCodename, platform: platform, channel: channel, period: period, name: name, token: token, callback: callback)
     }
     
     func unsubscribe(endpointCodename:String, platform: String, channel: String, name:String, callback:RequestCallback?)
     {
-        self.pushNotifcationsProvider.unsubscribe(self.gateway, endpointCodename: endpointCodename, platform: platform, channel: channel, name: name, callback: callback)
+        self.pushNotifcationsProvider.unsubscribe(gateway: self.gateway, endpointCodename: endpointCodename, platform: platform, channel: channel, name: name, callback: callback)
     }
     
     func unsubscribe(endpointCodename:String, platform: String, channel: String, token:String, callback:RequestCallback?)
     {
-        self.pushNotifcationsProvider.unsubscribe(self.gateway, endpointCodename: endpointCodename, platform: platform, channel: channel, token: token, callback: callback)
+        self.pushNotifcationsProvider.unsubscribe(gateway: self.gateway, endpointCodename: endpointCodename, platform: platform, channel: channel, token: token, callback: callback)
     }
     
     func publish(endpointCodename:String, channel:String, environment:String, payload:NSDictionary, callback:RequestCallback?) throws
     {
-        try self.pushNotifcationsProvider.publish(self.gateway, endpointCodename: endpointCodename, channel: channel, environment: environment, payload: payload, callback: callback)
+        try self.pushNotifcationsProvider.publish(gateway: self.gateway, endpointCodename: endpointCodename, channel: channel, environment: environment, payload: payload, callback: callback)
     }
 }
 
@@ -103,8 +103,8 @@ public class DefaultPushNotificationsProvider : PushNotificationsProvider
     
     public func subscribe(gateway:Gateway, endpointCodename:String, platform:String, channel:String, period:Int, name:String, token:String, callback:RequestCallback?)
     {
-        let path:String = self.resolvePath(endpointCodename, method: "subscribe")
-        let bodyPayload:[String:AnyObject] = [
+        let path:String = self.resolvePath(endpointCodename: endpointCodename, method: "subscribe")
+        let bodyPayload:[String:Any] = [
             "platform": platform,
             "channel": channel,
             "period": period,
@@ -113,43 +113,43 @@ public class DefaultPushNotificationsProvider : PushNotificationsProvider
         ]
         
         // We know all parameters are JSON-friendly, so we mute the possible encoding exception
-        let body = try! NSJSONSerialization.dataWithJSONObject(bodyPayload, options: NSJSONWritingOptions(rawValue: 0))
+        let body = try! JSONSerialization.data(withJSONObject: bodyPayload, options: JSONSerialization.WritingOptions(rawValue: 0))
         gateway.post(path, params: nil, headers: nil, body: body, callback: callback)
     }
 
     public func unsubscribe(gateway:Gateway, endpointCodename:String, platform: String, channel: String, name:String, callback:RequestCallback?)
     {
-        let path:String = self.resolvePath(endpointCodename, method: "unsubscribe")
-        let bodyPayload:[String:AnyObject] = [
+        let path:String = self.resolvePath(endpointCodename: endpointCodename, method: "unsubscribe")
+        let bodyPayload:[String:Any] = [
             "platform":platform,
             "channel":channel,
             "name":name
         ]
-        let body = try! NSJSONSerialization.dataWithJSONObject(bodyPayload, options: NSJSONWritingOptions(rawValue: 0))
+        let body = try! JSONSerialization.data(withJSONObject: bodyPayload, options: JSONSerialization.WritingOptions(rawValue: 0))
         gateway.post(path, params: nil, headers:nil, body:body, callback: callback)
     }
 
     public func unsubscribe(gateway:Gateway, endpointCodename:String, platform: String, channel: String, token:String, callback:RequestCallback?)
     {
-        let path:String = self.resolvePath(endpointCodename, method: "unsubscribe")
-        let bodyPayload:[String:AnyObject] = [
+        let path:String = self.resolvePath(endpointCodename: endpointCodename, method: "unsubscribe")
+        let bodyPayload:[String:Any] = [
             "platform":platform,
             "channel":channel,
             "token":token
         ]
-        let body = try! NSJSONSerialization.dataWithJSONObject(bodyPayload, options: NSJSONWritingOptions(rawValue: 0))
+        let body = try! JSONSerialization.data(withJSONObject: bodyPayload, options: JSONSerialization.WritingOptions(rawValue: 0))
         gateway.post(path, params: nil, headers:nil, body: body, callback: callback)
     }
 
     public func publish(gateway:Gateway, endpointCodename:String, channel:String, environment:String, payload:NSDictionary, callback:RequestCallback?) throws
     {
-        let path:String = self.resolvePath(endpointCodename, method: "publish")
-        let bodyPayload:[String:AnyObject] = [
+        let path:String = self.resolvePath(endpointCodename: endpointCodename, method: "publish")
+        let bodyPayload:[String:Any] = [
             "channel":channel,
             "environment":environment,
             "payload":payload
         ]
-        let body = try NSJSONSerialization.dataWithJSONObject(bodyPayload, options: NSJSONWritingOptions(rawValue: 0))
+        let body = try JSONSerialization.data(withJSONObject: bodyPayload, options: JSONSerialization.WritingOptions(rawValue: 0))
         gateway.post(path, params: nil, headers:nil, body:body, callback: callback)
     }
 }

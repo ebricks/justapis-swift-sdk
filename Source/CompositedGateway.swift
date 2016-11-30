@@ -19,7 +19,7 @@ import Foundation
 ///
 public protocol RequestPreparer
 {
-    func prepareRequest(request:Request) -> Request
+    func prepareRequest(_ request:Request) -> Request
 }
 
 ///
@@ -32,10 +32,10 @@ public protocol RequestPreparer
 ///
 public protocol ResponseProcessor
 {
-    func processResponse(response:Response, callback:ResponseProcessorCallback)
+    func processResponse(_ response:Response, callback: @escaping ResponseProcessorCallback)
 }
 
-public typealias ResponseProcessorCallback = ((response:Response, error:ErrorType?) -> Void)
+public typealias ResponseProcessorCallback = ((_ response:Response, _ error:Error?) -> Void)
 
 ///
 /// Invoked by the CompositedGateway to send the request along the wire
@@ -47,7 +47,7 @@ public typealias ResponseProcessorCallback = ((response:Response, error:ErrorTyp
 ///
 public protocol NetworkAdapter
 {
-    func submitRequest(request:Request, gateway:CompositedGateway)
+    func submitRequest(_ request:Request, gateway:CompositedGateway)
 }
 
 ///
@@ -56,10 +56,10 @@ public protocol NetworkAdapter
 public protocol CacheProvider
 {
     /// Called to retrieve a Response from the cache. Should call the callback with nil or the retrieved response
-    func cachedResponseForIdentifier(identifier:String, callback:CacheProviderCallback)
+    func cachedResponseForIdentifier(_ identifier:String, callback:CacheProviderCallback)
 
     /// Called to save a Response to the cache. The expiration should be considered a preference, not a guarantee.
-    func setCachedResponseForIdentifier(identifier:String, response:ResponseProperties, expirationSeconds:UInt)
+    func setCachedResponseForIdentifier(_ identifier:String, response:ResponseProperties, expirationSeconds:UInt)
 }
 
 public typealias CacheProviderCallback = ((ResponseProperties?) -> Void)
@@ -67,13 +67,13 @@ public typealias CacheProviderCallback = ((ResponseProperties?) -> Void)
 ///
 /// A Cache Provider implementation that does nothing. Useful to disable caching without changing your request logic
 ///
-public class NullCacheProvider : CacheProvider
+open class NullCacheProvider : CacheProvider
 {
-    public func cachedResponseForIdentifier(identifier: String, callback: CacheProviderCallback) {
+    open func cachedResponseForIdentifier(_ identifier: String, callback: CacheProviderCallback) {
         return callback(nil)
     }
     
-    public func setCachedResponseForIdentifier(identifier: String, response: ResponseProperties, expirationSeconds: UInt) {
+    open func setCachedResponseForIdentifier(_ identifier: String, response: ResponseProperties, expirationSeconds: UInt) {
         return
     }
 }
@@ -83,7 +83,7 @@ public class NullCacheProvider : CacheProvider
 ///
 public struct CompositedGatewayConfiguration
 {
-    var baseUrl:NSURL
+    var baseUrl:URL
     var sslCertificate:SSLCertificate? = nil
     var defaultRequestProperties:DefaultRequestPropertySet? = nil
     var networkAdapter:NetworkAdapter? = nil
@@ -92,7 +92,7 @@ public struct CompositedGatewayConfiguration
     var responseProcessor:ResponseProcessor? = nil
     var pushNotificationsProvider:PushNotificationsProvider? = nil
     
-    public init(baseUrl:NSURL,
+    public init(baseUrl:URL,
         sslCertificate:SSLCertificate? = nil,
         defaultRequestProperties:DefaultRequestPropertySet? = nil,
         requestPreparer:RequestPreparer? = nil,
@@ -116,12 +116,11 @@ public struct CompositedGatewayConfiguration
 /// Implementation of Gateway protocol that dispatches most details to
 /// helper classes.
 ///
-public class CompositedGateway : Gateway, PushNotificationSupportingGateway
+open class CompositedGateway : Gateway, PushNotificationSupportingGateway
 {
-    // Public properties
-    public let baseUrl:NSURL
-    public let sslCertificate:SSLCertificate?
-    public let defaultRequestProperties:DefaultRequestPropertySet
+    open let baseUrl:URL
+    open let sslCertificate:SSLCertificate?
+    open let defaultRequestProperties:DefaultRequestPropertySet
     
     // Public method groups
     public var pushNotifications:PushNotificationMethods { return self.pushNotificationsDispatcher }
@@ -136,18 +135,18 @@ public class CompositedGateway : Gateway, PushNotificationSupportingGateway
 
     // Internal state
     private var requests:InternalRequestQueue = InternalRequestQueue()
-    public var pendingRequests:[Request] { return self.requests.pendingRequests }
-    public var isPaused:Bool { return _isPaused }
+    open var pendingRequests:[Request] { return self.requests.pendingRequests }
+    open var isPaused:Bool { return _isPaused }
     private var _isPaused:Bool = true
     
     /// TODO: Make this configurable?
-    public var maxActiveRequests:Int = 2
+    open var maxActiveRequests:Int = 2
     
     ///
     /// Designated initializer
     ///
     public init(
-        baseUrl:NSURL,
+        baseUrl:URL,
         sslCertificate:SSLCertificate? = nil,
         defaultRequestProperties:DefaultRequestPropertySet? = nil,
         requestPreparer:RequestPreparer? = nil,
@@ -198,7 +197,7 @@ public class CompositedGateway : Gateway, PushNotificationSupportingGateway
     ///
     /// Pauses the gateway. No more pending requests will be processed until resume() is called.
     ///
-    public func pause()
+    open func pause()
     {
         self._isPaused = true
     }
@@ -206,7 +205,7 @@ public class CompositedGateway : Gateway, PushNotificationSupportingGateway
     ///
     /// Unpauses the gateway. Pending requests will continue being processed.
     ///
-    public func resume()
+    open func resume()
     {
         self._isPaused = false
         self.conditionallyProcessRequestQueue()
@@ -215,8 +214,8 @@ public class CompositedGateway : Gateway, PushNotificationSupportingGateway
     ///
     /// Removes a request from this gateway's pending request queue
     ///
-    public func cancelRequest(request: Request) -> Bool {
-        guard let internalRequest = request as? InternalRequest where internalRequest.gateway === self else
+    open func cancelRequest(_ request: Request) -> Bool {
+        guard let internalRequest = request as? InternalRequest, internalRequest.gateway === self else
         {
             /// Do nothing. This request wasn't associated with this gateway.
             return false
@@ -241,7 +240,7 @@ public class CompositedGateway : Gateway, PushNotificationSupportingGateway
     ///
     /// Sets a ResponseProcessor to run when the given contentType is encountered in a response
     ///
-    public func setParser(parser:ResponseProcessor?, contentType:String)
+    open func setParser(_ parser:ResponseProcessor?, contentType:String)
     {
         if (parser != nil)
         {
@@ -249,11 +248,11 @@ public class CompositedGateway : Gateway, PushNotificationSupportingGateway
         }
         else
         {
-            self.contentTypeParser.contentTypes.removeValueForKey(contentType)
+            self.contentTypeParser.contentTypes.removeValue(forKey: contentType)
         }
     }
     
-    public func submitRequest(request:RequestProperties, callback:RequestCallback?)
+    open func submitRequest(_ request:RequestProperties, callback:RequestCallback?)
     {
         let request = self.internalizeRequest(request)
         self.submitInternalRequest(request, callback: callback)
@@ -262,7 +261,7 @@ public class CompositedGateway : Gateway, PushNotificationSupportingGateway
     ///
     /// Called by CacheProvider or NetworkAdapter once a response is ready
     ///
-    public func fulfillRequest(request:Request, response:ResponseProperties?, error:ErrorType?, fromCache:Bool = false)
+    open func fulfillRequest(_ request:Request, response:ResponseProperties?, error:Error?, fromCache:Bool = false)
     {
         guard let request = request as? InternalRequest else
         {
@@ -273,7 +272,7 @@ public class CompositedGateway : Gateway, PushNotificationSupportingGateway
         // Build the result object
         let response:InternalResponse? = (response != nil) ? self.internalizeResponse(response!) : nil
         var result:RequestResult = (request:request,
-                                    response:response?.retreivedFromCache(fromCache),
+                                    response:response?.copyWith(retreivedFromCache: fromCache),
                                     error:error)
 
         // Check if there was an error
@@ -308,20 +307,20 @@ public class CompositedGateway : Gateway, PushNotificationSupportingGateway
         }
         
         // Run the compound processor in a dispatch group
-        let responseProcessingDispatchGroup = dispatch_group_create()
-        dispatch_group_enter(responseProcessingDispatchGroup)
+        let responseProcessingDispatchGroup = DispatchGroup()
+        responseProcessingDispatchGroup.enter()
         compoundResponseProcessor.processResponse(result.response!,
             callback:
             {
-                (response:Response, error:ErrorType?) in
+                (response:Response, error:Error?) in
                 
                 result = (request:request, response:response, error:error)
-                dispatch_group_leave(responseProcessingDispatchGroup)
+                responseProcessingDispatchGroup.leave()
             }
         )
 
         // When the dispatch group is emptied, cache the response and run the callback
-        dispatch_group_notify(responseProcessingDispatchGroup, dispatch_get_main_queue(), {
+        responseProcessingDispatchGroup.notify(queue: DispatchQueue.main, execute: {
             
             
             if result.error == nil // There's no error
@@ -344,7 +343,7 @@ public class CompositedGateway : Gateway, PushNotificationSupportingGateway
     ///
     /// Wraps raw ResponseProperties as an InternalResponse
     ///
-    internal func internalizeResponse(response:ResponseProperties) -> InternalResponse
+    internal func internalizeResponse(_ response:ResponseProperties) -> InternalResponse
     {
         // Downcast to an InternalResponse, or wrap externally prepared properties
         var internalResponse:InternalResponse = (response as? InternalResponse) ?? InternalResponse(self, response:response)
@@ -352,7 +351,7 @@ public class CompositedGateway : Gateway, PushNotificationSupportingGateway
         if (internalResponse.gateway !== self)
         {
             // response was prepared for another gateway. Associate it with this one!
-            internalResponse = internalResponse.gateway(self)
+            internalResponse = internalResponse.copyWith(gateway: self)
         }
         
         return internalResponse
@@ -361,7 +360,7 @@ public class CompositedGateway : Gateway, PushNotificationSupportingGateway
     ///
     /// Prepares RequestProperties as an InteralRequest and performs preflight prep
     ///
-    internal func internalizeRequest(request:RequestProperties) -> InternalRequest
+    internal func internalizeRequest(_ request:RequestProperties) -> InternalRequest
     {
         // Downcast to an InternalRequest, or wrap externally prepared properties
         var internalRequest:InternalRequest = (request as? InternalRequest) ?? InternalRequest(self, request:request)
@@ -369,7 +368,7 @@ public class CompositedGateway : Gateway, PushNotificationSupportingGateway
         if (internalRequest.gateway !== self)
         {
             // request was prepared for another gateway. Associate it with this one!
-            internalRequest = internalRequest.gateway(self)
+            internalRequest = internalRequest.copyWith(gateway: self)
         }
         
         return internalRequest
@@ -378,7 +377,7 @@ public class CompositedGateway : Gateway, PushNotificationSupportingGateway
     ///
     /// Checks CacheProvider for matching Response or submits InternalRequest to NetworkAdapter
     ///
-    private func submitInternalRequest(request:InternalRequest, callback:RequestCallback?)
+    private func submitInternalRequest(_ request:InternalRequest, callback:RequestCallback?)
     {
         var request = request
         
@@ -407,7 +406,7 @@ public class CompositedGateway : Gateway, PushNotificationSupportingGateway
             return
         }
         
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
+        DispatchQueue.global(qos: .default).async {
             
             if request.allowCachedResponse
             {
@@ -433,16 +432,16 @@ public class CompositedGateway : Gateway, PushNotificationSupportingGateway
                 self.networkAdapter.submitRequest(request, gateway:self)
             }
             
-        })
+        }
     }
 }
 
 ///
 /// Convenience subclass of CompositedGateway that uses the JsonResponseProcessor.
 ///
-public class JsonGateway : CompositedGateway
+open class JsonGateway : CompositedGateway
 {
-    public override init(baseUrl: NSURL, sslCertificate:SSLCertificate? = nil, defaultRequestProperties:DefaultRequestPropertySet? = nil, requestPreparer: RequestPreparer? = nil, responseProcessor:ResponseProcessor? = nil, cacheProvider:CacheProvider? = nil, networkAdapter: NetworkAdapter? = nil, pushNotificationsProvider:PushNotificationsProvider? = nil)
+    public override init(baseUrl: URL, sslCertificate:SSLCertificate? = nil, defaultRequestProperties:DefaultRequestPropertySet? = nil, requestPreparer: RequestPreparer? = nil, responseProcessor:ResponseProcessor? = nil, cacheProvider:CacheProvider? = nil, networkAdapter: NetworkAdapter? = nil, pushNotificationsProvider:PushNotificationsProvider? = nil)
     {
         super.init(baseUrl: baseUrl, defaultRequestProperties: defaultRequestProperties, requestPreparer:requestPreparer, responseProcessor:responseProcessor, networkAdapter:networkAdapter)
         super.setParser(JsonResponseProcessor(), contentType: "application/json")

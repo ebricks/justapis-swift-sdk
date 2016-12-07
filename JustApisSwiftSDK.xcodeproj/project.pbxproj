@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		182F3B0CEBFE17C5032B1996 /* Pods_JustApisSwiftSDKTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F7A95BEC7246BDEA4DEF61F8 /* Pods_JustApisSwiftSDKTests.framework */; };
 		1D2EF3ECF68EF0A3FA9E57FD /* Pods_JustApisSwiftSDK_tvOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B75BF46EA9FE94B505127178 /* Pods_JustApisSwiftSDK_tvOS.framework */; };
+		2E5EB0DF1DF709FE00FC7EEF /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5334A0F41C3EFDEE00429E6F /* Helpers.swift */; };
+		2E5EB0E01DF709FE00FC7EEF /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5334A0F41C3EFDEE00429E6F /* Helpers.swift */; };
+		2E5EB0E11DF709FF00FC7EEF /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5334A0F41C3EFDEE00429E6F /* Helpers.swift */; };
 		5303C3AA1C234E5E00E5A7AF /* RequestPreparers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5386B1CD1C18D761001D8D31 /* RequestPreparers.swift */; };
 		5303C3AC1C234E5E00E5A7AF /* CoreTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5386B1C01C18B903001D8D31 /* CoreTypes.swift */; };
 		5303C3AD1C234E5E00E5A7AF /* CompositedGateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5386B1C21C18CCE9001D8D31 /* CompositedGateway.swift */; };
@@ -105,7 +108,7 @@
 		5303C3851C21F2E100E5A7AF /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		5303C3861C21F2E100E5A7AF /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		5303C3B81C234E5E00E5A7AF /* JustApisSwiftSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = JustApisSwiftSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		5303C3B91C234E5F00E5A7AF /* Info-OSX.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Info-OSX.plist"; path = "/Users/andrewpalumbo/Projects/AnyPresence/justapis-swift-sdk/Source/Info-OSX.plist"; sourceTree = "<absolute>"; };
+		5303C3B91C234E5F00E5A7AF /* Info-OSX.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-OSX.plist"; sourceTree = "<group>"; };
 		5303C3CC1C23528400E5A7AF /* Info-watchOS.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Info-watchOS.plist"; sourceTree = "<group>"; };
 		5303C3DE1C23529500E5A7AF /* JustApisSwiftSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = JustApisSwiftSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5303C3F01C2353CC00E5A7AF /* JustApisSwiftSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = JustApisSwiftSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -471,6 +474,15 @@
 				LastUpgradeCheck = 0810;
 				ORGANIZATIONNAME = AnyPresence;
 				TargetAttributes = {
+					5303C3A81C234E5E00E5A7AF = {
+						LastSwiftMigration = 0810;
+					};
+					5303C3CE1C23529500E5A7AF = {
+						LastSwiftMigration = 0810;
+					};
+					5303C3E01C2353CC00E5A7AF = {
+						LastSwiftMigration = 0810;
+					};
 					5386B1A51C18B503001D8D31 = {
 						CreatedOnToolsVersion = 7.1.1;
 						LastSwiftMigration = 0810;
@@ -727,6 +739,7 @@
 				5303C4051C331C5700E5A7AF /* Errors.swift in Sources */,
 				53C4DCC21C3AFB5D0067B671 /* InMemoryCacheProvider.swift in Sources */,
 				5303C3AE1C234E5E00E5A7AF /* FoundationNetworkAdapter.swift in Sources */,
+				2E5EB0DF1DF709FE00FC7EEF /* Helpers.swift in Sources */,
 				5303C3B01C234E5E00E5A7AF /* ResponseProcessors.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -748,6 +761,7 @@
 				5303C4061C331C5700E5A7AF /* Errors.swift in Sources */,
 				53C4DCC31C3AFB5D0067B671 /* InMemoryCacheProvider.swift in Sources */,
 				5303C3D41C23529500E5A7AF /* FoundationNetworkAdapter.swift in Sources */,
+				2E5EB0E01DF709FE00FC7EEF /* Helpers.swift in Sources */,
 				5303C3D61C23529500E5A7AF /* ResponseProcessors.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -769,6 +783,7 @@
 				5303C4071C331C5700E5A7AF /* Errors.swift in Sources */,
 				53C4DCC41C3AFB5D0067B671 /* InMemoryCacheProvider.swift in Sources */,
 				5303C3E61C2353CC00E5A7AF /* FoundationNetworkAdapter.swift in Sources */,
+				2E5EB0E11DF709FF00FC7EEF /* Helpers.swift in Sources */,
 				5303C3E81C2353CC00E5A7AF /* ResponseProcessors.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -840,6 +855,7 @@
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = macosx;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -860,6 +876,7 @@
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = macosx;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -882,6 +899,7 @@
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "watchsimulator watchos";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -903,6 +921,7 @@
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "watchsimulator watchos";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -925,6 +944,7 @@
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "appletvsimulator appletvos";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -946,6 +966,7 @@
 				SDKROOT = appletvos;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "appletvsimulator appletvos";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};

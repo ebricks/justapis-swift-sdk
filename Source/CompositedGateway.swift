@@ -91,15 +91,18 @@ public struct CompositedGatewayConfiguration
     var requestPreparer:RequestPreparer? = nil
     var responseProcessor:ResponseProcessor? = nil
     var pushNotificationsProvider:PushNotificationsProvider? = nil
+#if !os(watchOS)
+    var mqttProvider:MQTTProvider? = nil
+#endif
     
     public init(baseUrl:URL,
-        sslCertificate:SSLCertificate? = nil,
-        defaultRequestProperties:DefaultRequestPropertySet? = nil,
-        requestPreparer:RequestPreparer? = nil,
-        responseProcessor:ResponseProcessor? = nil,
-        cacheProvider:CacheProvider? = nil,
-        networkAdapter:NetworkAdapter? = nil,
-        pushNotificationsProvider:PushNotificationsProvider? = nil)
+                sslCertificate:SSLCertificate? = nil,
+                defaultRequestProperties:DefaultRequestPropertySet? = nil,
+                requestPreparer:RequestPreparer? = nil,
+                responseProcessor:ResponseProcessor? = nil,
+                cacheProvider:CacheProvider? = nil,
+                networkAdapter:NetworkAdapter? = nil,
+                pushNotificationsProvider:PushNotificationsProvider? = nil)
     {
         self.baseUrl = baseUrl
         self.sslCertificate = sslCertificate
@@ -110,6 +113,29 @@ public struct CompositedGatewayConfiguration
         self.networkAdapter = networkAdapter
         self.pushNotificationsProvider = pushNotificationsProvider
     }
+    
+#if !os(watchOS)
+    public init(baseUrl:URL,
+        sslCertificate:SSLCertificate? = nil,
+        defaultRequestProperties:DefaultRequestPropertySet? = nil,
+        requestPreparer:RequestPreparer? = nil,
+        responseProcessor:ResponseProcessor? = nil,
+        cacheProvider:CacheProvider? = nil,
+        networkAdapter:NetworkAdapter? = nil,
+        pushNotificationsProvider:PushNotificationsProvider? = nil,
+        mqttProvider:MQTTProvider? = nil)
+    {
+        self.init(baseUrl: baseUrl,
+                  sslCertificate: sslCertificate,
+                  defaultRequestProperties: defaultRequestProperties,
+                  requestPreparer: requestPreparer,
+                  responseProcessor: responseProcessor,
+                  cacheProvider: cacheProvider,
+                  networkAdapter: networkAdapter,
+                  pushNotificationsProvider: pushNotificationsProvider)
+        self.mqttProvider = mqttProvider
+    }
+#endif
 }
 
 ///
@@ -124,6 +150,9 @@ open class CompositedGateway : Gateway, PushNotificationSupportingGateway
     
     // Public method groups
     public var pushNotifications:PushNotificationMethods { return self.pushNotificationsDispatcher }
+#if !os(watchOS)
+    public var mqtt: MQTTMethods { return self.mqttDispatcher }
+#endif
 
     // Internal Providers, Adapters, and Dispatches
     private let networkAdapter:NetworkAdapter
@@ -132,6 +161,9 @@ open class CompositedGateway : Gateway, PushNotificationSupportingGateway
     private let responseProcessor:ResponseProcessor?
     private let contentTypeParser:ContentTypeParser
     private var pushNotificationsDispatcher:PushNotificationMethodDispatcher!
+#if !os(watchOS)
+    private var mqttDispatcher: MQTTMethodDispatcher! = nil
+#endif
 
     // Internal state
     private var requests:InternalRequestQueue = InternalRequestQueue()
@@ -153,18 +185,17 @@ open class CompositedGateway : Gateway, PushNotificationSupportingGateway
         responseProcessor:ResponseProcessor? = nil,
         cacheProvider:CacheProvider? = nil,
         networkAdapter:NetworkAdapter? = nil,
-        pushNotificationsProvider:PushNotificationsProvider? = nil
-        )
+        pushNotificationsProvider:PushNotificationsProvider? = nil)
     {
         self.baseUrl = baseUrl
         self.sslCertificate = sslCertificate
-
+        
         // Use the GatewayDefaultRequestProperties if none were provided
         self.defaultRequestProperties = defaultRequestProperties ?? GatewayDefaultRequestProperties()
         self.requestPreparer = requestPreparer
         self.responseProcessor = responseProcessor
         self.contentTypeParser = ContentTypeParser()
-
+        
         // Use the InMemory Cache Provider if none was provided
         self.cacheProvider = cacheProvider ?? InMemoryCacheProvider()
         
@@ -173,9 +204,36 @@ open class CompositedGateway : Gateway, PushNotificationSupportingGateway
         
         // Use the Default Push Notifications Provider if none was provided
         self.pushNotificationsDispatcher = PushNotificationMethodDispatcher(gateway: self, pushNotificationsProvider: pushNotificationsProvider ?? DefaultPushNotificationsProvider())
-
+        
         self.resume()
     }
+    
+#if !os(watchOS) //Only Available on iOS, macOS, tvOS
+    ///
+    /// Convenience initializer for use with MQTT Provider
+    ///
+    public convenience init(
+        baseUrl:URL,
+        sslCertificate:SSLCertificate? = nil,
+        defaultRequestProperties:DefaultRequestPropertySet? = nil,
+        requestPreparer:RequestPreparer? = nil,
+        responseProcessor:ResponseProcessor? = nil,
+        cacheProvider:CacheProvider? = nil,
+        networkAdapter:NetworkAdapter? = nil,
+        pushNotificationsProvider:PushNotificationsProvider? = nil,
+        mqttProvider:MQTTProvider? = nil)
+    {
+        self.init(baseUrl: baseUrl,
+                  sslCertificate: sslCertificate,
+                  defaultRequestProperties: defaultRequestProperties,
+                  requestPreparer: requestPreparer,
+                  responseProcessor: responseProcessor,
+                  cacheProvider: cacheProvider,
+                  networkAdapter: networkAdapter,
+                  pushNotificationsProvider: pushNotificationsProvider)
+        setupMQTTDispatcherWithProvider(mqttProvider)
+    }
+#endif
     
     ///
     /// Convenience initializer for use with CompositedGatewayConfiguration
@@ -190,10 +248,24 @@ open class CompositedGateway : Gateway, PushNotificationSupportingGateway
             responseProcessor:configuration.responseProcessor,
             cacheProvider:configuration.cacheProvider,
             networkAdapter:configuration.networkAdapter,
-            pushNotificationsProvider: configuration.pushNotificationsProvider
-                  )
+            pushNotificationsProvider: configuration.pushNotificationsProvider)
+        #if !os(watchOS)
+            setupMQTTDispatcherWithConfiguration(configuration)
+        #endif
     }
     
+    
+#if !os(watchOS)
+    private func setupMQTTDispatcherWithConfiguration(_ configuration: CompositedGatewayConfiguration) {
+        setupMQTTDispatcherWithProvider(configuration.mqttProvider)
+    }
+    
+    private func setupMQTTDispatcherWithProvider(_ mqttProvider: MQTTProvider?) {
+        // Use the Default MQTT Provider if none was provided
+        self.mqttDispatcher = MQTTMethodDispatcher(gateway: self, mqttProvider: mqttProvider ?? DefaultMQTTProvider())
+    }
+#endif
+
     ///
     /// Pauses the gateway. No more pending requests will be processed until resume() is called.
     ///
@@ -436,14 +508,32 @@ open class CompositedGateway : Gateway, PushNotificationSupportingGateway
     }
 }
 
+#if !os(watchOS)
+extension CompositedGateway: MQTTSupportingGateway {}
+#endif
+
 ///
 /// Convenience subclass of CompositedGateway that uses the JsonResponseProcessor.
 ///
 open class JsonGateway : CompositedGateway
 {
-    public override init(baseUrl: URL, sslCertificate:SSLCertificate? = nil, defaultRequestProperties:DefaultRequestPropertySet? = nil, requestPreparer: RequestPreparer? = nil, responseProcessor:ResponseProcessor? = nil, cacheProvider:CacheProvider? = nil, networkAdapter: NetworkAdapter? = nil, pushNotificationsProvider:PushNotificationsProvider? = nil)
+    public override init(baseUrl: URL,
+                         sslCertificate:SSLCertificate? = nil,
+                         defaultRequestProperties:DefaultRequestPropertySet? = nil,
+                         requestPreparer: RequestPreparer? = nil,
+                         responseProcessor:ResponseProcessor? = nil,
+                         cacheProvider:CacheProvider? = nil,
+                         networkAdapter: NetworkAdapter? = nil,
+                         pushNotificationsProvider:PushNotificationsProvider? = nil)
     {
-        super.init(baseUrl: baseUrl, defaultRequestProperties: defaultRequestProperties, requestPreparer:requestPreparer, responseProcessor:responseProcessor, networkAdapter:networkAdapter)
+        super.init(baseUrl: baseUrl,
+                   sslCertificate: sslCertificate,
+                   defaultRequestProperties: defaultRequestProperties,
+                   requestPreparer: requestPreparer,
+                   responseProcessor: responseProcessor,
+                   cacheProvider: cacheProvider,
+                   networkAdapter: networkAdapter,
+                   pushNotificationsProvider: pushNotificationsProvider)
         super.setParser(JsonResponseProcessor(), contentType: "application/json")
     }
 }

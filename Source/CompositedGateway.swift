@@ -206,6 +206,10 @@ open class CompositedGateway : Gateway, PushNotificationSupportingGateway
         self.pushNotificationsDispatcher = PushNotificationMethodDispatcher(gateway: self, pushNotificationsProvider: pushNotificationsProvider ?? DefaultPushNotificationsProvider())
         
         self.resume()
+
+#if !os(watchOS)
+        setupMQTTDispatcherWithProvider(nil)
+#endif
     }
     
 #if !os(watchOS) //Only Available on iOS, macOS, tvOS

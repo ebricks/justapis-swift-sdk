@@ -262,7 +262,7 @@ open class CompositedGateway : Gateway, PushNotificationSupportingGateway
     
     private func setupMQTTDispatcherWithProvider(_ mqttProvider: MQTTProvider?) {
         // Use the Default MQTT Provider if none was provided
-        self.mqttDispatcher = MQTTMethodDispatcher(gateway: self, mqttProvider: mqttProvider ?? DefaultMQTTProvider())
+        self.mqttDispatcher = MQTTMethodDispatcher(gateway: self, mqttProvider: mqttProvider ?? DefaultMQTTProvider(), pinnedSSLCertificate: sslCertificate)
     }
 #endif
 

@@ -143,6 +143,10 @@ public struct MQTTConfiguration {
     public var willMesage: (topic: String, message: String)?
     public weak var delegator: MQTTMethods?
     public weak var delegate: MQTTDelegate?
+    //See SSL Settings of GCD Async Socket
+    public var enableSSL: Bool
+    public var sslSettings: [String : NSObject]?
+    public var pinnedSSLCertificate: SSLCertificate?
     
     public static func defaultConfigurationWith(host: String, username: String, password: String) -> MQTTConfiguration {
         return MQTTConfiguration(host: host,
@@ -154,7 +158,10 @@ public struct MQTTConfiguration {
                                  cleanSession: true,
                                  willMesage: nil,
                                  delegator: nil,
-                                 delegate: nil)
+                                 delegate: nil,
+                                 enableSSL: false,
+                                 sslSettings: nil,
+                                 pinnedSSLCertificate: nil)
     }
 }
 
@@ -195,6 +202,7 @@ public class MQTTMethodDispatcher: MQTTMethods {
     
     unowned let gateway: Gateway
     let mqttProvider: MQTTProvider
+    let pinnedSSLCertificate: SSLCertificate?
     
     public var connected: Bool {
         get {
@@ -202,15 +210,17 @@ public class MQTTMethodDispatcher: MQTTMethods {
         }
     }
 
-    init(gateway: Gateway, mqttProvider: MQTTProvider) {
+    init(gateway: Gateway, mqttProvider: MQTTProvider, pinnedSSLCertificate: SSLCertificate?) {
         self.gateway = gateway
         self.mqttProvider = mqttProvider
+        self.pinnedSSLCertificate = pinnedSSLCertificate
     }
     
     public func defaultConfigurationWith(username: String, password: String, delegate: MQTTDelegate?) -> MQTTConfiguration {
         var config = MQTTConfiguration.defaultConfigurationWith(host: gateway.baseUrl.host!, username: username, password: password)
         config.delegator = self
         config.delegate = delegate
+        config.pinnedSSLCertificate = pinnedSSLCertificate
         return config
     }
 
@@ -386,6 +396,16 @@ public class DefaultMQTTProvider : MQTTProvider, CocoaMQTTDelegate
             client.willMessage = CocoaMQTTWill(topic: willMessage.topic, message: willMessage.message)
         }
         client.delegate = self
+        let enableSSL = config.enableSSL || config.sslSettings != nil || config.pinnedSSLCertificate != nil
+        var sslSettings = config.sslSettings
+        if let _ = config.pinnedSSLCertificate {
+            if sslSettings == nil {
+                sslSettings = [String : NSObject]()
+            }
+            sslSettings![GCDAsyncSocketManuallyEvaluateTrust as String] = NSNumber(value: true)
+        }
+        client.enableSSL = enableSSL
+        client.sslSettings = sslSettings
     }
     
     //MARK: Callback Identifiers
@@ -521,5 +541,25 @@ public class DefaultMQTTProvider : MQTTProvider, CocoaMQTTDelegate
             delegate.mqtt(delegator, didDisconnectWithError: err)
         }
         removeClientIfNeeded()
-    }    
+    }
+    
+    public func mqtt(_ mqtt: CocoaMQTT, didReceive trust: SecTrust, completionHandler: @escaping (Bool) -> Void) {
+        //This is on main
+        if let certData = currentClientConfig.pinnedSSLCertificate?.data, let pinnedCertificate = SecCertificateCreateWithData(nil, certData as CFData) {
+            let host = currentClientConfig.host
+            DispatchQueue.global(qos: .background).async {
+                let policy = SecPolicyCreateSSL(true, host as CFString)
+                SecTrustSetPolicies(trust, policy)
+                
+                SecTrustSetAnchorCertificates(trust, [pinnedCertificate] as CFArray)
+                SecTrustSetAnchorCertificatesOnly(trust, true)
+                
+                let isTrustValid = DefaultMQTTProvider.trustIsValid(trust)
+                completionHandler(isTrustValid)
+            }
+        }
+        else {
+            completionHandler(false)
+        }
+    }
 }

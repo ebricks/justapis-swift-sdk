@@ -16,6 +16,7 @@ target 'JustApisSwiftSDK' do
         # Pods for testing
         pod 'OHHTTPStubs', '~> 5.2.3' # Default subspecs, including support for NSURLSession & JSON etc
         pod 'OHHTTPStubs/Swift', '~> 5.2.3' # Adds the Swiftier API wrapper too
+        pod 'HKLSocketStubServer', '~> 0.0.1'
     end
 end
 

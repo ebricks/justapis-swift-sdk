@@ -5,6 +5,8 @@ PODS:
   - CocoaMQTT (1.0.11):
     - CocoaAsyncSocket (~> 7.5.1)
     - MSWeakTimer (~> 1.1.0)
+  - HKLSocketStubServer (0.0.1):
+    - CocoaAsyncSocket (~> 7.5.1)
   - MSWeakTimer (1.1.0)
   - OHHTTPStubs (5.2.3):
     - OHHTTPStubs/Default (= 5.2.3)
@@ -24,15 +26,17 @@ PODS:
 
 DEPENDENCIES:
   - CocoaMQTT (~> 1.0.11)
+  - HKLSocketStubServer (~> 0.0.1)
   - OHHTTPStubs (~> 5.2.3)
   - OHHTTPStubs/Swift (~> 5.2.3)
 
 SPEC CHECKSUMS:
   CocoaAsyncSocket: e0a7e93b2ffa411592ff87e58524fbbc9b95b4fa
   CocoaMQTT: 9d281e782d3fe16a2171c6f23f2af70554ebebc2
+  HKLSocketStubServer: 87b9a48ae7700c8d1583aafe680e8a1eb320a962
   MSWeakTimer: a17c24b5108f6ce49c009851b747c297770762d9
   OHHTTPStubs: e238cd5b66d8efa51c861db45895de8fe079f4a7
 
-PODFILE CHECKSUM: 8a9e5925d2330b8cd8a90032c803e56a07c62be7
+PODFILE CHECKSUM: a3353619d30132480e8714c6e8cd08fa9a6e4b43
 
 COCOAPODS: 1.1.1

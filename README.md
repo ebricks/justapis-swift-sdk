@@ -7,21 +7,20 @@ Lightweight Swift SDK to connect to a JustAPIs gateway through an iOS client.
 ##Dependencies
 Managed using Cocoapods.
 
-Unit Tests: OHHTTPStub
+Framework: CocoaMQTT [MSWeakTimer, CocoaAsyncSocket]
+Unit Tests: OHHTTPStub, HKLSocketStubServer
 
 ### Development/Production
-There are no external dependencies when using this framework in your own project. 
-
-However, this SDK is a Swift dynamic framework, and is written in Swift 3 and needs Xcode 8.
+This SDK is a Swift dynamic framework, and is written in Swift 3 and needs Xcode 8.
 
 Some features used in the SDK (i.e. tuples, structs) are not currently available in Objective-C code. If you want to use this framework in an Objective-C app, you'll need to marshall these features through Swift code of your own. 
 
 ### Unit Testing
-If you want to perform unit tests on this framework, it requires [OHHTTPStubs](https://github.com/AliSoftware/OHHTTPStubs/) in order to mock requests. It's already included as a pod of Unit Test Target, so you can run:
+If you want to perform unit tests on this framework, it requires [OHHTTPStubs](https://github.com/AliSoftware/OHHTTPStubs/) & [HKLSocketStubServer](https://github.com/hirohitokato/HKLSocketStubServer) in order to mock requests. These already included as a pod of Unit Test Target, so you can run:
 
 ```pod install``` 
 
-to make it available.
+to make them available.
 
 ## Introduction
 
@@ -56,6 +55,10 @@ If you'd like more persistent or sophisticated caching, you can implement your o
 
 * An optional `DefaultRequestPropertySet` that allows you to customize the default options for GET, POST, PUT, and DELETE requests submitted to the Gateway. These defaults are used when using the Gateway's convenience methods to submit a request. If you don't provide your own defaults, the Gateway will use `GatewayDefaultRequestProperties` as found in `Request.swift` 
 
+* An optional `PushNotificationsProvider` that allows you interact with Push Notification Related End Points. If you don't provide your own, the Gateway will use `DefaultPushNotificationsProvider` as found in `PushNotifications.swift` 
+
+* An optional `MQTTProvider` that allows you to interact with MQTT Server/Broker. If you don't provide your own, the Gateway will use `DefaultMQTTProvider` as found in `MQTT.swift` SSL is not supported currently.
+
 ### JsonGateway
 
 `JsonGateway` is Gateway implementation provided for convenience. It's just a `CompositedGateway` that includes a `JsonResponseProcessor` by default.
@@ -72,9 +75,19 @@ For the bleeding edge version of this SDK, you can add the following directive t
 
 `pod 'JustApisSwiftSDK', :git => 'https://github.com/AnyPresence/justapis-swift-sdk.git'`
 
-Since this SDK is a dynamic framework that uses Swift 2.1, you'll also need to make sure that your Podfile targets iOS 8.0 or higher and is set to use dynamic frameworks:
+Since this SDK is a dynamic framework that uses Swift 3.0, you'll also need to make sure that your Podfile targets iOS 8.0 or higher and is set to use dynamic frameworks:
 
 ```ruby
+platform :ios 8.0
+use_frameworks!
+```
+
+For version `0.2.0+`: This version requires modified variats of some pods. So you also need to include alternate `podspec` source at the top of your pod file.
+
+```ruby
+source 'git@github.com:ebricks/NanoscalePodspecs.git'
+source 'git@github.com:CocoaPods/Specs.git'
+
 platform :ios 8.0
 use_frameworks!
 ```
@@ -231,9 +244,10 @@ The SDK is designed to be lightweight and modular so that you can enhance and mo
 
 However, if you would like to make changes to the SDK, you are welcome to  clone or fork this repository. You will also need to modify your apps to make sure they integrate your code rather than what's hosted in this repository.
 
-Unit Testing does require that you OHHTTPStubs is available in order to mock requests, but this is bundled in as a git submodule. See **Dependencies** for more information.
+See **Dependencies** for more information.
 
 ##Changes from Version `0.2.0` from `0.1.0`
 
 - Added Support for Swift 3
 - Refactored builder methods names from `propertName(value: PropertyType)` to `copyWith(propertyName value: PropertyType)`
+- Support for MQTT(without SSL)

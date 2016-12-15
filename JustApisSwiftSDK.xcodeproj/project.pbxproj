@@ -16,6 +16,7 @@
 		2E5EB0DF1DF709FE00FC7EEF /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5334A0F41C3EFDEE00429E6F /* Helpers.swift */; };
 		2E5EB0E01DF709FE00FC7EEF /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5334A0F41C3EFDEE00429E6F /* Helpers.swift */; };
 		2E5EB0E11DF709FF00FC7EEF /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5334A0F41C3EFDEE00429E6F /* Helpers.swift */; };
+		2E6065A51E013CC5002738E8 /* ObjC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E6065A41E013CC5002738E8 /* ObjC.m */; };
 		5303C3AA1C234E5E00E5A7AF /* RequestPreparers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5386B1CD1C18D761001D8D31 /* RequestPreparers.swift */; };
 		5303C3AC1C234E5E00E5A7AF /* CoreTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5386B1C01C18B903001D8D31 /* CoreTypes.swift */; };
 		5303C3AD1C234E5E00E5A7AF /* CompositedGateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5386B1C21C18CCE9001D8D31 /* CompositedGateway.swift */; };
@@ -113,6 +114,8 @@
 		29144BFBD37663717275C3D6 /* Pods-JustApisSwiftSDK.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JustApisSwiftSDK.debug.xcconfig"; path = "Pods/Target Support Files/Pods-JustApisSwiftSDK/Pods-JustApisSwiftSDK.debug.xcconfig"; sourceTree = "<group>"; };
 		2E572FB01DEF0F5E006B8FFD /* MQTT.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MQTT.swift; sourceTree = "<group>"; };
 		2E572FB21DF18D9B006B8FFD /* MQTTTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MQTTTests.swift; sourceTree = "<group>"; };
+		2E6065A31E013CC5002738E8 /* ObjC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjC.h; sourceTree = "<group>"; };
+		2E6065A41E013CC5002738E8 /* ObjC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ObjC.m; sourceTree = "<group>"; };
 		3D2A6A161CC1F2BA0A2B2EE8 /* Pods-JustApisSwiftSDKTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JustApisSwiftSDKTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-JustApisSwiftSDKTests/Pods-JustApisSwiftSDKTests.release.xcconfig"; sourceTree = "<group>"; };
 		48EEA993D841FABE13AEB69E /* Pods-JustApisSwiftSDKTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JustApisSwiftSDKTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-JustApisSwiftSDKTests/Pods-JustApisSwiftSDKTests.debug.xcconfig"; sourceTree = "<group>"; };
 		4C8E19CE847A667403EE6AD1 /* Pods-JustApisSwiftSDK-OSX.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JustApisSwiftSDK-OSX.debug.xcconfig"; path = "Pods/Target Support Files/Pods-JustApisSwiftSDK-OSX/Pods-JustApisSwiftSDK-OSX.debug.xcconfig"; sourceTree = "<group>"; };
@@ -213,6 +216,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2E6065A21E013CAE002738E8 /* UtilsAndHelpers */ = {
+			isa = PBXGroup;
+			children = (
+				2E6065A31E013CC5002738E8 /* ObjC.h */,
+				2E6065A41E013CC5002738E8 /* ObjC.m */,
+			);
+			path = UtilsAndHelpers;
+			sourceTree = "<group>";
+		};
 		4E3319C367725DF7068040D8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -281,6 +293,7 @@
 		5386B1B41C18B503001D8D31 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				2E6065A21E013CAE002738E8 /* UtilsAndHelpers */,
 				5386B1B71C18B503001D8D31 /* Info.plist */,
 				53122FDC1C20828E0052E8A5 /* FoundationRequestTests.swift */,
 				53122FDB1C20828D0052E8A5 /* JustApisSwiftSDKTests-Bridging-Header.h */,
@@ -839,6 +852,7 @@
 				53122FDF1C2088D90052E8A5 /* FoundationResponseTests.swift in Sources */,
 				53C4DCCC1C3C687A0067B671 /* CachingTests.swift in Sources */,
 				53C4DCC81C3C675B0067B671 /* InternalRequestTests.swift in Sources */,
+				2E6065A51E013CC5002738E8 /* ObjC.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -57,7 +57,7 @@ public enum MQTTError: Error {
         case .accept:
             return nil
         case .unacceptableProtocolVersion:
-            return MQTTError.identifierRejected
+            return MQTTError.unacceptableProtocolVersion
         case .identifierRejected:
             return MQTTError.identifierRejected
         case .serverUnavailable:
@@ -168,7 +168,7 @@ public protocol MQTTProvider: class {
     func subscribeTo(topic: String, qos: MQTTQoS, callback: MQTTCallback?) -> Error?
     func unsubscribeFrom(topic: String, callback: MQTTCallback?) -> Error?
     func publish(topic: String, string: String, qos: MQTTQoS, callback: MQTTCallback?) -> MQTTMethodResult
-    func publish(topic: String, message: MQTTMessage, callback: MQTTCallback?) -> MQTTMethodResult
+    func publish(message: MQTTMessage, callback: MQTTCallback?) -> MQTTMethodResult
 }
 
 
@@ -187,7 +187,7 @@ public protocol MQTTMethods: class {
     func subscribeTo(topic: String, qos: MQTTQoS, callback: MQTTCallback?) -> Error?
     func unsubscribeFrom(topic: String, callback: MQTTCallback?) -> Error?
     func publish(topic: String, string: String, qos: MQTTQoS, callback: MQTTCallback?) -> MQTTMethodResult
-    func publish(topic: String, message: MQTTMessage, callback: MQTTCallback?) -> MQTTMethodResult
+    func publish(message: MQTTMessage, callback: MQTTCallback?) -> MQTTMethodResult
 }
 
 
@@ -234,8 +234,8 @@ public class MQTTMethodDispatcher: MQTTMethods {
         return mqttProvider.publish(topic: topic, string: string, qos: qos, callback: callback)
     }
     
-    public func publish(topic: String, message: MQTTMessage, callback: MQTTCallback?) -> MQTTMethodResult {
-        return mqttProvider.publish(topic: topic, message: message, callback: callback)
+    public func publish(message: MQTTMessage, callback: MQTTCallback?) -> MQTTMethodResult {
+        return mqttProvider.publish(message: message, callback: callback)
     }
 }
 
@@ -328,7 +328,7 @@ public class DefaultMQTTProvider : MQTTProvider, CocoaMQTTDelegate
         }
     }
     
-    public func publish(topic: String, message: MQTTMessage, callback: MQTTCallback?) -> MQTTMethodResult {
+    public func publish(message: MQTTMessage, callback: MQTTCallback?) -> MQTTMethodResult {
         if connected {
             let identifier = client.publish(message.cocoaMQTTMessage)
             if message.qos != .qos0 {
@@ -420,10 +420,10 @@ public class DefaultMQTTProvider : MQTTProvider, CocoaMQTTDelegate
     
     private func dispatchCallbackForIdentifier(_ identifier: String, andRemove remove: Bool) {
         if let callback = callbacks[identifier] {
-            callback()
             if remove {
                 callbacks[identifier] = nil
             }
+            callback()
         }
     }
     
@@ -452,11 +452,15 @@ public class DefaultMQTTProvider : MQTTProvider, CocoaMQTTDelegate
     
     public func mqtt(_ mqtt: CocoaMQTT, didConnectAck ack: CocoaMQTTConnAck) {
         let error = MQTTError.errorForConnAck(ack)
+        let connectCallback = self.connectCallback
+        self.connectCallback = nil
+        let delegate = currentClientConfig.delegate
+        let delegator = currentClientConfig.delegator
+        //Callback & Delegate Call
         if let connectCallback = connectCallback {
             connectCallback(error)
-            self.connectCallback = nil
         }
-        if let delegate = currentClientConfig.delegate, let delegator = currentClientConfig.delegator {
+        if let delegate = delegate, let delegator = delegator {
             delegate.mqtt(delegator, didFinishConnectingWithError: error)
         }
     }
@@ -466,36 +470,51 @@ public class DefaultMQTTProvider : MQTTProvider, CocoaMQTTDelegate
     }
     
     public func mqtt(_ mqtt: CocoaMQTT, didPublishComplete id: UInt16) {
+        let delegate = currentClientConfig.delegate
+        let delegator = currentClientConfig.delegator
+        //Callback & Delegate Call
         dispatchCallbackForIdentifier(id, andRemove: true)
-        if let delegate = currentClientConfig.delegate, let delegator = currentClientConfig.delegator {
+        if let delegate = delegate, let delegator = delegator {
             delegate.mqtt(delegator, didPublishMessageWithId: id)
         }
     }
     
     
     public func mqtt(_ mqtt: CocoaMQTT, didPublishAck id: UInt16) {
+        let delegate = currentClientConfig.delegate
+        let delegator = currentClientConfig.delegator
+        //Callback & Delegate Call
         dispatchCallbackForIdentifier(id, andRemove: true)
-        if let delegate = currentClientConfig.delegate, let delegator = currentClientConfig.delegator {
+        if let delegate = delegate, let delegator = delegator {
             delegate.mqtt(delegator, didPublishMessageWithId: id)
         }
     }
     
     public func mqtt(_ mqtt: CocoaMQTT, didReceiveMessage message: CocoaMQTTMessage, id: UInt16 ) {
-        if let delegate = currentClientConfig.delegate, let delegator = currentClientConfig.delegator {
+        let delegate = currentClientConfig.delegate
+        let delegator = currentClientConfig.delegator
+        //Delegate Call
+        if let delegate = delegate, let delegator = delegator {
             delegate.mqtt(delegator, didReceiveMessage: MQTTMessage(cocoaMQTTMessage: message))
         }
     }
     
     public func mqtt(_ mqtt: CocoaMQTT, didSubscribeTopic topic: String) {
+        let delegate = currentClientConfig.delegate
+        let delegator = currentClientConfig.delegator
+        //Callback & Delegate Call
         dispatchCallbackForIdentifier(stringIdentifierForSubscribeToTopic(topic), andRemove: true)
-        if let delegate = currentClientConfig.delegate, let delegator = currentClientConfig.delegator {
+        if let delegate = delegate, let delegator = delegator {
             delegate.mqtt(delegator, didSubscribeToTopic: topic)
         }
     }
     
     public func mqtt(_ mqtt: CocoaMQTT, didUnsubscribeTopic topic: String) {
+        let delegate = currentClientConfig.delegate
+        let delegator = currentClientConfig.delegator
+        //Callback & Delegate Call
         dispatchCallbackForIdentifier(stringIdentifierForUnsubscribeFromTopic(topic), andRemove: true)
-        if let delegate = currentClientConfig.delegate, let delegator = currentClientConfig.delegator {
+        if let delegate = delegate, let delegator = delegator {
             delegate.mqtt(delegator, didUnsubscribeFromTopic: topic)
         }
     }
@@ -509,17 +528,22 @@ public class DefaultMQTTProvider : MQTTProvider, CocoaMQTTDelegate
     }
     
     public func mqttDidDisconnect(_ mqtt: CocoaMQTT, withError err: Error?) {
+        let connectCallback = self.connectCallback
+        self.connectCallback = nil
+        let disconnectCallback = self.disconnectCallback
+        self.disconnectCallback = nil
+        let delegate = currentClientConfig.delegate
+        let delegator = currentClientConfig.delegator
+        removeClientIfNeeded()
+        
         if let connectCallback = connectCallback {
             connectCallback(err ?? MQTTError.unexpected)
-            self.connectCallback = nil
         }
         if let disconnectCallback = disconnectCallback {
             disconnectCallback(err)
-            self.disconnectCallback = nil
         }
-        if let delegate = currentClientConfig.delegate, let delegator = currentClientConfig.delegator {
+        if let delegate = delegate, let delegator = delegator {
             delegate.mqtt(delegator, didDisconnectWithError: err)
         }
-        removeClientIfNeeded()
     }    
 }

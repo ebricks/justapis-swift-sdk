@@ -75,19 +75,23 @@ For the bleeding edge version of this SDK, you can add the following directive t
 
 `pod 'JustApisSwiftSDK', :git => 'https://github.com/AnyPresence/justapis-swift-sdk.git'`
 
-Since this SDK is a dynamic framework that uses Swift 3.0, you'll also need to make sure that your Podfile targets iOS 8.0 or higher and is set to use dynamic frameworks:
+Since this SDK is a dynamic framework that uses Swift 3.0, you'll also need to make sure that your Podfile targets iOS 8.0 or higher and is set to use dynamic frameworks. See Example below:
 
-```ruby
-platform :ios 8.0
-use_frameworks!
-```
+#### For version `0.2.0+`: 
 
-For version `0.2.0+`: This version requires modified variats of some pods. So you also need to include alternate `podspec` source at the top of your pod file.
+This version requires modified variants of some pods. So you also need to include alternate `podspec` source at the top of your pod file.
 
 ```ruby
 source 'git@github.com:ebricks/NanoscalePodspecs.git'
 source 'git@github.com:CocoaPods/Specs.git'
 
+platform :ios 8.0
+use_frameworks!
+```
+
+#### For Earlier Versions:
+
+```ruby
 platform :ios 8.0
 use_frameworks!
 ```
@@ -191,6 +195,9 @@ The CompositedGateway exposes a method group named `pushNotifications` that allo
 
 For each method, you'll need the `endpointCodename` expected by the Gateway. 
 
+### MQTT Method Group
+
+The CompositedGateway exposes a method group named `mqtt` that allows you to interact with Nanoscale Server(MQTT Broker/Server) that has MQTT configured.
 
 ### Receiving JSON Responses
 
@@ -246,7 +253,7 @@ However, if you would like to make changes to the SDK, you are welcome to  clone
 
 See **Dependencies** for more information.
 
-##Changes from Version `0.2.0` from `0.1.0`
+##Changes in Version `0.2.0` from `0.1.0`
 
 - Added Support for Swift 3
 - Refactored builder methods names from `propertName(value: PropertyType)` to `copyWith(propertyName value: PropertyType)`

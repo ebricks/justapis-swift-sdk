@@ -1,10 +1,10 @@
-#JustAPIs Swift SDK
+# JustAPIs Swift SDK
 
-##Overview
+## Overview
 
 Lightweight Swift SDK to connect to a JustAPIs gateway through an iOS client.
 
-##Dependencies
+## Dependencies
 Managed using Cocoapods.
 
 Framework: CocoaMQTT [MSWeakTimer, CocoaAsyncSocket]
@@ -63,7 +63,7 @@ If you'd like more persistent or sophisticated caching, you can implement your o
 
 `JsonGateway` is Gateway implementation provided for convenience. It's just a `CompositedGateway` that includes a `JsonResponseProcessor` by default.
 
-##Setup
+## Setup
 
 ### Framework Integration
 
@@ -75,9 +75,9 @@ For the bleeding edge version of this SDK, you can add the following directive t
 
 `pod 'JustApisSwiftSDK', :git => 'https://github.com/AnyPresence/justapis-swift-sdk.git'`
 
-Since this SDK is a dynamic framework that uses Swift 3.0, you'll also need to make sure that your Podfile targets iOS 8.0 or higher and is set to use dynamic frameworks. See Example below:
+Since this SDK is a dynamic framework that uses Swift 3.0, you'll also need to make sure that your Podfile targets iOS 8.0 or higher and is set to use dynamic frameworks(See 'examples' below). The repository also includes a basic Demo project that uses Cocoapods. You're encoraged to look at it and its Podfile for a better understanding.
 
-#### For version `0.2.0+`: 
+###### For version `0.2.0+`: 
 
 This version requires modified variants of some pods. So you also need to include alternate `podspec` source at the top of your pod file.
 
@@ -89,14 +89,12 @@ platform :ios 8.0
 use_frameworks!
 ```
 
-#### For Earlier Versions:
+###### For Earlier Versions:
 
 ```ruby
 platform :ios 8.0
 use_frameworks!
 ```
-
-The repository includes a basic Demo project that uses Cocoapods. You're encoraged to look at it and its Podfile for a better understanding.
 
 #### Carthage
 
@@ -245,7 +243,7 @@ The `ResponseProcessorClosureAdapter` is a convenience wrapper to use when you h
 
 The `CompoundResponseProcessor` lets you easily chain a series of response processors together so that they run sequentially. If any response processor signals an error, the remainder will be skipped.
 
-##Development
+## Development
 
 The SDK is designed to be lightweight and modular so that you can enhance and modify its functionality without modifying its code directly. 
 
@@ -253,7 +251,7 @@ However, if you would like to make changes to the SDK, you are welcome to  clone
 
 See **Dependencies** for more information.
 
-##Changes in Version `0.2.0` from `0.1.0`
+## Changes in Version `0.2.0` from `0.1.0`
 
 - Added Support for Swift 3
 - Refactored builder methods names from `propertName(value: PropertyType)` to `copyWith(propertyName value: PropertyType)`

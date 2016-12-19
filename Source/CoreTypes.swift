@@ -20,6 +20,12 @@ public typealias RequestResult = (request:Request, response:Response?, error:Err
 /// A callback which is invoked when a request completes
 public typealias RequestCallback = ((RequestResult) -> Void)
 
+/// A callback which is invoked when a MQTT task completes
+public typealias MQTTCallback = (() -> Void)
+
+/// A callback with error which is invoked when a MQTT task completes
+public typealias MQTTCallbackWithError = ((Error?) -> Void)
+
 /// A semantic alias for Key-Value hashes used as Query Parameters
 public typealias QueryParameters = Dictionary<String, Any>
 

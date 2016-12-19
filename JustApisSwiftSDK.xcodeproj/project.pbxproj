@@ -9,9 +9,14 @@
 /* Begin PBXBuildFile section */
 		182F3B0CEBFE17C5032B1996 /* Pods_JustApisSwiftSDKTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F7A95BEC7246BDEA4DEF61F8 /* Pods_JustApisSwiftSDKTests.framework */; };
 		1D2EF3ECF68EF0A3FA9E57FD /* Pods_JustApisSwiftSDK_tvOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B75BF46EA9FE94B505127178 /* Pods_JustApisSwiftSDK_tvOS.framework */; };
+		2E40E61A1DF7169A00C531A1 /* MQTT.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E572FB01DEF0F5E006B8FFD /* MQTT.swift */; };
+		2E40E61C1DF7169B00C531A1 /* MQTT.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E572FB01DEF0F5E006B8FFD /* MQTT.swift */; };
+		2E572FB11DEF0F5E006B8FFD /* MQTT.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E572FB01DEF0F5E006B8FFD /* MQTT.swift */; };
+		2E572FB41DF18DEB006B8FFD /* MQTTTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E572FB21DF18D9B006B8FFD /* MQTTTests.swift */; };
 		2E5EB0DF1DF709FE00FC7EEF /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5334A0F41C3EFDEE00429E6F /* Helpers.swift */; };
 		2E5EB0E01DF709FE00FC7EEF /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5334A0F41C3EFDEE00429E6F /* Helpers.swift */; };
 		2E5EB0E11DF709FF00FC7EEF /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5334A0F41C3EFDEE00429E6F /* Helpers.swift */; };
+		2E6065A51E013CC5002738E8 /* ObjC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E6065A41E013CC5002738E8 /* ObjC.m */; };
 		5303C3AA1C234E5E00E5A7AF /* RequestPreparers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5386B1CD1C18D761001D8D31 /* RequestPreparers.swift */; };
 		5303C3AC1C234E5E00E5A7AF /* CoreTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5386B1C01C18B903001D8D31 /* CoreTypes.swift */; };
 		5303C3AD1C234E5E00E5A7AF /* CompositedGateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5386B1C21C18CCE9001D8D31 /* CompositedGateway.swift */; };
@@ -107,6 +112,10 @@
 /* Begin PBXFileReference section */
 		088B2B9EDB6D0D8A2D0447EA /* Pods-JustApisSwiftSDK-watchOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JustApisSwiftSDK-watchOS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-JustApisSwiftSDK-watchOS/Pods-JustApisSwiftSDK-watchOS.debug.xcconfig"; sourceTree = "<group>"; };
 		29144BFBD37663717275C3D6 /* Pods-JustApisSwiftSDK.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JustApisSwiftSDK.debug.xcconfig"; path = "Pods/Target Support Files/Pods-JustApisSwiftSDK/Pods-JustApisSwiftSDK.debug.xcconfig"; sourceTree = "<group>"; };
+		2E572FB01DEF0F5E006B8FFD /* MQTT.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MQTT.swift; sourceTree = "<group>"; };
+		2E572FB21DF18D9B006B8FFD /* MQTTTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MQTTTests.swift; sourceTree = "<group>"; };
+		2E6065A31E013CC5002738E8 /* ObjC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjC.h; sourceTree = "<group>"; };
+		2E6065A41E013CC5002738E8 /* ObjC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ObjC.m; sourceTree = "<group>"; };
 		3D2A6A161CC1F2BA0A2B2EE8 /* Pods-JustApisSwiftSDKTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JustApisSwiftSDKTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-JustApisSwiftSDKTests/Pods-JustApisSwiftSDKTests.release.xcconfig"; sourceTree = "<group>"; };
 		48EEA993D841FABE13AEB69E /* Pods-JustApisSwiftSDKTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JustApisSwiftSDKTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-JustApisSwiftSDKTests/Pods-JustApisSwiftSDKTests.debug.xcconfig"; sourceTree = "<group>"; };
 		4C8E19CE847A667403EE6AD1 /* Pods-JustApisSwiftSDK-OSX.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JustApisSwiftSDK-OSX.debug.xcconfig"; path = "Pods/Target Support Files/Pods-JustApisSwiftSDK-OSX/Pods-JustApisSwiftSDK-OSX.debug.xcconfig"; sourceTree = "<group>"; };
@@ -127,7 +136,6 @@
 		53122FDB1C20828D0052E8A5 /* JustApisSwiftSDKTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "JustApisSwiftSDKTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		53122FDC1C20828E0052E8A5 /* FoundationRequestTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoundationRequestTests.swift; sourceTree = "<group>"; };
 		53122FDE1C2088D90052E8A5 /* FoundationResponseTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoundationResponseTests.swift; sourceTree = "<group>"; };
-		53122FE01C20993E0052E8A5 /* OHHTTPStubs.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OHHTTPStubs.framework; path = "Submodules/OHHTTPStubs/OHHTTPStubs/build/Debug-iphoneos/OHHTTPStubs.framework"; sourceTree = "<group>"; };
 		5334A0F41C3EFDEE00429E6F /* Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		5334A0F61C44551000429E6F /* RequestQueueTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestQueueTests.swift; sourceTree = "<group>"; };
 		534915291CE642090085F481 /* PushNotifications.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushNotifications.swift; sourceTree = "<group>"; };
@@ -208,6 +216,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2E6065A21E013CAE002738E8 /* UtilsAndHelpers */ = {
+			isa = PBXGroup;
+			children = (
+				2E6065A31E013CC5002738E8 /* ObjC.h */,
+				2E6065A41E013CC5002738E8 /* ObjC.m */,
+			);
+			path = UtilsAndHelpers;
+			sourceTree = "<group>";
+		};
 		4E3319C367725DF7068040D8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -227,14 +244,6 @@
 				5303C3861C21F2E100E5A7AF /* README.md */,
 			);
 			name = Docs;
-			sourceTree = "<group>";
-		};
-		5303C3891C21F2F700E5A7AF /* Dependencies */ = {
-			isa = PBXGroup;
-			children = (
-				53122FE01C20993E0052E8A5 /* OHHTTPStubs.framework */,
-			);
-			name = Dependencies;
 			sourceTree = "<group>";
 		};
 		5386B19C1C18B503001D8D31 = {
@@ -276,6 +285,7 @@
 				5303C3FE1C331C0400E5A7AF /* Gateway.swift */,
 				5303C4031C331C5700E5A7AF /* Errors.swift */,
 				534915291CE642090085F481 /* PushNotifications.swift */,
+				2E572FB01DEF0F5E006B8FFD /* MQTT.swift */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -283,7 +293,7 @@
 		5386B1B41C18B503001D8D31 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				5303C3891C21F2F700E5A7AF /* Dependencies */,
+				2E6065A21E013CAE002738E8 /* UtilsAndHelpers */,
 				5386B1B71C18B503001D8D31 /* Info.plist */,
 				53122FDC1C20828E0052E8A5 /* FoundationRequestTests.swift */,
 				53122FDB1C20828D0052E8A5 /* JustApisSwiftSDKTests-Bridging-Header.h */,
@@ -296,6 +306,7 @@
 				53C4DCD81C3D9B990067B671 /* SSLCertificatePinningTests.swift */,
 				5334A0F61C44551000429E6F /* RequestQueueTests.swift */,
 				5349152E1CEB81100085F481 /* PushNotificationMethodTests.swift */,
+				2E572FB21DF18D9B006B8FFD /* MQTTTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -741,6 +752,7 @@
 				53C4DCD31C3D8AD20067B671 /* SSLCertificate.swift in Sources */,
 				5303C4001C331C0400E5A7AF /* Gateway.swift in Sources */,
 				5303C3FB1C331BFA00E5A7AF /* Response.swift in Sources */,
+				2E40E61A1DF7169A00C531A1 /* MQTT.swift in Sources */,
 				5303C40A1C3487F700E5A7AF /* InternalRequest.swift in Sources */,
 				53C4DCDC1C3ED9500067B671 /* InternalRequestQueue.swift in Sources */,
 				5303C3AD1C234E5E00E5A7AF /* CompositedGateway.swift in Sources */,
@@ -787,6 +799,7 @@
 				53C4DCD51C3D8AD20067B671 /* SSLCertificate.swift in Sources */,
 				5303C4021C331C0400E5A7AF /* Gateway.swift in Sources */,
 				5303C3FD1C331BFA00E5A7AF /* Response.swift in Sources */,
+				2E40E61C1DF7169B00C531A1 /* MQTT.swift in Sources */,
 				5303C40C1C3487F700E5A7AF /* InternalRequest.swift in Sources */,
 				53C4DCDE1C3ED9500067B671 /* InternalRequestQueue.swift in Sources */,
 				5303C3E51C2353CC00E5A7AF /* CompositedGateway.swift in Sources */,
@@ -810,6 +823,7 @@
 				53C4DCD21C3D8AD20067B671 /* SSLCertificate.swift in Sources */,
 				5303C3FF1C331C0400E5A7AF /* Gateway.swift in Sources */,
 				5303C3FA1C331BFA00E5A7AF /* Response.swift in Sources */,
+				2E572FB11DEF0F5E006B8FFD /* MQTT.swift in Sources */,
 				5303C4091C3487F700E5A7AF /* InternalRequest.swift in Sources */,
 				53C4DCDB1C3ED9500067B671 /* InternalRequestQueue.swift in Sources */,
 				5386B1C31C18CCE9001D8D31 /* CompositedGateway.swift in Sources */,
@@ -828,6 +842,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				53C4DCCE1C3C69190067B671 /* ContentTypeParsingTests.swift in Sources */,
+				2E572FB41DF18DEB006B8FFD /* MQTTTests.swift in Sources */,
 				53122FDD1C20828E0052E8A5 /* FoundationRequestTests.swift in Sources */,
 				53C4DCCA1C3C67EF0067B671 /* InternalResponseTests.swift in Sources */,
 				53C4DCD01C3C69DB0067B671 /* CompoundResponseProcessorTests.swift in Sources */,
@@ -837,6 +852,7 @@
 				53122FDF1C2088D90052E8A5 /* FoundationResponseTests.swift in Sources */,
 				53C4DCCC1C3C687A0067B671 /* CachingTests.swift in Sources */,
 				53C4DCC81C3C675B0067B671 /* InternalRequestTests.swift in Sources */,
+				2E6065A51E013CC5002738E8 /* ObjC.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

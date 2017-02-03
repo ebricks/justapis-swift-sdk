@@ -150,7 +150,7 @@ public struct MQTTConfiguration {
                                  clientId: "",
                                  username: username,
                                  password: password,
-                                 keepAlive: 3600,//60*60
+                                 keepAlive: 60,//seconds
                                  cleanSession: true,
                                  willMesage: nil,
                                  delegator: nil,
